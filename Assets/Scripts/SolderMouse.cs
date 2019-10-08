@@ -174,7 +174,7 @@ public class SolderMouse : MonoBehaviour
             Vector3 locationB = new Vector3(x, 0, z);
             locationASelected = false;
 
-            GameObject placed = circuitPool.PlaceIntegratedCircuit(integratedCircuitName, nodeId, index, nodeIdA, indexA);
+            GameObject placed = circuitPool.PlaceIntegratedCircuit(integratedCircuitName, nodeId, index, nodeIdA, indexA, false);
             placed.transform.position = new Vector3((locationA.x + locationB.x) / 2, 0, (locationA.z + locationB.z) / 2);            
             placed.transform.localScale = new Vector3(Vector3.Distance(locationB, locationA) / 2, 1, 1);
             placed.transform.Rotate(0, CircuitHelper.AngleBetweenVector3(locationB, locationA), 0);            
@@ -185,7 +185,7 @@ public class SolderMouse : MonoBehaviour
     {
         if (circuitPool.CanPlace(integratedCircuit.IcType, integratedCircuit.Pins, nodeId, index))
         {
-            GameObject placed = circuitPool.PlaceIntegratedCircuit(integratedCircuitName, nodeId, index);
+            GameObject placed = circuitPool.PlaceIntegratedCircuit(integratedCircuitName, nodeId, index, false);
             placed.transform.position = new Vector3(x, 0, z);
         }
         else

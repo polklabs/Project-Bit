@@ -21,6 +21,15 @@ namespace IntegratedCircuits
             Gnd = 0;
         }
 
+        public override void CustomMethod()
+        {
+            if (mono == null)
+            {
+                mono = GameObjectRef.GetComponent<Mono_Led>();
+            }
+            mono.ToggleLed(On);
+        }
+
         protected override void InternalUpdate()
         {
             if (PinState[0] == State.HIGH /*&& PinState[1] == -1*/)
@@ -32,13 +41,9 @@ namespace IntegratedCircuits
             {
                 //Debug.Log("LIGHT OFF");
                 On = false;
-            }            
-
-            if(mono == null)
-            {
-                mono = GameObjectRef.GetComponent<Mono_Led>();
             }
-            mono.ToggleLed(On);
+
+            CustomMethod();
 
         }
 

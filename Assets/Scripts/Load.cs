@@ -41,8 +41,11 @@ public class Load : MonoBehaviour
         filePath += "/components.json";
         using (StreamReader file = File.OpenText(filePath))
         {
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.TypeNameHandling = TypeNameHandling.Auto;
+            JsonSerializer serializer = new JsonSerializer
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                ObjectCreationHandling = ObjectCreationHandling.Replace
+            };
             Dictionary<Guid, IntegratedCircuit> components = (Dictionary<Guid, IntegratedCircuit>)serializer.Deserialize(file, typeof(Dictionary<Guid, IntegratedCircuit>));
 
             foreach(Guid g in components.Keys)
@@ -56,13 +59,13 @@ public class Load : MonoBehaviour
                 {
                     case ICType.solo:
 
-                        obj = cp.PlaceIntegratedCircuit(ic, ic.GetType().Name, ic.GetPinNode(0), ic.GetPinNodeIndex(0));
+                        obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), true);
                         obj.transform.position = CircuitHelper.GetPositionFromNode(ic.GetPinNode(0), ic.GetPinNodeIndex(0));
 
                         break;
                     case ICType.dual:
 
-                        obj = cp.PlaceIntegratedCircuit(ic, ic.GetType().Name, ic.GetPinNode(0), ic.GetPinNodeIndex(0), ic.GetPinNode(1), ic.GetPinNodeIndex(1));
+                        obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), ic.GetPinNode(1), ic.GetPinNodeIndex(1), true);
 
                         Vector3 locationA = CircuitHelper.GetPositionFromNode(ic.GetPinNode(0), ic.GetPinNodeIndex(0));
                         Vector3 locationB = CircuitHelper.GetPositionFromNode(ic.GetPinNode(1), ic.GetPinNodeIndex(1));
@@ -73,16 +76,16 @@ public class Load : MonoBehaviour
 
                         break;
                     case ICType.ic4:
-                        obj = cp.PlaceIntegratedCircuit(ic, ic.GetType().Name, ic.GetPinNode(0), ic.GetPinNodeIndex(0));
+                        obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), true);
                         obj.transform.position = CircuitHelper.GetPositionFromNode(ic.GetPinNode(0), ic.GetPinNodeIndex(0));
                         break;
                     case ICType.ic6:
-                        obj = cp.PlaceIntegratedCircuit(ic, ic.GetType().Name, ic.GetPinNode(0), ic.GetPinNodeIndex(0));
+                        obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), true);
                         obj.transform.position = CircuitHelper.GetPositionFromNode(ic.GetPinNode(0), ic.GetPinNodeIndex(0));
                         break;
                     case ICType.wire:
 
-                        obj = cp.PlaceIntegratedCircuit(ic, ic.GetType().Name, ic.GetPinNode(0), ic.GetPinNodeIndex(0), ic.GetPinNode(1), ic.GetPinNodeIndex(1));
+                        obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), ic.GetPinNode(1), ic.GetPinNodeIndex(1), true);
 
                         locationA = CircuitHelper.GetPositionFromNode(ic.GetPinNode(0), ic.GetPinNodeIndex(0));
                         locationB = CircuitHelper.GetPositionFromNode(ic.GetPinNode(1), ic.GetPinNodeIndex(1));

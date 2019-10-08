@@ -11,21 +11,21 @@ public class CircuitPool : MonoBehaviour
     public BreadBoard breadBoard;
     public Transform parent;
 
-    public GameObject PlaceIntegratedCircuit(string IcName, string nodeIdA, int indexA)
+    public GameObject PlaceIntegratedCircuit(string IcName, string nodeIdA, int indexA, bool skipUpdate)
     {
         IntegratedCircuit ic = GetIntegratedCircuit(IcName);
-        return PlaceIntegratedCircuit(ic, IcName, nodeIdA, indexA, "", 0);
+        return PlaceIntegratedCircuit(ic, nodeIdA, indexA, "", 0, skipUpdate);
     }
-    public GameObject PlaceIntegratedCircuit(IntegratedCircuit ic, string IcName, string nodeIdA, int indexA)
+    public GameObject PlaceIntegratedCircuit(IntegratedCircuit ic, string nodeIdA, int indexA, bool skipUpdate)
     {
-        return PlaceIntegratedCircuit(ic, IcName, nodeIdA, indexA, "", 0);
+        return PlaceIntegratedCircuit(ic, nodeIdA, indexA, "", 0, skipUpdate);
     }
-    public GameObject PlaceIntegratedCircuit(string IcName, string nodeIdA, int indexA, string nodeIdB, int indexB)
+    public GameObject PlaceIntegratedCircuit(string IcName, string nodeIdA, int indexA, string nodeIdB, int indexB, bool skipUpdate)
     {
         IntegratedCircuit ic = GetIntegratedCircuit(IcName);
-        return PlaceIntegratedCircuit(ic, IcName, nodeIdA, indexA, nodeIdB, indexB);
+        return PlaceIntegratedCircuit(ic, nodeIdA, indexA, nodeIdB, indexB, skipUpdate);
     }
-    public GameObject PlaceIntegratedCircuit(IntegratedCircuit ic, string IcName, string nodeIdA, int indexA, string nodeIdB, int indexB)
+    public GameObject PlaceIntegratedCircuit(IntegratedCircuit ic, string nodeIdA, int indexA, string nodeIdB, int indexB, bool skipUpdate)
     {
         // Debug.Log("Placing: " + IcName);
         GameObject obj = Instantiate(GetIntegratedCircuitObj(ic), new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
@@ -82,13 +82,7 @@ public class CircuitPool : MonoBehaviour
                         ic.SetPinIndex(pinIndex, index);
                         ic.SetPinNode(pinIndex, nodeId);
                     }
-                }
-
-                //Text text = obj.GetComponentInChildren<Text>();
-                //if (text != null && text.text.Equals(""))
-                //{
-                //    text.text = IcName + "\n\n" + ic.GetId().ToString();
-                //}                
+                }               
 
                 break;
             case ICType.ic6:
@@ -113,19 +107,17 @@ public class CircuitPool : MonoBehaviour
                     }
                 }
 
-                //text = obj.GetComponentInChildren<Text>();
-                //if (text != null && text.text.Equals(""))
-                //{
-                //    text.text = IcName + "\n" + ic.GetId().ToString();
-                //}
-
                 break;
             default:
                 return null;
         }
 
         breadBoard.components.Add(ic.GetId(), ic);
-        ic.Update();
+
+        if (!skipUpdate)
+        {
+            ic.Update();
+        }
 
         return obj;
     }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Gates;
+using UnityEngine;
 
 namespace Chips
 {
@@ -32,11 +33,35 @@ namespace Chips
     {
         [DataMember]
         public Guid ID { get; set; }
-
-        [DataMember]
+       
         public BitArray Input { get; set; }
         [DataMember]
+        private bool[] _Input {
+            get {
+                bool[] b = new bool[Input.Length];
+                Input.CopyTo(b, 0);
+                return b;
+            }
+            set
+            {
+                Input = new BitArray(value);
+            }
+        }        
+
         public BitArray Output { get; set; }
+        [DataMember]
+        private bool[] _Output {
+            get
+            {
+                bool[] b = new bool[Output.Length];
+                Output.CopyTo(b, 0);
+                return b;
+            }
+            set
+            {
+                Output = new BitArray(value);
+            }
+        }
 
         [DataMember]
         public List<Gate> Gates { get; set; }
@@ -45,8 +70,22 @@ namespace Chips
         [DataMember]
         public Dictionary<Guid, List<Wire>> WireDict { get; set; }
 
-        [DataMember]
+        
         protected BitArray Dirty { get; set; }
+        [DataMember]
+        private bool[] _Dirty
+        {
+            get
+            {
+                bool[] b = new bool[Dirty.Length];
+                Dirty.CopyTo(b, 0);
+                return b;
+            }
+            set
+            {
+                Dirty = new BitArray(value);
+            }
+        }
 
         protected Chip(int inputs, int outputs)
         {

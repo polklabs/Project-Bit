@@ -321,10 +321,12 @@ public class WorkspaceEditor : MonoBehaviour
 
                     Vector3 locationA = CircuitHelper.GetPositionFromNode(nodeIdA, indexA);
 
-                    GameObject placedWire = circuitPool.PlaceIntegratedCircuit(icName, nodeId, index, nodeIdA, indexA);
+                    GameObject placedWire = circuitPool.PlaceIntegratedCircuit(icName, nodeId, index, nodeIdA, indexA, false);
                     placedWire.transform.position = new Vector3((locationA.x + location.x) / 2, 0, (locationA.z + location.z) / 2);
                     placedWire.transform.localScale = new Vector3(Vector3.Distance(location, locationA) / 2, 1, 1);
-                    placedWire.transform.Rotate(0, CircuitHelper.AngleBetweenVector3(location, locationA), 0);
+                    float angle = CircuitHelper.AngleBetweenVector3(location, locationA);
+                    angle = locationA.z > location.z ? -angle : angle;
+                    placedWire.transform.rotation = Quaternion.Euler(0, angle, 0);
 
                     locationASelected = false;
                     nodeIdA = "";
@@ -340,7 +342,7 @@ public class WorkspaceEditor : MonoBehaviour
             default:
 
                 Debug.Log("Placing at " + nodeId + index);
-                GameObject placed = circuitPool.PlaceIntegratedCircuit(icName, nodeId, index);
+                GameObject placed = circuitPool.PlaceIntegratedCircuit(icName, nodeId, index, false);
                 placed.transform.position = location;
 
                 break;
