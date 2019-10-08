@@ -120,21 +120,6 @@ namespace Gates
         }
     }
 
-    public class NANDGate3 : Gate
-    {        
-        public NANDGate3() : base(3) { }
-
-        protected override bool GetOutput()
-        {
-            bool output = Input[0];
-            foreach (bool bit in Input)
-            {
-                output &= bit;
-            }
-            return !output;
-        }
-    }
-
     public class ORGate : Gate
     {
         public ORGate(int inputs) : base(inputs) { }
