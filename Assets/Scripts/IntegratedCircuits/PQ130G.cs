@@ -11,20 +11,20 @@ namespace IntegratedCircuits
 
         public PQ130G() : base(16)
         {
-            IcType = ICType.ic4;
-            ModelName = "IC16";
+            IcType      = ICType.ic4;
+            ModelName   = "IC16";
 
             Chip = new Chips.Binary_Adder_4Bit();
 
-            PinModes[1] = PinMode.Ouput;
-            PinModes[2] = PinMode.Ouput;
-            PinModes[4] = PinMode.Ouput;
-            PinModes[5] = PinMode.Ouput;
-            PinModes[6] = PinMode.Ouput;
-            PinModes[10] = PinMode.Ouput;
-            PinModes[11] = PinMode.Ouput;
-            PinModes[13] = PinMode.Ouput;
-            PinModes[14] = PinMode.Ouput;
+            PinModes[1]     = PinMode.Ouput;
+            PinModes[2]     = PinMode.Ouput;
+            PinModes[4]     = PinMode.Ouput;
+            PinModes[5]     = PinMode.Ouput;
+            PinModes[6]     = PinMode.Ouput;
+            PinModes[10]    = PinMode.Ouput;
+            PinModes[11]    = PinMode.Ouput;
+            PinModes[13]    = PinMode.Ouput;
+            PinModes[14]    = PinMode.Ouput;
         }
 
         protected override void InternalUpdate()
@@ -46,11 +46,11 @@ namespace IntegratedCircuits
             Chip.Update();
 
             //Outputs
-            PinState[8] = Chip.Output[0] ? State.HIGH : State.LOW;
-            PinState[9] = Chip.Output[1] ? State.HIGH : State.LOW;
-            PinState[12] = Chip.Output[2] ? State.HIGH : State.LOW;
-            PinState[0] = Chip.Output[3] ? State.HIGH : State.LOW;
-            PinState[3] = Chip.Output[4] ? State.HIGH : State.LOW;
+            PinState[8]     = Chip.Output[0] ? State.HIGH : State.LOW;
+            PinState[9]     = Chip.Output[1] ? State.HIGH : State.LOW;
+            PinState[12]    = Chip.Output[2] ? State.HIGH : State.LOW;
+            PinState[0]     = Chip.Output[3] ? State.HIGH : State.LOW;
+            PinState[3]     = Chip.Output[4] ? State.HIGH : State.LOW;
         }
 
         protected override void InternalReset(bool disable)
