@@ -72,7 +72,9 @@ public class Load : MonoBehaviour
 
                         obj.transform.position = new Vector3((locationA.x + locationB.x) / 2, 0, (locationA.z + locationB.z) / 2);
                         obj.transform.localScale = new Vector3(Vector3.Distance(locationB, locationA) / 2, 1, 1);
-                        obj.transform.Rotate(0, CircuitHelper.AngleBetweenVector3(locationA, locationB), 0);
+                        float angle = CircuitHelper.AngleBetweenVector3(locationB, locationA);
+                        angle = locationA.z > locationB.z ? -angle : angle;
+                        obj.transform.rotation = Quaternion.Euler(0, angle, 0);
 
                         break;
                     case ICType.ic4:
@@ -92,7 +94,9 @@ public class Load : MonoBehaviour
 
                         obj.transform.position = new Vector3((locationA.x + locationB.x) / 2, 0, (locationA.z + locationB.z) / 2);
                         obj.transform.localScale = new Vector3(Vector3.Distance(locationB, locationA) / 2, 1, 1);
-                        obj.transform.Rotate(0, CircuitHelper.AngleBetweenVector3(locationA, locationB), 0);
+                        angle = CircuitHelper.AngleBetweenVector3(locationB, locationA);
+                        angle = locationA.z > locationB.z ? -angle : angle;
+                        obj.transform.rotation = Quaternion.Euler(0, angle, 0);
 
                         break;
                     default:

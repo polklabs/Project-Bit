@@ -3,17 +3,21 @@ using System.Linq;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+/**
+ * Clock
+ */
+
 namespace IntegratedCircuits
 {
     [DataContract]
-    public class PQ160T : IntegratedCircuit
+    public class PQ160 : IntegratedCircuit
     {
         [DataMember]
         public bool On;
 
         private Mono_Clock mono_Clock = null;
 
-        public PQ160T() : base(6)
+        public PQ160() : base(6)
         {
             IcType = ICType.ic4;
             ModelName = "IC_Clock";

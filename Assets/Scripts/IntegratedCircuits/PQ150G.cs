@@ -1,15 +1,17 @@
-﻿using UnityEngine;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
+/**
+ * 4-Bit Binary Counter
+ */
 namespace IntegratedCircuits
 {
     [DataContract]
-    public class PQ150C : IntegratedCircuit
+    public class PQ150G : IntegratedCircuit
     {
         [DataMember]
         private readonly Chips.Binary_Counter_4Bit Chip;
 
-        public PQ150C() : base(8)
+        public PQ150G() : base(8)
         {
             IcType = ICType.ic4;
             ModelName = "IC8";
