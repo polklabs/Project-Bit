@@ -194,7 +194,7 @@ namespace Chips
                 if (findIndex != -1)
                 {					
                     FromValues = new BitArray(1, Gates[findIndex].Output);
-					FromDirty = new BitArray(1, Gates[findIndex.Dirty);
+					FromDirty = new BitArray(1, Gates[findIndex].IsDirty());
                 }
                 else
                 {
