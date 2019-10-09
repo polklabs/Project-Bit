@@ -1,9 +1,10 @@
 ﻿using UnityEngine.EventSystems;
 using UnityEngine;
-using System.Collections.Generic;
 using IntegratedCircuits;
 using System.Linq;
 using Helper;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public enum WorkspaceAction { Place, Remove, Probe, None };
 
@@ -32,14 +33,24 @@ public class WorkspaceEditor : MonoBehaviour
     private int indexA = 0;
     private bool showsError = false;
 
+    /* For Probing */
+    public Text ProbeText;
+    public GameObject HighLight;
+
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene(0);
+        }
+
         switch (Action)
         {
             case WorkspaceAction.Place:
                 PlaceAction_Hover();
                 break;
             case WorkspaceAction.Probe:
+                ProbeAction_Hover();
                 break;
             case WorkspaceAction.Remove:
                 RemoveAction_Hover();
@@ -288,6 +299,41 @@ public class WorkspaceEditor : MonoBehaviour
                 RemoveOutline(hoverObject.GetComponentInChildren<Renderer>());
                 hoverObject = null;
             }
+        }
+    }
+
+    private void ProbeAction_Hover()
+    {
+        int layer_mask = LayerMask.GetMask("Pin", "UI");
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (/*!EventSystem.current.IsPointerOverGameObject() && */Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask))
+        {
+            string stateString;
+            int state = breadBoard.GetNodeState(hit.transform.name);
+            if(state == 1)
+            {
+                stateString = "High";
+            }
+            else if(state == -1)
+            {
+                stateString = "Low";
+            }
+            else
+            {
+                stateString = "Off";
+            }
+
+
+            ProbeText.text = "Probing Node\n" + hit.transform.name + "\n\nState\n" + stateString;
+
+            HighLight.transform.position = new Vector3(Mathf.RoundToInt(hit.point.x), 0, Mathf.RoundToInt(hit.point.z));
+
+        }
+        else
+        {
+            ProbeText.text = "Probing Node\nUnknown\n\nState\nUnknown";
+            HighLight.transform.position = new Vector3(0, 500, 0);
         }
     }
 

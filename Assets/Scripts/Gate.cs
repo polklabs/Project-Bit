@@ -107,6 +107,7 @@ namespace Gates
 
     public class NANDGate : Gate
     {
+        public NANDGate(int inputs) : base(inputs) { }
         public NANDGate() : base(2) { }
 
         protected override bool GetOutput()

@@ -12,7 +12,7 @@ namespace Chips
             Gate gateB = new NANDGate();
             int indexB = AddGate(gateB);
 
-            Gate gateC = new NANDGate3();
+            Gate gateC = new NANDGate(3);
             int indexC = AddGate(gateC);
 
             Gate gateD = new NANDGate();

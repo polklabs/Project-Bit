@@ -8,23 +8,25 @@ public class Save : MonoBehaviour
 
     public BreadBoard bb;
 
-    public void SaveWorkspace(string workSpaceName)
+    public void SaveWorkspaceGUI()
     {
-#if UNITY_STANDALONE_WIN
-        string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments).Replace("\\", "/");       
-        filePath += "/My Games/Project Logical/";        
-#else
-        string filePath = Application.persistentDataPath + "/";
-#endif
+        if (SaveWorkspace())
+        {
+            Debug.Log("Saved Workspace!");
+        }
+    }
 
-        filePath += workSpaceName;
+    public bool SaveWorkspace()
+    {
+        string filePath = Helper.GameHelper.GetSaveDirectory();
+        filePath += PlayerPrefs.GetString("Workspace");
         Directory.CreateDirectory(filePath);
 
         SaveComponents(filePath);
         SaveNodes(filePath);
         SaveUpdates(filePath);
 
-        Debug.Log("Workspace Saved!");
+        return true;
 
     }
 

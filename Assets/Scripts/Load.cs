@@ -6,25 +6,25 @@ using System.IO;
 using UnityEngine;
 using IntegratedCircuits;
 using Helper;
+using UnityEngine.UI;
 
 public class Load : MonoBehaviour
 {
     public BreadBoard bb;
     public CircuitPool cp;
 
+    public Text Title;
+
     private void Start()
     {
-       LoadWorkspace("Test Workspace");
+        String title = PlayerPrefs.GetString("Workspace");        
+        LoadWorkspace(title);
+        Title.text = title;
     }
 
     public void LoadWorkspace(string workSpaceName)
     {
-#if UNITY_STANDALONE_WIN
-        string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments).Replace("\\", "/");
-        filePath += "/My Games/Project Logical/";
-#else
-        string filePath = Application.persistentDataPath + "/";
-#endif
+        string filePath = GameHelper.GetSaveDirectory();
         filePath += workSpaceName;
 
         if (Directory.Exists(filePath))
@@ -39,6 +39,11 @@ public class Load : MonoBehaviour
     private void LoadComponents(string filePath)
     {
         filePath += "/components.json";
+        if (!File.Exists(filePath))
+        {
+            return;
+        }
+
         using (StreamReader file = File.OpenText(filePath))
         {
             JsonSerializer serializer = new JsonSerializer
@@ -113,6 +118,11 @@ public class Load : MonoBehaviour
     private void LoadNodes(string filePath)
     {
         filePath += "/nodes.json";
+        if (!File.Exists(filePath))
+        {
+            return;
+        }
+
         using (StreamReader file = File.OpenText(filePath))
         {
             JsonSerializer serializer = new JsonSerializer();
@@ -126,6 +136,11 @@ public class Load : MonoBehaviour
     private void LoadUpdates(string filePath)
     {
         filePath += "/updates.json";
+        if (!File.Exists(filePath))
+        {
+            return;
+        }
+
         using (StreamReader file = File.OpenText(filePath))
         {
             JsonSerializer serializer = new JsonSerializer();

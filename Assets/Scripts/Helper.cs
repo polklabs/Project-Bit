@@ -1,7 +1,22 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Helper
 {
+    public static class GameHelper
+    {
+        public static string GetSaveDirectory()
+        {
+#if UNITY_STANDALONE_WIN
+            string baseFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments).Replace("\\", "/");
+            baseFilePath += "/My Games/Project Bit/";
+#else
+        string baseFilePath = Application.persistentDataPath + "/";
+#endif
+            return baseFilePath;
+        }
+    }
+
     public static class CircuitHelper
     {
         public static float AngleBetweenVector3(Vector3 vec1, Vector3 vec2)

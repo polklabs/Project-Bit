@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Runtime.Serialization;
 
 /**
@@ -5,23 +6,19 @@ using System.Runtime.Serialization;
  */
 namespace IntegratedCircuits
 {
-    public class PQ130G : IntegratedCircuit
+    public class PQ130 : IntegratedCircuit
     {
 
-        public PQ130G() : base(16)
+        public PQ130() : base(16)
         {
             IcType = ICType.ic4;
             ModelName = "IC16";
 
-            PinModes[1]     = PinMode.Ouput;
-            PinModes[2]     = PinMode.Ouput;
-            PinModes[4]     = PinMode.Ouput;
-            PinModes[5]     = PinMode.Ouput;
-            PinModes[6]     = PinMode.Ouput;
-            PinModes[10]    = PinMode.Ouput;
-            PinModes[11]    = PinMode.Ouput;
-            PinModes[13]    = PinMode.Ouput;
-            PinModes[14]    = PinMode.Ouput;
+            PinModes[0]     = PinMode.Ouput;
+            PinModes[3]     = PinMode.Ouput;
+            PinModes[8]     = PinMode.Ouput;
+            PinModes[9]     = PinMode.Ouput;
+            PinModes[12]     = PinMode.Ouput;            
         }
 
         protected override void InternalUpdate()
@@ -42,12 +39,12 @@ namespace IntegratedCircuits
             });
             int[] ab = new int[2];
          
-            a.copyTo(ab, 0);
-            b.copyTo(ab, 1);
+            a.CopyTo(ab, 0);
+            b.CopyTo(ab, 1);
          
             int output = ab[0] + ab[1] + (PinState[6] == State.HIGH ? 1 : 0);
          
-            BitArray bitOut = new BitArray(new byte[] { output });
+            BitArray bitOut = new BitArray(System.BitConverter.GetBytes(output));
          
             //Outputs
             PinState[8]     = bitOut[4] ? State.HIGH : State.LOW; //C4
