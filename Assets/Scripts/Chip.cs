@@ -29,15 +29,18 @@ namespace Chips
     }
 
     [DataContract]
-    public class Chip
+    public abstract class Chip
     {
         [DataMember]
         public Guid ID { get; set; }
        
+        //[DataMember]
         public BitArray Input { get; set; }
         [DataMember]
-        private bool[] _Input {
-            get {
+        private bool[] _Input
+        {
+            get
+            {
                 bool[] b = new bool[Input.Length];
                 Input.CopyTo(b, 0);
                 return b;
@@ -46,11 +49,13 @@ namespace Chips
             {
                 Input = new BitArray(value);
             }
-        }        
+        }
 
+        //[DataMember]
         public BitArray Output { get; set; }
         [DataMember]
-        private bool[] _Output {
+        private bool[] _Output
+        {
             get
             {
                 bool[] b = new bool[Output.Length];
@@ -70,7 +75,7 @@ namespace Chips
         [DataMember]
         public Dictionary<Guid, List<Wire>> WireDict { get; set; }
 
-        
+        //[DataMember]
         protected BitArray Dirty { get; set; }
         [DataMember]
         private bool[] _Dirty
@@ -87,7 +92,7 @@ namespace Chips
             }
         }
 
-        protected Chip(int inputs, int outputs)
+        public Chip(int inputs, int outputs)
         {
             ID = Guid.NewGuid();
 

@@ -163,7 +163,7 @@ public class CircuitPool : MonoBehaviour
             Text text = obj.GetComponentInChildren<Text>();
             if (text != null && text.text.Equals(""))
             {
-                text.text = circuit.GetType().Name.split('_')[0] + "\n\n" + circuit.GetId().ToString();
+                text.text = circuit.GetType().Name.Split('_')[0] + "\n\n" + circuit.GetId().ToString();
             }
 
         }

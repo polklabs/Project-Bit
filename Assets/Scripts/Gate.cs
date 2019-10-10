@@ -11,6 +11,7 @@ namespace Gates
         [DataMember]
         public Guid ID { get; set; }
        
+        //[DataMember]
         public BitArray Input { get; set; }
         [DataMember]
         private bool[] _Input

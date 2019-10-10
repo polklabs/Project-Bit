@@ -6,10 +6,10 @@ using System.Runtime.Serialization;
  */
 namespace IntegratedCircuits
 {
-    public class PQ130 : IntegratedCircuit
+    public class PQ130_Adder4Bit : IntegratedCircuit
     {
 
-        public PQ130() : base(16)
+        public PQ130_Adder4Bit() : base(16)
         {
             IcType = ICType.ic4;
             ModelName = "IC16";

@@ -10,14 +10,14 @@ using UnityEngine;
 namespace IntegratedCircuits
 {
     [DataContract]
-    public class PQ160 : IntegratedCircuit
+    public class PQ160_Clock : IntegratedCircuit
     {
         [DataMember]
         public bool On;
 
         private Mono_Clock mono_Clock = null;
 
-        public PQ160() : base(6)
+        public PQ160_Clock() : base(6)
         {
             IcType = ICType.ic4;
             ModelName = "IC_Clock";

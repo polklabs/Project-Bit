@@ -39,7 +39,8 @@ public class Save : MonoBehaviour
             JsonSerializer serializer = new JsonSerializer
             {
                 TypeNameHandling = TypeNameHandling.Auto,
-                Formatting = Formatting.Indented
+                Formatting = Formatting.Indented,
+                Converters = { new BitArrayConverter() }
             };            
 
             serializer.Serialize(file, bb.components);

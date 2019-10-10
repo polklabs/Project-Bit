@@ -4,10 +4,10 @@ using IntegratedCircuits;
 
 public class Mono_Clock : MonoBehaviour
 {
-    private PQ160 IcClock;
+    private PQ160_Clock IcClock;
     private Coroutine Clock;
 
-    public void StartClock(float length, PQ160 clockRef)
+    public void StartClock(float length, PQ160_Clock clockRef)
     {
         IcClock = clockRef;
         StopClock();

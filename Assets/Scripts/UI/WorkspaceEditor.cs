@@ -14,6 +14,7 @@ public class WorkspaceEditor : MonoBehaviour
     public BreadBoard breadBoard;
     public CircuitPool circuitPool;
     public Mono_Switch mono_Switch;
+    public Oscilloscope oscilloscope;
 
     public Material outlineMat;
 
@@ -339,7 +340,19 @@ public class WorkspaceEditor : MonoBehaviour
 
     private void ProbeAction()
     {
+        int layer_mask = LayerMask.GetMask("Pin", "UI");
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+        if (/*!EventSystem.current.IsPointerOverGameObject() && */Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask))
+        {
+
+            oscilloscope.NodeA = hit.transform.name;
+
+        }
+        else
+        {
+            oscilloscope.NodeA = "";
+        }
     }
 
     private void NoneAction()
