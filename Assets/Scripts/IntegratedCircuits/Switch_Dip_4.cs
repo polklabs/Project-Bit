@@ -7,6 +7,7 @@
             SwitchType = SwitchTypes.Toggle;
             ModelName = "DIP4";
             NeedsObjRef = true;
+            OverwriteObjText = false;
         }
 
         public override void CustomMethod()

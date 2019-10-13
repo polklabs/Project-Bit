@@ -5,6 +5,8 @@ using System.Linq;
 using Helper;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System;
 
 public enum WorkspaceAction { Place, Remove, Probe, None };
 
@@ -32,6 +34,7 @@ public class WorkspaceEditor : MonoBehaviour
     private bool locationASelected = false;
     private string nodeIdA = "";
     private int indexA = 0;
+    private List<Vector3> wireNodes = new List<Vector3>();
     private bool showsError = false;
 
     /* For Probing */
@@ -42,7 +45,14 @@ public class WorkspaceEditor : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            SceneManager.LoadScene(0);
+            if (locationASelected)
+            {
+                ResetWire();
+            }
+            else
+            {
+                SceneManager.LoadScene(0);
+            }
         }
 
         switch (Action)
@@ -75,6 +85,18 @@ public class WorkspaceEditor : MonoBehaviour
                     break;
                 default:
                     NoneAction();
+                    break;
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1))//&& !EventSystem.current.IsPointerOverGameObject())
+        {
+            switch (Action)
+            {
+                case WorkspaceAction.Place:
+                    PlaceActionWireNode();
+                    break;                
+                default:
                     break;
             }
         }
@@ -163,14 +185,115 @@ public class WorkspaceEditor : MonoBehaviour
             }
 
         }
-        else if (icModel != null)
+        else if (icModel != null && ic.IcType != ICType.wire)
         {
             icModel.transform.position = GameObjectPool;
         }
     }
 
+    private void PlaceActionWireNode()
+    {
+        Debug.Log("Place Action Wire Node");
+        if (ic.IcType == ICType.wire)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (/*!EventSystem.current.IsPointerOverGameObject() && */Physics.Raycast(ray, out RaycastHit hit))
+            {
+                Vector3 point = hit.point;
+                point.y = Mathf.Clamp(point.y, 0.25f, 100f);
+                wireNodes.Add(point);
+                icModel.GetComponentInChildren<LineRenderer>().positionCount = wireNodes.Count;
+                icModel.GetComponentInChildren<LineRenderer>().SetPositions(wireNodes.ToArray());
+            }
+        }
+    }
+
+    private void PlaceActionWire_Hover()
+    {
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (/*!EventSystem.current.IsPointerOverGameObject() && */Physics.Raycast(ray, out RaycastHit hit))
+        {
+
+            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("UI"))
+            {
+                icModel.transform.position = GameObjectPool;
+                return;
+            }
+
+            bool isPin = hit.transform.gameObject.layer == LayerMask.NameToLayer("Pin");
+
+            string nodeId = hit.transform.gameObject.name;
+            int index = 0;
+            int x = Mathf.RoundToInt(hit.point.x);
+            int z = Mathf.RoundToInt(hit.point.z);
+
+            if (isPin)
+            {
+                string[] s = nodeId.Split('x');
+
+                if (s[0].Equals("1") || s[0].Equals("2"))
+                {
+                    index = z - int.Parse(s[2]) - 1;
+                }
+                else if (s[0].Equals("0"))
+                {
+                    index = x - int.Parse(s[1]) - 1;
+                }
+            }
+
+            Vector3 location = new Vector3(x, 0, z);
+
+
+            if (locationASelected)
+            {
+                List<Vector3> hoverLinePos = new List<Vector3>(wireNodes);
+                hoverLinePos.Add(hit.point);
+                icModel.GetComponentInChildren<LineRenderer>().positionCount = hoverLinePos.Count;
+                icModel.GetComponentInChildren<LineRenderer>().SetPositions(hoverLinePos.ToArray());
+            }
+            else
+            {
+                icModel.transform.position = location;
+            }
+
+            if (isPin && circuitPool.CanPlace(ic.IcType, ic.Pins, nodeId, index))
+            {
+                if (showsError)
+                {
+                    showsError = false;
+                    RemoveOutline(icModel.GetComponentInChildren<Renderer>());
+                }
+            }
+            else
+            {
+                if (!showsError)
+                {
+                    showsError = true;
+                    AddOutline(icModel.GetComponentInChildren<Renderer>());
+                }
+            }
+
+        }
+        else if (icModel != null)
+        {
+            if (ic.IcType != ICType.wire)
+            {
+                icModel.transform.position = GameObjectPool;
+            }
+        }
+    }
+
     private void PlaceAction_Hover()
     {
+        if(ic != null && ic.IcType == ICType.wire)
+        {
+            PlaceActionWire_Hover();
+            return;
+        }
+
         int layer_mask = LayerMask.GetMask("Pin", "UI");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -210,14 +333,10 @@ public class WorkspaceEditor : MonoBehaviour
                     case ICType.wire:
                         if (locationASelected)
                         {
-                            Vector3 locationA = CircuitHelper.GetPositionFromNode(nodeIdA, indexA);
-
-                            icModel.transform.position = new Vector3((locationA.x + x) / 2, 0, (locationA.z + z) / 2);
-                            icModel.transform.localScale = new Vector3(Vector3.Distance(location, locationA) / 2, 1, 1);
-                            //icModel.transform.Rotate(0, CircuitHelper.AngleBetweenVector3(location, locationA), 0);
-                            float angle = CircuitHelper.AngleBetweenVector3(location, locationA);
-                            angle = locationA.z > location.z ? -angle : angle;
-                            icModel.transform.rotation = Quaternion.Euler(0, angle, 0);
+                            List<Vector3> hoverLinePos = new List<Vector3>(wireNodes);                            
+                            hoverLinePos.Add(hit.point);
+                            icModel.GetComponentInChildren<LineRenderer>().positionCount = hoverLinePos.Count;
+                            icModel.GetComponentInChildren<LineRenderer>().SetPositions(hoverLinePos.ToArray());
                         }
                         else
                         {
@@ -250,7 +369,10 @@ public class WorkspaceEditor : MonoBehaviour
         }
         else if(icModel != null)
         {
-            icModel.transform.position = GameObjectPool;
+            if (ic.IcType != ICType.wire)
+            {
+                icModel.transform.position = GameObjectPool;
+            }
         }
     }
 
@@ -311,19 +433,22 @@ public class WorkspaceEditor : MonoBehaviour
         if (/*!EventSystem.current.IsPointerOverGameObject() && */Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask))
         {
             string stateString;
-            int state = breadBoard.GetNodeState(hit.transform.name);
-            if(state == 1)
-            {
-                stateString = "High";
-            }
-            else if(state == -1)
-            {
-                stateString = "Low";
-            }
-            else
-            {
-                stateString = "Off";
-            }
+            Vector2Int state = breadBoard.GetNodeStateFull(hit.transform.name);
+            stateString =  state.x.ToString() + " : " + state.y.ToString();
+
+            //int state = breadBoard.GetNodeState(hit.transform.name);
+            //if (state == 1)
+            //{
+            //    stateString = "High";
+            //}
+            //else if(state == -1)
+            //{
+            //    stateString = "Low";
+            //}
+            //else
+            //{
+            //    stateString = "Off";
+            //}
 
 
             ProbeText.text = "Probing Node\n" + hit.transform.name + "\n\nState\n" + stateString;
@@ -376,26 +501,43 @@ public class WorkspaceEditor : MonoBehaviour
             case ICType.wire:
                 if (locationASelected)
                 {
+                    Debug.Log("Place Action Wire Final");
                     breadBoard.LinkNodes(nodeIdA, indexA, nodeId, index);
-
-                    Vector3 locationA = CircuitHelper.GetPositionFromNode(nodeIdA, indexA);
+                    
+                    Vector3 finalPos = CircuitHelper.GetPositionFromNode(nodeId, index);
+                    finalPos.y = 0.25f;
+                    wireNodes.Add(finalPos);
 
                     GameObject placedWire = circuitPool.PlaceIntegratedCircuit(icName, nodeId, index, nodeIdA, indexA, false);
-                    placedWire.transform.position = new Vector3((locationA.x + location.x) / 2, 0, (locationA.z + location.z) / 2);
-                    placedWire.transform.localScale = new Vector3(Vector3.Distance(location, locationA) / 2, 1, 1);
-                    float angle = CircuitHelper.AngleBetweenVector3(location, locationA);
-                    angle = locationA.z > location.z ? -angle : angle;
-                    placedWire.transform.rotation = Quaternion.Euler(0, angle, 0);
 
-                    locationASelected = false;
-                    nodeIdA = "";
-                    indexA = 0;
+                    LineRenderer lineRenderer = placedWire.GetComponentInChildren<LineRenderer>();                    
+                    lineRenderer.positionCount = wireNodes.Count;
+                    lineRenderer.SetPositions(wireNodes.ToArray());
+
+                    CircuitHelper.CreateColliderChain(placedWire, wireNodes);
+
+                    Wire wire = (Wire)breadBoard.GetIntegratedCircuit(Guid.Parse(placedWire.name));
+                    List<WirePoint> wirePoints = new List<WirePoint>();
+                    foreach(Vector3 v in wireNodes)
+                    {
+                        wirePoints.Add(new WirePoint(v));
+                    }
+                    wire.points = wirePoints.ToArray();
+
+                    ResetWire();
                 }
                 else
                 {
+                    Debug.Log("Place Action Wire Initial");
+                    wireNodes.Clear();
                     locationASelected = true;
                     nodeIdA = nodeId;
                     indexA = index;
+
+                    Vector3 startPos = CircuitHelper.GetPositionFromNode(nodeId, index);
+                    startPos.y = 0.25f;
+                    wireNodes.Add(startPos);
+                    icModel.transform.position = new Vector3(0, 0, 0);
                 }
                 break;
             default:
@@ -407,6 +549,8 @@ public class WorkspaceEditor : MonoBehaviour
                 break;
         }
     }
+
+    
 
     public void AttachIC(string name)
     {
@@ -434,23 +578,25 @@ public class WorkspaceEditor : MonoBehaviour
         showsError = false;
     }
 
+    public void ResetWire()
+    {
+        wireNodes.Clear();
+        locationASelected = false;
+        nodeIdA = "";
+        indexA = 0;
+        icModel.GetComponentInChildren<LineRenderer>().positionCount = 2;
+        icModel.GetComponentInChildren<LineRenderer>().SetPositions(new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 1, 0) });
+    }
+
     private void AddOutline(Renderer r)
     {
         hoverMaterials = r.materials;
-        r.materials = Enumerable.Repeat(outlineMat, r.materials.Length).ToArray();
-        ////Renderer rNew = obj.GetComponent<Renderer>();
-        //List<Material> materialsNew = new List<Material>(r.materials);
-        //materialsNew.Add(outlineMat);
-        //r.materials = materialsNew.ToArray();        
+        r.materials = Enumerable.Repeat(outlineMat, r.materials.Length).ToArray();   
     }
 
     private void RemoveOutline(Renderer r)
     {
         r.materials = hoverMaterials;
-        ////Renderer r = obj.GetComponent<Renderer>();
-        //List<Material> materialsOld = new List<Material>(r.materials);
-        //materialsOld.RemoveAt(materialsOld.Count - 1);
-        //r.materials = materialsOld.ToArray();
     }
 
 }

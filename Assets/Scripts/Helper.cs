@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Helper
@@ -49,6 +50,36 @@ namespace Helper
             }
 
             return new Vector3(x, 0, z);
+        }
+
+        public static void CreateColliderChain(GameObject obj, List<Vector3> wireNodes)
+        {
+            for (int i = 0; i < wireNodes.Count - 1; i++)
+            {
+                Vector3 pointA = wireNodes[i];
+                Vector3 pointB = wireNodes[i + 1];
+
+                Vector3 rotation = Quaternion.FromToRotation(pointA - pointB, Vector3.down).eulerAngles;
+                rotation.x *= -1;
+                rotation.z *= -1;
+
+                float height = Vector3.Distance(pointA, pointB) + 0.35f;
+
+                Vector3 point = (pointA + pointB) / 2.0f;
+
+                GameObject collider = new GameObject();
+                collider.transform.parent = obj.transform;
+
+                CapsuleCollider capCol = collider.AddComponent<CapsuleCollider>();
+                capCol.height = height;
+                capCol.radius = 0.2f;
+
+                collider.transform.position = point;
+                collider.transform.rotation = Quaternion.Euler(rotation);
+
+                collider.layer = LayerMask.NameToLayer("Component");
+
+            }
         }
 
     }

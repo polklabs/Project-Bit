@@ -71,6 +71,14 @@ public class BreadBoard : MonoBehaviour
         }
         return 0;
     }
+    public Vector2Int GetNodeStateFull(string nodeId)
+    {
+        if (nodes.ContainsKey(nodeId))
+        {
+            return new Vector2Int(nodes[nodeId].valuePos, nodes[nodeId].valueNeg);
+        }
+        return new Vector2Int(0, 0);
+    }
 
     public bool NodeHasConnection(string nodeId, int index)
     {

@@ -151,21 +151,17 @@ public class CircuitPool : MonoBehaviour
     {
         GameObject obj = GetIntegratedCircuitObj(circuit.ModelName);
 
-        if (circuit != null)
+        if (circuit.NeedsObjRef)
         {
-            if (circuit.NeedsObjRef)
-            {
-                circuit.AssignObjRef(obj);
-            }
+            circuit.AssignObjRef(obj);
+        }
 
-            obj.name = circuit.SetBreadBoard(breadBoard).ToString();
+        obj.name = circuit.SetBreadBoard(breadBoard).ToString();
 
-            Text text = obj.GetComponentInChildren<Text>();
-            if (text != null && text.text.Equals(""))
-            {
-                text.text = circuit.GetType().Name.Split('_')[0] + "\n\n" + circuit.GetId().ToString();
-            }
-
+        Text text = obj.GetComponentInChildren<Text>();
+        if (text != null && circuit.OverwriteObjText)
+        {
+            text.text = circuit.GetType().Name.Split('_')[0] + "\n\n" + circuit.GetId().ToString();
         }
 
         return obj;

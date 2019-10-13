@@ -26,7 +26,8 @@ namespace IntegratedCircuits
 
         protected override void InternalUpdate()
         {
-            Chip.Input[0] = PinState[0] == State.HIGH ? true : false;            
+            Chip.Input[0] = PinState[0] == State.HIGH ? true : false;
+            Chip.Input[1] = PinState[1] == State.HIGH ? true : false;
             Chip.Update();
             PinState[2] = Chip.Output[0] ? State.HIGH : State.LOW;
             PinState[4] = Chip.Output[1] ? State.HIGH : State.LOW;

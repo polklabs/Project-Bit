@@ -95,14 +95,17 @@ public class Load : MonoBehaviour
 
                         obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), ic.GetPinNode(1), ic.GetPinNodeIndex(1), true);
 
-                        locationA = CircuitHelper.GetPositionFromNode(ic.GetPinNode(0), ic.GetPinNodeIndex(0));
-                        locationB = CircuitHelper.GetPositionFromNode(ic.GetPinNode(1), ic.GetPinNodeIndex(1));
+                        List<Vector3> vectors = new List<Vector3>();
+                        foreach(WirePoint w in ((Wire)ic).points)
+                        {
+                            vectors.Add(new Vector3(w.x, w.y, w.z));
+                        }
 
-                        obj.transform.position = new Vector3((locationA.x + locationB.x) / 2, 0, (locationA.z + locationB.z) / 2);
-                        obj.transform.localScale = new Vector3(Vector3.Distance(locationB, locationA) / 2, 1, 1);
-                        angle = CircuitHelper.AngleBetweenVector3(locationB, locationA);
-                        angle = locationA.z > locationB.z ? -angle : angle;
-                        obj.transform.rotation = Quaternion.Euler(0, angle, 0);
+                        LineRenderer lineRenderer = obj.GetComponentInChildren<LineRenderer>();
+                        lineRenderer.positionCount = vectors.Count;
+                        lineRenderer.SetPositions(vectors.ToArray());
+
+                        CircuitHelper.CreateColliderChain(obj, vectors);
 
                         break;
                     default:

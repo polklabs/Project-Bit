@@ -1,8 +1,10 @@
-﻿namespace Chips
+﻿using Gates;
+
+namespace Chips
 {
     public class Binary_Counter_4Bit : Chip
     {
-        public Binary_Counter_4Bit() : base(1, 4)
+        public Binary_Counter_4Bit() : base(2, 4)
         {
             D_FlipFlop_Re chipA = new D_FlipFlop_Re();
             int indexA = AddChip(chipA);
@@ -16,8 +18,15 @@
             D_FlipFlop_Re chipD = new D_FlipFlop_Re();
             int indexD = AddChip(chipD);
 
+            Gate gateE = new XORGate();
+            int indexE = AddGate(gateE);
+
             //Inputs
-            AddWire(ID, new Wire(0, 0, indexA, true));
+            AddWire(ID, new Wire(0, 0, indexE, false));
+            AddWire(ID, new Wire(1, 1, indexE, false));
+
+            //Gate E
+            AddWire(gateE.ID, new Wire(0, 0, indexA, true));
 
             //Chip A
             AddWire(chipA.ID, new Wire(0, 0, -1, true));

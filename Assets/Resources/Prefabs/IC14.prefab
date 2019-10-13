@@ -175,7 +175,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: 'PQ010G
+
+
+    8c2e5f7f-09e6-4277-8660-941ae635329b'
 --- !u!65 &5885865815790519166
 BoxCollider:
   m_ObjectHideFlags: 0

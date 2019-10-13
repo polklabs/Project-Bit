@@ -185,6 +185,10 @@ namespace Chips
             {
                 chip.Dirty.SetAll(false);
             }
+            foreach (Gate gate in Gates)
+            {
+                gate.SetClean();
+            }
 
             foreach (Wire wire in WireDict[ID])
             {

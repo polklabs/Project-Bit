@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Gates
 {
     [DataContract]
-    public class Gate
+    public abstract class Gate
     {
         [DataMember]
         public Guid ID { get; set; }
@@ -33,8 +33,9 @@ namespace Gates
 
         [DataMember]
         protected bool Dirty;
+        private bool oldOutput;
 
-        protected Gate(int inputs)
+        public Gate(int inputs)
         {
             ID = Guid.NewGuid();
 
@@ -52,6 +53,10 @@ namespace Gates
         public bool IsDirty()
         {
             return Dirty;
+        }
+        public void SetClean()
+        {
+            oldOutput = Output;
         }
 
         public Gate SetInputBit(int index, bool value)
@@ -78,8 +83,6 @@ namespace Gates
 
         public bool Update()
         {
-            bool oldOutput = Output;
-
             Output = GetOutput();
 
             Dirty = oldOutput != Output;

@@ -27,6 +27,7 @@ namespace IntegratedCircuits
         [DataMember]
         //State of connected pin - -1=low, 0=unknown, 1=high
         protected readonly State[] PinState;
+        protected State[] oldState;
 
         [DataMember]
         //Whether the pin is input or output
@@ -40,6 +41,7 @@ namespace IntegratedCircuits
         public bool NeedsObjRef;      
         public string ModelName;
         public readonly int Pins;
+        public bool OverwriteObjText;
 
         protected BreadBoard BreadBoardRef;
         protected GameObject GameObjectRef;
@@ -52,6 +54,7 @@ namespace IntegratedCircuits
             IcType = ICType.unknown;
             NeedsObjRef = false;
             ModelName = "Unknown";
+            OverwriteObjText = true;
 
             Pins = numPins;
             Vdd  = numPins - 1;
@@ -117,30 +120,10 @@ namespace IntegratedCircuits
 
         public void Update(bool disable)
         {
-            //Debug.Log("Update: " + Id.ToString());
-            State[] oldState = (State[])PinState.Clone();
+            //Debug.Log("Update: " + Id.ToString());            
 
             //Update all input states
-            for(int i = 0; i < Pins; i++)
-            {
-                if (PinModes[i] == PinMode.Input && !PinNodes[i].Equals(""))
-                {
-                    int inputState = disable ? 0 : BreadBoardRef.GetNodeState(PinNodes[i]); //TODO get node state from pinNodes[i]
-                    if(inputState != 0)
-                    {
-                        PinState[i] = (State)inputState;
-                    }
-                    else
-                    {
-                        PinState[i] = DefaultState[i];
-                    }
-                    
-                }
-                //else
-                //{
-                //    PinState[i] = State.OFF;
-                //}
-            }
+            UpdateState(disable, false);
 
             //Update internal
             if(PinState[Vdd] == State.HIGH && PinState[Gnd] == State.LOW)
@@ -186,6 +169,33 @@ namespace IntegratedCircuits
                 }
             }
 
+        }
+
+        protected void UpdateState(bool disable, bool updateOutputs)
+        {
+            oldState = (State[])PinState.Clone();
+
+            for (int i = 0; i < Pins; i++)
+            {
+                if (!PinNodes[i].Equals("")) {
+                    if (PinModes[i] == PinMode.Input)
+                    {
+                        int inputState = disable ? 0 : BreadBoardRef.GetNodeState(PinNodes[i]);
+                        if (inputState != 0)
+                        {
+                            PinState[i] = (State)inputState;
+                        }
+                        else
+                        {
+                            PinState[i] = DefaultState[i];
+                        }
+                    }
+                    else if(updateOutputs)
+                    {
+                        PinState[i] = State.OFF;
+                    }
+                }
+            }
         }
 
         public virtual void CustomMethod()

@@ -133,22 +133,22 @@ namespace userInterface {
         public static Part GND              = new Part("Ground",            "Gnd",          PartGroups.Wires);        
         public static Part WIRE_GREEN       = new Part("Wire, Green",       "Wire_Green",   PartGroups.Wires).SetMultiPoint();
         public static Part WIRE_RED         = new Part("Wire, Red",         "Wire_Red",     PartGroups.Wires).SetMultiPoint();
-        //public static Part WIRE_BLUE        = new Part("Wire, Blue",        "Wire_Blue",    PartGroups.Wires).SetMultiPoint();
-        //public static Part WIRE_YELLOW      = new Part("Wire, Yellow",      "Wire_Yellow",  PartGroups.Wires).SetMultiPoint();
-        //public static Part WIRE_BLACK       = new Part("Wire, Black",       "Wire_Black",   PartGroups.Wires).SetMultiPoint();
-        //public static Part WIRE_WHITE       = new Part("Wire, White",       "Wire_White",   PartGroups.Wires).SetMultiPoint();
-        //public static Part WIRE_PURPLE      = new Part("Wire, Purple",      "Wire_Purple",  PartGroups.Wires).SetMultiPoint();
-        //public static Part WIRE_ORANGE      = new Part("Wire, Orange",      "Wire_Orange",  PartGroups.Wires).SetMultiPoint();
+        public static Part WIRE_BLUE        = new Part("Wire, Blue",        "Wire_Blue",    PartGroups.Wires).SetMultiPoint();
+        public static Part WIRE_YELLOW      = new Part("Wire, Yellow",      "Wire_Yellow",  PartGroups.Wires).SetMultiPoint();
+        public static Part WIRE_BLACK       = new Part("Wire, Black",       "Wire_Black",   PartGroups.Wires).SetMultiPoint();
+        public static Part WIRE_WHITE       = new Part("Wire, White",       "Wire_White",   PartGroups.Wires).SetMultiPoint();
+        public static Part WIRE_PURPLE      = new Part("Wire, Purple",      "Wire_Purple",  PartGroups.Wires).SetMultiPoint();
+        public static Part WIRE_ORANGE      = new Part("Wire, Orange",      "Wire_Orange",  PartGroups.Wires).SetMultiPoint();
 
         // Basic ------------------------------------------------------------------------------------
-        //public static Part QUAD_AND   = new Part("And Gates, Quad 2-Input (PQ010G)",      "PQ010G_AndGate",       PartGroups.BasicCircuit); // 74LS08
-        //public static Part QUAD_NAND  = new Part("Nand Gates, Quad 2-Input (PQ011G)",     "PQ011G_NandGate",      PartGroups.BasicCircuit); // 74LS00
-        //public static Part QUAD_OR    = new Part("Or Gates, Quad 2-Input (PQ020G)",       "PQ020G_OrGate",        PartGroups.BasicCircuit); // 74LS32
-        //public static Part QUAD_NOR   = new Part("Nor Gates, Quad 2-Input (PQ021G)",      "PQ021G_NorGate",       PartGroups.BasicCircuit); // 74LS02
-        //public static Part QUAD_XOR   = new Part("Xor Gates, Quad 2-Input (PQ030G)",      "PQ030G_XorGate",       PartGroups.BasicCircuit); // 74LS86
-        //public static Part QUAD_XNOR  = new Part("Xnor Gates, Quad 2-Input (PQ031G)",     "PQ031G_XnorGate",      PartGroups.BasicCircuit);
-        //public static Part OCTAL_BUS  = new Part("Buffer Gates, Octal 1-Input (PQ040G)",  "PQ040G_BufferGate",    PartGroups.BasicCircuit); // 74LS245
-        //public static Part HEX_NOT    = new Part("Not Gates, Hex 1-Input (PQ041G)",       "PQ041G_NotGate",       PartGroups.BasicCircuit); // 74LS04
+        public static Part QUAD_AND   = new Part("And Gates, Quad 2-Input (PQ010G)",      "PQ010G_AndGate",       PartGroups.BasicCircuit); // 74LS08
+        public static Part QUAD_NAND  = new Part("Nand Gates, Quad 2-Input (PQ011G)",     "PQ011G_NandGate",      PartGroups.BasicCircuit); // 74LS00
+        public static Part QUAD_OR    = new Part("Or Gates, Quad 2-Input (PQ020G)",       "PQ020G_OrGate",        PartGroups.BasicCircuit); // 74LS32
+        public static Part QUAD_NOR   = new Part("Nor Gates, Quad 2-Input (PQ021G)",      "PQ021G_NorGate",       PartGroups.BasicCircuit); // 74LS02
+        public static Part QUAD_XOR   = new Part("Xor Gates, Quad 2-Input (PQ030G)",      "PQ030G_XorGate",       PartGroups.BasicCircuit); // 74LS86
+        public static Part QUAD_XNOR  = new Part("Xnor Gates, Quad 2-Input (PQ031G)",     "PQ031G_XnorGate",      PartGroups.BasicCircuit); // 74LS??
+        public static Part OCTAL_BUS  = new Part("Buffer Gates, Octal 1-Input (PQ040G)",  "PQ040G_BufferGate",    PartGroups.BasicCircuit); // 74LS245
+        public static Part HEX_NOT    = new Part("Not Gates, Hex 1-Input (PQ041G)",       "PQ041G_NotGate",       PartGroups.BasicCircuit); // 74LS04
 
         // Special ----------------------------------------------------------------------------------
         //public static Part BCD_DEC_DECODE   = new Part("Bcd to decimal decoder (PQ110)",      "PQ110_BcdToDec",   PartGroups.SpecialCircuit);
