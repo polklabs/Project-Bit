@@ -151,6 +151,7 @@ namespace userInterface {
         public static Part HEX_NOT    = new Part("Not Gates, Hex 1-Input (PQ041G)",       "PQ041G_NotGate",       PartGroups.BasicCircuit); // 74LS04
 
         // Special ----------------------------------------------------------------------------------
+        public static Part CLOCK            = new Part("Clock (PQ160)",                       "PQ160_Clock",      PartGroups.SpecialCircuit);
         //public static Part BCD_DEC_DECODE   = new Part("Bcd to decimal decoder (PQ110)",      "PQ110_BcdToDec",   PartGroups.SpecialCircuit);
         //public static Part BCD_7SEG_DECODE  = new Part("Bcd to 7 segment decoder (PQ111)",    "PQ111_BcdToSeg",   PartGroups.SpecialCircuit);
         //public static Part DUAL_JK_FF       = new Part("Dual JK M/S Flip Flop (PQ120)",       "PQ120_JkFf",       PartGroups.SpecialCircuit); // 74LS107
@@ -169,8 +170,7 @@ namespace userInterface {
         //public static Part EEPROM_16K   = new Part("EEPROM 16K (2K x 8) (PQ220)",         "PQ220_EEPROM16K",          PartGroups.Memory); // 28C16
         //public static Part RAM_64       = new Part("64-Bit Random Access Memory (PQ230)", "PQ230_Ram64Bit",           PartGroups.Memory); // 74189
 
-        // Inputs -----------------------------------------------------------------------------------
-        public static Part CLOCK            = new Part("Clock (PQ160)",     "PQ160_Clock",      PartGroups.Inputs);
+        // Inputs -----------------------------------------------------------------------------------        
         public static Part SWITCH_TOGGLE    = new Part("Switch, Toggle",    "Switch_Toggle",    PartGroups.Inputs);
         public static Part SWITCH_MOMENT    = new Part("Switch, Momentary", "Switch_Momentary", PartGroups.Inputs);
         public static Part SWITCH_PULSE     = new Part("Switch, Pulse",     "Switch_Pulse",     PartGroups.Inputs);

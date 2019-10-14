@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Wire
   - Switch
+  - Component
   layers:
   - Default
   - TransparentFX

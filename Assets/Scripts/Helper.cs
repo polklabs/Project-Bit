@@ -52,12 +52,12 @@ namespace Helper
             return new Vector3(x, 0, z);
         }
 
-        public static void CreateColliderChain(GameObject obj, List<Vector3> wireNodes)
+        public static void CreateColliderChain(GameObject obj, Vector3[] wireNodes)
         {
-            for (int i = 0; i < wireNodes.Count - 1; i++)
+            for (int i = 1; i < wireNodes.Length; i++)
             {
-                Vector3 pointA = wireNodes[i];
-                Vector3 pointB = wireNodes[i + 1];
+                Vector3 pointA = wireNodes[i - 1];
+                Vector3 pointB = wireNodes[i];
 
                 Vector3 rotation = Quaternion.FromToRotation(pointA - pointB, Vector3.down).eulerAngles;
                 rotation.x *= -1;
@@ -76,10 +76,56 @@ namespace Helper
 
                 collider.transform.position = point;
                 collider.transform.rotation = Quaternion.Euler(rotation);
+                collider.transform.tag = "Wire";
 
                 collider.layer = LayerMask.NameToLayer("Component");
 
             }
+        }
+
+    }
+
+    public static class WireHelper
+    {
+        public static int MaxDistance = 1415;
+        public static int MinDistance = 0;
+        public static int MaxHeight = 3;
+        public static float MinHeight = 0.5f;
+
+        public static int NumberOfWirePoints(Vector3 A, Vector3 B)
+        {
+            return Mathf.FloorToInt(Vector3.Distance(A, B) * 1.75f);
+        }
+
+        public static Vector3[] CurvedPoints(Vector3 A, Vector3 B)
+        {
+            int points = NumberOfWirePoints(A, B);            
+            Vector3[] newPoints = new Vector3[points];
+            if (points == 0)
+            {
+                return newPoints;
+            }
+
+            float k = (Mathf.Log10(Vector3.Distance(A, B) - MinDistance) / Mathf.Log10(MaxDistance - MinDistance)) * (MaxHeight - MinHeight);
+            float a = (-k) / 1;
+
+            float step = 2.0f / (points+1.0f);
+            Debug.Log(step);
+            for(int i = 0; i < points; i++)
+            {
+                float x = -1.0f + (step * (i + 1));
+                float y = (a * Mathf.Pow(x, 2)) + k;
+
+                float xDist = Mathf.Abs(A.x - B.x);
+                float xStep = (xDist / (points + 1.0f)) * Mathf.Sign(B.x - A.x);
+
+                float zDist = Mathf.Abs(A.z - B.z);
+                float zStep = (zDist / (points + 1.0f)) *Mathf.Sign(B.z - A.z);
+
+                newPoints[i] = new Vector3(A.x + (xStep * (i+ 1)), y, A.z + (zStep * (i + 1)));
+            }
+
+            return newPoints;
         }
 
     }

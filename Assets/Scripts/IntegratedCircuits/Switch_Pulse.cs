@@ -6,7 +6,7 @@
         {
             SwitchType = SwitchTypes.Pulse;
 
-            ModelName = "momentary_switch";
+            ModelName = "pulse_switch";
         }
     }
 }

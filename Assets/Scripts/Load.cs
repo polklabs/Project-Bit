@@ -50,7 +50,7 @@ public class Load : MonoBehaviour
             {
                 TypeNameHandling = TypeNameHandling.Auto,
                 ObjectCreationHandling = ObjectCreationHandling.Replace,
-                Converters = { new BitArrayConverter() }
+                Converters = { new BitArrayConverter(), new Vector3Converter() }
             };
             Dictionary<Guid, IntegratedCircuit> components = (Dictionary<Guid, IntegratedCircuit>)serializer.Deserialize(file, typeof(Dictionary<Guid, IntegratedCircuit>));
 
@@ -95,15 +95,11 @@ public class Load : MonoBehaviour
 
                         obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), ic.GetPinNode(1), ic.GetPinNodeIndex(1), true);
 
-                        List<Vector3> vectors = new List<Vector3>();
-                        foreach(WirePoint w in ((Wire)ic).points)
-                        {
-                            vectors.Add(new Vector3(w.x, w.y, w.z));
-                        }
+                        Vector3[] vectors = ((Wire)ic).points;
 
                         LineRenderer lineRenderer = obj.GetComponentInChildren<LineRenderer>();
-                        lineRenderer.positionCount = vectors.Count;
-                        lineRenderer.SetPositions(vectors.ToArray());
+                        lineRenderer.positionCount = vectors.Length;
+                        lineRenderer.SetPositions(vectors);
 
                         CircuitHelper.CreateColliderChain(obj, vectors);
 

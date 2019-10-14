@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using Newtonsoft.Json;
 
 public class BitArrayConverter : JsonConverter
 {
@@ -12,23 +14,35 @@ public class BitArrayConverter : JsonConverter
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
-        var bytes = serializer.Deserialize<byte[]>(reader);
-        return bytes == null ? null : new BitArray(bytes);
+        string bytes = serializer.Deserialize<string>(reader);
+        bool[] values = Enumerable.Repeat(false, bytes.Length).ToArray();
+        for(int i = 0; i < bytes.Length; i++)
+        {
+            if (bytes[i].Equals('1'))
+            {
+                values[i] = true;
+            }
+        }
+        return new BitArray(values);
     }
 
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        serializer.Serialize(writer, ((BitArray)value).BitArrayToByteArray());
+        serializer.Serialize(writer, ((BitArray)value).ToDigitString());
     }
 
 }
 
 public static class BitArrayExtensions
 {
-    public static byte[] BitArrayToByteArray(this BitArray bits)
+    public static string ToDigitString(this BitArray array)
     {
-        byte[] ret = new byte[(bits.Length - 1) / 8 + 1];
-        bits.CopyTo(ret, 0);
-        return ret;
+        var builder = new StringBuilder();
+        foreach(bool bit in array.Cast<bool>())
+        {
+            builder.Append(bit ? "1" : "0");
+        }
+        return builder.ToString();
     }
+
 }

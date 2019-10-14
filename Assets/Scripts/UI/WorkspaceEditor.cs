@@ -70,7 +70,7 @@ public class WorkspaceEditor : MonoBehaviour
                 break;
         }
 
-        if (Input.GetMouseButtonDown(0) )//&& !EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetMouseButtonDown(0))
         {
             switch (Action)
             {
@@ -89,7 +89,7 @@ public class WorkspaceEditor : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(1))//&& !EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetMouseButtonDown(1))
         {
             switch (Action)
             {
@@ -143,17 +143,11 @@ public class WorkspaceEditor : MonoBehaviour
 
     private void PlaceAction()
     {
-        int layer_mask = LayerMask.GetMask("Pin", "UI");
+        int layer_mask = LayerMask.GetMask("Pin");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (/*!EventSystem.current.IsPointerOverGameObject() && */Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask))
+        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
         {
-
-            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("UI"))
-            {                
-                return;
-            }
-
             string nodeId = hit.transform.gameObject.name;
             int x = Mathf.RoundToInt(hit.point.x);
             int z = Mathf.RoundToInt(hit.point.z);
@@ -193,12 +187,11 @@ public class WorkspaceEditor : MonoBehaviour
 
     private void PlaceActionWireNode()
     {
-        Debug.Log("Place Action Wire Node");
         if (ic.IcType == ICType.wire)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (/*!EventSystem.current.IsPointerOverGameObject() && */Physics.Raycast(ray, out RaycastHit hit))
+            if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
             {
                 Vector3 point = hit.point;
                 point.y = Mathf.Clamp(point.y, 0.25f, 100f);
@@ -214,7 +207,7 @@ public class WorkspaceEditor : MonoBehaviour
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (/*!EventSystem.current.IsPointerOverGameObject() && */Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
         {
 
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("UI"))
@@ -294,18 +287,11 @@ public class WorkspaceEditor : MonoBehaviour
             return;
         }
 
-        int layer_mask = LayerMask.GetMask("Pin", "UI");
+        int layer_mask = LayerMask.GetMask("Pin");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (/*!EventSystem.current.IsPointerOverGameObject() && */Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask))
+        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
         {
-
-            if(hit.transform.gameObject.layer == LayerMask.NameToLayer("UI") && icModel != null)
-            {
-                icModel.transform.position = GameObjectPool;
-                return;
-            }
-
             string nodeId = hit.transform.gameObject.name;
             int x = Mathf.RoundToInt(hit.point.x);
             int z = Mathf.RoundToInt(hit.point.z);
@@ -380,7 +366,7 @@ public class WorkspaceEditor : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Component"))
             {
@@ -401,11 +387,10 @@ public class WorkspaceEditor : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Component"))
             {
-
                 if (hoverObject != hit.transform.gameObject)
                 {
                     if (hoverObject != null)
@@ -423,32 +408,37 @@ public class WorkspaceEditor : MonoBehaviour
                 hoverObject = null;
             }
         }
+        else if (hoverObject != null)
+        {
+            RemoveOutline(hoverObject.GetComponentInChildren<Renderer>());
+            hoverObject = null;
+        }
     }
 
     private void ProbeAction_Hover()
     {
-        int layer_mask = LayerMask.GetMask("Pin", "UI");
+        int layer_mask = LayerMask.GetMask("Pin");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (/*!EventSystem.current.IsPointerOverGameObject() && */Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask))
+        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
         {
             string stateString;
-            Vector2Int state = breadBoard.GetNodeStateFull(hit.transform.name);
-            stateString =  state.x.ToString() + " : " + state.y.ToString();
+            //Vector2Int state = breadBoard.GetNodeStateFull(hit.transform.name);
+            //stateString =  state.x.ToString() + " : " + state.y.ToString();
 
-            //int state = breadBoard.GetNodeState(hit.transform.name);
-            //if (state == 1)
-            //{
-            //    stateString = "High";
-            //}
-            //else if(state == -1)
-            //{
-            //    stateString = "Low";
-            //}
-            //else
-            //{
-            //    stateString = "Off";
-            //}
+            int state = breadBoard.GetNodeState(hit.transform.name);
+            if (state == 1)
+            {
+                stateString = "High";
+            }
+            else if (state == -1)
+            {
+                stateString = "Low";
+            }
+            else
+            {
+                stateString = "Off";
+            }
 
 
             ProbeText.text = "Probing Node\n" + hit.transform.name + "\n\nState\n" + stateString;
@@ -468,7 +458,7 @@ public class WorkspaceEditor : MonoBehaviour
         int layer_mask = LayerMask.GetMask("Pin", "UI");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (/*!EventSystem.current.IsPointerOverGameObject() && */Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask))
+        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
         {
 
             oscilloscope.NodeA = hit.transform.name;
@@ -484,7 +474,7 @@ public class WorkspaceEditor : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
         {
             if (hit.transform.tag == "Switch")
             {
@@ -501,12 +491,29 @@ public class WorkspaceEditor : MonoBehaviour
             case ICType.wire:
                 if (locationASelected)
                 {
-                    Debug.Log("Place Action Wire Final");
                     breadBoard.LinkNodes(nodeIdA, indexA, nodeId, index);
                     
                     Vector3 finalPos = CircuitHelper.GetPositionFromNode(nodeId, index);
                     finalPos.y = 0.25f;
                     wireNodes.Add(finalPos);
+
+                    for(int i = wireNodes.Count - 2; i >= 0; i--)
+                    {
+                        Vector3[] vectors = WireHelper.CurvedPoints(wireNodes[i], wireNodes[i + 1]);
+                        foreach(Vector3 v in vectors.Reverse())
+                        {
+                            float newY = finalPos.y;
+                            RaycastHit hit;
+                            if(Physics.Raycast(new Vector3(v.x, 200, v.z), -Vector3.up, out hit, 250))
+                            {
+                                newY += hit.point.y;
+                            }
+
+                            newY = Mathf.Max(newY, v.y);
+
+                            wireNodes.Insert(i + 1, new Vector3(v.x, newY, v.z));
+                        }
+                    }
 
                     GameObject placedWire = circuitPool.PlaceIntegratedCircuit(icName, nodeId, index, nodeIdA, indexA, false);
 
@@ -514,21 +521,15 @@ public class WorkspaceEditor : MonoBehaviour
                     lineRenderer.positionCount = wireNodes.Count;
                     lineRenderer.SetPositions(wireNodes.ToArray());
 
-                    CircuitHelper.CreateColliderChain(placedWire, wireNodes);
+                    CircuitHelper.CreateColliderChain(placedWire, wireNodes.ToArray());
 
                     Wire wire = (Wire)breadBoard.GetIntegratedCircuit(Guid.Parse(placedWire.name));
-                    List<WirePoint> wirePoints = new List<WirePoint>();
-                    foreach(Vector3 v in wireNodes)
-                    {
-                        wirePoints.Add(new WirePoint(v));
-                    }
-                    wire.points = wirePoints.ToArray();
+                    wire.points = wireNodes.ToArray();
 
                     ResetWire();
                 }
                 else
                 {
-                    Debug.Log("Place Action Wire Initial");
                     wireNodes.Clear();
                     locationASelected = true;
                     nodeIdA = nodeId;
@@ -560,8 +561,6 @@ public class WorkspaceEditor : MonoBehaviour
         ic = circuitPool.GetIntegratedCircuit(icName);
         icModel = circuitPool.GetIntegratedCircuitObj(ic);
         icModel = Instantiate(icModel, GameObjectPool, Quaternion.identity) as GameObject;
-        //icModel.transform.parent = 
-
     }
 
     public void ClearIC()

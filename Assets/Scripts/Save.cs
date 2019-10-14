@@ -40,7 +40,7 @@ public class Save : MonoBehaviour
             {
                 TypeNameHandling = TypeNameHandling.Auto,
                 Formatting = Formatting.Indented,
-                Converters = { new BitArrayConverter() }
+                Converters = { new BitArrayConverter(), new Vector3Converter() }
             };            
 
             serializer.Serialize(file, bb.components);
