@@ -14,17 +14,27 @@ public class Fabricator : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {        
-        placeBreadBoard(0, 0, 0, false);        
-        placeBreadBoard(0, 0, 18, false);
-        placeBreadBoard(1, 0, 4, false);
-        placeBreadBoard(3, 0, 0, false);
+    {
+        newBoard(0, 0, false);
+        newBoard(0, -1, true);
     }
 
-    // Update is called once per frame
-    void Update()
+    void newBoard(int x, int y, bool rotation)
     {
-        
+        if (rotation)
+        {
+            placeBreadBoard(0, x, y, rotation);
+            placeBreadBoard(0, x + 18, y, rotation);
+            placeBreadBoard(1, x + 4, y, rotation);
+            placeBreadBoard(3, x, y, rotation);
+        }
+        else
+        {
+            placeBreadBoard(0, x, y, rotation);
+            placeBreadBoard(0, x, y + 18, rotation);
+            placeBreadBoard(1, x, y + 4, rotation);
+            placeBreadBoard(3, x, y, rotation);
+        }
     }
 
     void placeBreadBoard(int type, int x, int y, bool rotation)
@@ -36,8 +46,13 @@ public class Fabricator : MonoBehaviour
         }
         else if (type == 3)
         {
-            GameObject obj = Instantiate(breadBoardPrefab, new Vector3(x + 32, 0, y + 10.5f), Quaternion.identity) as GameObject;
+            GameObject obj = Instantiate(breadBoardPrefab, new Vector3(x + (rotation ? 10.5f : 32), 0, y + (rotation ? -32 : 10.5f)), Quaternion.identity) as GameObject;
             obj.transform.parent = breadBoardParent;
+
+            if (rotation)
+            {
+                obj.transform.rotation = Quaternion.Euler(0, 90, 0);
+            }
         }
         else
         {
@@ -62,7 +77,7 @@ public class Fabricator : MonoBehaviour
                 {
                     for (int j = 1; j < 3; j++)
                     {
-                        GameObject temp = Instantiate(pinX, new Vector3(i + x, -0.4f, j + y), Quaternion.identity) as GameObject;
+                        GameObject temp = Instantiate(pinX, new Vector3(i + x, -0.4f, j + y), Quaternion.Euler(0, 0, 0)) as GameObject;
                         temp.name = parent.name + "x" + j.ToString();
                         temp.transform.parent = parent.transform;
                         breadBoard.AddNode(temp.name, type);
@@ -80,6 +95,11 @@ public class Fabricator : MonoBehaviour
             }
             index++;
         }
+
+        if (rotation)
+        {
+            parent.transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
     }
 
     void placeMainBoard(int type, int x, int y, bool rotation)
@@ -91,10 +111,15 @@ public class Fabricator : MonoBehaviour
 
         for (int i = 1; i < 64; i++)
         {
-            GameObject temp = Instantiate(pinZ, new Vector3(i + x, -0.4f, 3 + y), Quaternion.identity) as GameObject;
+            GameObject temp = Instantiate(pinZ, new Vector3(i + x, -0.4f, 3 + y), Quaternion.Euler(0, 0, 0)) as GameObject;
             temp.name = parent.name + "x" + i.ToString();
             temp.transform.parent = parent.transform;
             breadBoard.AddNode(temp.name, type);       
+        }
+
+        if (rotation)
+        {
+            parent.transform.rotation = Quaternion.Euler(0, 90, 0);
         }
     }
 
