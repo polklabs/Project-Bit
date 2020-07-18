@@ -242,6 +242,11 @@ public class CircuitPool : MonoBehaviour
                         {
                             return false;
                         }
+
+                        if(breadBoard.NodeHasICType(nodeIdT, ICType.ic6))
+                        {
+                            return false;
+                        }
                         
                     }
                 }

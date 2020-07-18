@@ -88,6 +88,30 @@ public class BreadBoard : MonoBehaviour
         return true;
     }
 
+    public bool NodeHasICType(string nodeId, ICType iCType)
+    {
+        if (nodes.ContainsKey(nodeId))
+        {
+            Node node = nodes[nodeId];
+            foreach(Connection connection in node.connections)
+            {
+                if (connection != null)
+                {
+                    Guid id = Guid.Parse(connection.ID);
+                    if (!connection.IsNode && components.ContainsKey(id))
+                    {
+                        IntegratedCircuit c = components[id];
+                        if (c.IcType == iCType)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public void PropagateValue(string nodeId, string id, int index, int value)
     {
         PropagateValue(nodeId, id, index, value, 0, 0);
