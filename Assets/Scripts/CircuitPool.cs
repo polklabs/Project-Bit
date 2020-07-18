@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using IntegratedCircuits;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Runtime.Remoting;
 
 public class CircuitPool : MonoBehaviour
 {
@@ -37,6 +34,8 @@ public class CircuitPool : MonoBehaviour
         }
 
         obj.name = ic.SetBreadBoard(breadBoard).ToString();
+
+        bool rotated = Helper.CircuitHelper.IsNodeRotated(nodeIdA);
 
         switch (ic.IcType)
         {
@@ -74,7 +73,15 @@ public class CircuitPool : MonoBehaviour
                 {
                     for(int j = 0; j < ic.Pins/2; j++)
                     {
-                        string nodeId = (a + i).ToString() + "x" + b.ToString() + "x" + (c + (i * 7)).ToString() + "x" + (d + j).ToString();
+                        string nodeId;
+                        if (rotated)
+                        {
+                            nodeId = (a + i).ToString() + "x" + (b + (i * 7)).ToString() + "x" + c.ToString() + "x" + (d + j).ToString() + "x" + id[4];
+                        }
+                        else
+                        {
+                            nodeId = (a + i).ToString() + "x" + b.ToString() + "x" + (c + (i * 7)).ToString() + "x" + (d + j).ToString() + "x" + id[4];
+                        }
                         int index = i == 0 ? 4 : 0;
                         int pinIndex = i == 0 ? j : (ic.Pins - 1) - j;
 
@@ -97,7 +104,15 @@ public class CircuitPool : MonoBehaviour
                 {
                     for (int j = 0; j < ic.Pins / 2; j++)
                     {
-                        string nodeId = (a + i).ToString() + "x" + b.ToString() + "x" + (c + (i * 7)).ToString() + "x" + (d + j).ToString();
+                        string nodeId;
+                        if (rotated)
+                        {
+                            nodeId = (a + i).ToString() + "x" + (b + (i * 7)).ToString() + "x" + c.ToString() + "x" + (d + j).ToString() + "x" + id[4];
+                        }
+                        else
+                        {
+                            nodeId = (a + i).ToString() + "x" + b.ToString() + "x" + (c + (i * 7)).ToString() + "x" + (d + j).ToString() + "x" + id[4];
+                        }
                         int index = i == 0 ? indexA : indexA - 1;
                         int pinIndex = i == 0 ? j : (ic.Pins - 1) - j;
 
@@ -176,6 +191,7 @@ public class CircuitPool : MonoBehaviour
 
     public bool CanPlace(ICType iCType, int pins, string nodeId, int index)
     {
+        bool rotated = Helper.CircuitHelper.IsNodeRotated(nodeId);
         switch (iCType)
         {
             case ICType.solo:
@@ -209,10 +225,18 @@ public class CircuitPool : MonoBehaviour
 
                 for (int i = 0; i < 2; i++)
                 {
+                    int indexT = i == 0 ? 4 : 0;
                     for (int j = 0; j < pins / 2; j++)
                     {
-                        string nodeIdT = (a + i).ToString() + "x" + b.ToString() + "x" + (c + (i * 7)).ToString() + "x" + (d + j).ToString();
-                        int indexT = i == 0 ? 4 : 0;
+                        string nodeIdT;
+                        if (rotated)
+                        {
+                            nodeIdT = (a + i).ToString() + "x" + (b + (i * 7)).ToString() + "x" + c.ToString() + "x" + (d + j).ToString() + "x" + id[4];
+                        }
+                        else
+                        {
+                            nodeIdT = (a + i).ToString() + "x" + b.ToString() + "x" + (c + (i * 7)).ToString() + "x" + (d + j).ToString() + "x" + id[4];
+                        }
                         
                         if(!CanPlaceSinglePin(nodeIdT, indexT))
                         {
@@ -232,7 +256,7 @@ public class CircuitPool : MonoBehaviour
 
                 id = nodeId.Split('x');
                 a = int.Parse(id[0]);
-                // b = int.Parse(id[1]);
+                b = int.Parse(id[1]);
                 c = int.Parse(id[2]);
                 d = int.Parse(id[3]);
 
@@ -246,38 +270,24 @@ public class CircuitPool : MonoBehaviour
                     return false;
                 }
 
-                //for (int i = 0; i < 2; i++)
-                //{
-                //    for (int j = 0; j < pins / 2; j++)
-                //    {
-                //        string nodeIdT = (a + i).ToString() + "x" + b.ToString() + "x" + (c + (i * 7)).ToString() + "x" + (d + j).ToString();
-                //        int indexT = i == 0 ? index : index - 1;
-
-                //        if (!CanPlaceSinglePin(nodeIdT, indexT))
-                //        {
-                //            return false;
-                //        }
-
-                //    }
-                //}
-
-                for(int i = index; i < 5; i++)
+                
+                for(int k = 0; k < pins / 2; k++)
                 {
-                    for(int k = 0; k < pins / 2; k++)
+                    string nodeIdT = "1x" + id[1] + "x" + id[2] + "x" + (d + k).ToString() + "x" + id[4];
+                    for (int i = index; i < 5; i++)
                     {
-                        string nodeIdT = "1x" + id[1] + "x" + id[2] + "x" + (d + k).ToString();
                         if (!CanPlaceSinglePin(nodeIdT, i))
                         {
                             return false;
                         }
                     }
                 }
-
-                for (int i = 0; i < index; i++)
+              
+                for (int k = 0; k < pins / 2; k++)
                 {
-                    for (int k = 0; k < pins / 2; k++)
+                    string nodeIdT = "2x" + (rotated ? (b + 7).ToString() : id[1]) + "x" + (rotated ? id[2] : (c + 7).ToString()) + "x" + (d + k).ToString() + "x" + id[4];
+                    for (int i = 0; i < index; i++)
                     {
-                        string nodeIdT = "2x" + id[1] + "x" + (c + 7).ToString() + "x" + (d + k).ToString();
                         if (!CanPlaceSinglePin(nodeIdT, i))
                         {
                             return false;

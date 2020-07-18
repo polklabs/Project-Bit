@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Helper
@@ -38,18 +37,73 @@ namespace Helper
             int c = int.Parse(nodeValues[2]);
             int d = int.Parse(nodeValues[3]);
 
-            if (a == 0)
+            if (IsNodeRotated(nodeId))
             {
-                x = b + index + 1;                
-                z = c + d;
+                if (a == 0)
+                {
+                    z = c - index - 1;
+                    x = b + d;
+                }
+                else if (a == 1 || a == 2)
+                {
+                    z = c - d;
+                    x = b + index + 1;
+                }
             }
-            else if (a == 1 || a == 2)
+            else
             {
-                x = b + d;
-                z = c + index + 1;
+                if (a == 0)
+                {
+                    x = b + index + 1;
+                    z = c + d;
+                }
+                else if (a == 1 || a == 2)
+                {
+                    x = b + d;
+                    z = c + index + 1;
+                }
             }
 
             return new Vector3(x, 0, z);
+        }
+
+        public static int GetIndexFromNode(string nodeId, Vector3 point)
+        {
+            int x = Mathf.RoundToInt(point.x);
+            int z = Mathf.RoundToInt(point.z);
+
+            string[] s = nodeId.Split('x');
+            int index = 0;
+
+            if (IsNodeRotated(nodeId))
+            {
+                if (s[0].Equals("1") || s[0].Equals("2"))
+                {
+                    index = x - int.Parse(s[1]) - 1;
+                }
+                else if (s[0].Equals("0"))
+                {
+                    index = -z + int.Parse(s[2]) - 1;
+                }
+            }
+            else
+            {
+                if (s[0].Equals("1") || s[0].Equals("2"))
+                {
+                    index = z - int.Parse(s[2]) - 1;
+                }
+                else if (s[0].Equals("0"))
+                {
+                    index = x - int.Parse(s[1]) - 1;
+                }
+            }
+
+            return index;
+        }
+
+        public static bool IsNodeRotated(string nodeId)
+        {
+            return nodeId[nodeId.Length-1] == '1';
         }
 
         public static void CreateColliderChain(GameObject obj, Vector3[] wireNodes)
@@ -110,7 +164,6 @@ namespace Helper
             float a = (-k) / 1;
 
             float step = 2.0f / (points+1.0f);
-            Debug.Log(step);
             for(int i = 0; i < points; i++)
             {
                 float x = -1.0f + (step * (i + 1));

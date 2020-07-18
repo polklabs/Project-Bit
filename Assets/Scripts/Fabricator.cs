@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Fabricator : MonoBehaviour
 {
@@ -17,6 +15,10 @@ public class Fabricator : MonoBehaviour
     {
         newBoard(0, 0, false);
         newBoard(0, -1, true);
+
+        newBoard(0, 25, false);
+
+        newBoard(-25, 66, true);
     }
 
     void newBoard(int x, int y, bool rotation)
@@ -57,7 +59,14 @@ public class Fabricator : MonoBehaviour
         else
         {
             placeMainBoard(type, x, y, rotation);
-            placeMainBoard(type + 1, x, y + 7, rotation);
+            if (rotation)
+            {
+                placeMainBoard(type + 1, x + 7, y, rotation);
+            }
+            else
+            {
+                placeMainBoard(type + 1, x, y + 7, rotation);
+            }
         }
     }
 
@@ -78,7 +87,7 @@ public class Fabricator : MonoBehaviour
                     for (int j = 1; j < 3; j++)
                     {
                         GameObject temp = Instantiate(pinX, new Vector3(i + x, -0.4f, j + y), Quaternion.Euler(0, 0, 0)) as GameObject;
-                        temp.name = parent.name + "x" + j.ToString();
+                        temp.name = parent.name + "x" + j.ToString() + "x" + (rotation ? "1" : "0");
                         temp.transform.parent = parent.transform;
                         breadBoard.AddNode(temp.name, type);
                     }
@@ -112,7 +121,7 @@ public class Fabricator : MonoBehaviour
         for (int i = 1; i < 64; i++)
         {
             GameObject temp = Instantiate(pinZ, new Vector3(i + x, -0.4f, 3 + y), Quaternion.Euler(0, 0, 0)) as GameObject;
-            temp.name = parent.name + "x" + i.ToString();
+            temp.name = parent.name + "x" + i.ToString() + "x" + (rotation ? "1" : "0");
             temp.transform.parent = parent.transform;
             breadBoard.AddNode(temp.name, type);       
         }

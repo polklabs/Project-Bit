@@ -94,7 +94,13 @@ public class WorkspaceEditor : MonoBehaviour
             switch (Action)
             {
                 case WorkspaceAction.Place:
-                    PlaceActionWireNode();
+                    if (ic.IcType == ICType.wire)
+                    {
+                        PlaceActionWireNode();
+                    } else if (ic.IcType == ICType.ic4 || ic.IcType == ICType.ic6)
+                    {
+                        // TODO: Rotate chip
+                    }
                     break;                
                 default:
                     break;
@@ -149,23 +155,13 @@ public class WorkspaceEditor : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
         {
             string nodeId = hit.transform.gameObject.name;
-            int x = Mathf.RoundToInt(hit.point.x);
-            int z = Mathf.RoundToInt(hit.point.z);
+            int index = CircuitHelper.GetIndexFromNode(nodeId, hit.point);
 
             if (ic != null && icModel != null)
             {
-                string[] s = nodeId.Split('x');
-                int index = 0;
 
-                if (s[0].Equals("1") || s[0].Equals("2"))
-                {
-                    index = z - int.Parse(s[2]) - 1;
-                }
-                else if (s[0].Equals("0"))
-                {
-                    index = x - int.Parse(s[1]) - 1;
-                }
-
+                int x = Mathf.RoundToInt(hit.point.x);
+                int z = Mathf.RoundToInt(hit.point.z);
                 icModel.transform.position = new Vector3(x, 0, z);
 
                 if (circuitPool.CanPlace(ic.IcType, ic.Pins, nodeId, index))
@@ -187,18 +183,15 @@ public class WorkspaceEditor : MonoBehaviour
 
     private void PlaceActionWireNode()
     {
-        if (ic.IcType == ICType.wire)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
-            {
-                Vector3 point = hit.point;
-                point.y = Mathf.Clamp(point.y, 0.25f, 100f);
-                wireNodes.Add(point);
-                icModel.GetComponentInChildren<LineRenderer>().positionCount = wireNodes.Count;
-                icModel.GetComponentInChildren<LineRenderer>().SetPositions(wireNodes.ToArray());
-            }
+        if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            Vector3 point = hit.point;
+            point.y = Mathf.Clamp(point.y, 0.25f, 100f);
+            wireNodes.Add(point);
+            icModel.GetComponentInChildren<LineRenderer>().positionCount = wireNodes.Count;
+            icModel.GetComponentInChildren<LineRenderer>().SetPositions(wireNodes.ToArray());
         }
     }
 
@@ -219,22 +212,13 @@ public class WorkspaceEditor : MonoBehaviour
             bool isPin = hit.transform.gameObject.layer == LayerMask.NameToLayer("Pin");
 
             string nodeId = hit.transform.gameObject.name;
-            int index = 0;
+            int index = 0;                    
             int x = Mathf.RoundToInt(hit.point.x);
             int z = Mathf.RoundToInt(hit.point.z);
 
             if (isPin)
             {
-                string[] s = nodeId.Split('x');
-
-                if (s[0].Equals("1") || s[0].Equals("2"))
-                {
-                    index = z - int.Parse(s[2]) - 1;
-                }
-                else if (s[0].Equals("0"))
-                {
-                    index = x - int.Parse(s[1]) - 1;
-                }
+                index = CircuitHelper.GetIndexFromNode(nodeId, hit.point);
             }
 
             Vector3 location = new Vector3(x, 0, z);
@@ -292,23 +276,13 @@ public class WorkspaceEditor : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
         {
-            string nodeId = hit.transform.gameObject.name;
+            string nodeId = hit.transform.gameObject.name;           
+            int index = CircuitHelper.GetIndexFromNode(nodeId, hit.point);
             int x = Mathf.RoundToInt(hit.point.x);
             int z = Mathf.RoundToInt(hit.point.z);
 
             if (ic != null && icModel != null)
             {
-                string[] s = nodeId.Split('x');
-                int index = 0;
-
-                if (s[0].Equals("1") || s[0].Equals("2"))
-                {
-                    index = z - int.Parse(s[2]) - 1;
-                }
-                else if (s[0].Equals("0"))
-                {
-                    index = x - int.Parse(s[1]) - 1;
-                }
 
                 Vector3 location = new Vector3(x, 0, z);
 
@@ -316,21 +290,9 @@ public class WorkspaceEditor : MonoBehaviour
                 {
                     case ICType.dual:
                         break;
-                    case ICType.wire:
-                        if (locationASelected)
-                        {
-                            List<Vector3> hoverLinePos = new List<Vector3>(wireNodes);                            
-                            hoverLinePos.Add(hit.point);
-                            icModel.GetComponentInChildren<LineRenderer>().positionCount = hoverLinePos.Count;
-                            icModel.GetComponentInChildren<LineRenderer>().SetPositions(hoverLinePos.ToArray());
-                        }
-                        else
-                        {
-                            icModel.transform.position = location;
-                        }
-                        break;
                     default:
                         icModel.transform.position = location;
+                        icModel.transform.rotation = Quaternion.Euler(0, CircuitHelper.IsNodeRotated(nodeId) ? 90 : 0, 0);
                         break;
                 }                
 
@@ -358,6 +320,7 @@ public class WorkspaceEditor : MonoBehaviour
             if (ic.IcType != ICType.wire)
             {
                 icModel.transform.position = GameObjectPool;
+                icModel.transform.rotation = Quaternion.Euler(0, 0, 0);
             }
         }
     }
@@ -422,9 +385,10 @@ public class WorkspaceEditor : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
         {
+            string nodeId = hit.transform.gameObject.name;
+            int index = CircuitHelper.GetIndexFromNode(nodeId, hit.point);
+
             string stateString;
-            //Vector2Int state = breadBoard.GetNodeStateFull(hit.transform.name);
-            //stateString =  state.x.ToString() + " : " + state.y.ToString();
 
             int state = breadBoard.GetNodeState(hit.transform.name);
             if (state == 1)
@@ -441,7 +405,7 @@ public class WorkspaceEditor : MonoBehaviour
             }
 
 
-            ProbeText.text = "Probing Node\n" + hit.transform.name + "\n\nState\n" + stateString;
+            ProbeText.text = "Probing Node\n" + hit.transform.name + ':' + index + "\n\nState\n" + stateString;
 
             HighLight.transform.position = new Vector3(Mathf.RoundToInt(hit.point.x), 0, Mathf.RoundToInt(hit.point.z));
 
@@ -546,6 +510,10 @@ public class WorkspaceEditor : MonoBehaviour
                 Debug.Log("Placing at " + nodeId + index);
                 GameObject placed = circuitPool.PlaceIntegratedCircuit(icName, nodeId, index, false);
                 placed.transform.position = location;
+                if (CircuitHelper.IsNodeRotated(nodeId))
+                {
+                    placed.transform.rotation = Quaternion.Euler(0, 90, 0);
+                }
 
                 break;
         }

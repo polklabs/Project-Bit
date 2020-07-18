@@ -202,8 +202,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
+  m_Color: {r: 0.5294118, g: 0.5294118, b: 0.5294118, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -228,16 +229,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1723829351004906856}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 1b4c11aee27b7944a993a4a18b4a3a6a,
-        type: 3}
-      propertyPath: m_Name
-      value: ic20
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 1b4c11aee27b7944a993a4a18b4a3a6a,
-        type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 1b4c11aee27b7944a993a4a18b4a3a6a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -313,6 +304,16 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: 1715f285931401f4aa7e76a141da162b, type: 2}
+    - target: {fileID: -927199367670048503, guid: 1b4c11aee27b7944a993a4a18b4a3a6a,
+        type: 3}
+      propertyPath: m_Name
+      value: ic20
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 1b4c11aee27b7944a993a4a18b4a3a6a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b4c11aee27b7944a993a4a18b4a3a6a, type: 3}
 --- !u!1 &777436658842709758 stripped
