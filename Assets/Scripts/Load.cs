@@ -12,12 +12,13 @@ public class Load : MonoBehaviour
 {
     public BreadBoard bb;
     public CircuitPool cp;
+    public Fabricator fabricator;
 
     public Text Title;
 
     private void Start()
     {
-        String title = PlayerPrefs.GetString("Workspace");        
+        string title = PlayerPrefs.GetString("Workspace");
         LoadWorkspace(title);
         Title.text = title;
     }
@@ -29,9 +30,13 @@ public class Load : MonoBehaviour
 
         if (Directory.Exists(filePath))
         {
+            LoadBreadBoards(filePath);
             LoadUpdates(filePath);
             LoadNodes(filePath);
             LoadComponents(filePath);
+        } else
+        {
+            fabricator.addBoard("0", 0, 0, false);            
         }
 
     }
@@ -148,6 +153,22 @@ public class Load : MonoBehaviour
 
             bb.updates = updates;
 
+        }
+    }
+
+    private void LoadBreadBoards(string filePath)
+    {
+        filePath += "/breadboard.json";
+        if (!File.Exists(filePath))
+        {
+            return;
+        }
+
+        using (StreamReader file = File.OpenText(filePath))
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            fabricator.breadBoardData = (List<BreadBoardData>)serializer.Deserialize(file, typeof(List<BreadBoardData>));
+            fabricator.loadFromBreadBoardData();
         }
     }
 

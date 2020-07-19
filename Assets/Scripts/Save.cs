@@ -7,6 +7,7 @@ public class Save : MonoBehaviour
 {
 
     public BreadBoard bb;
+    public Fabricator fabricator;
 
     public void SaveWorkspaceGUI()
     {
@@ -25,6 +26,7 @@ public class Save : MonoBehaviour
         SaveComponents(filePath);
         SaveNodes(filePath);
         SaveUpdates(filePath);
+        SaveBreadBoards(filePath);
 
         return true;
 
@@ -74,6 +76,21 @@ public class Save : MonoBehaviour
             };
 
             serializer.Serialize(file, bb.updates);
+        }
+    }
+
+    private void SaveBreadBoards(string filePath)
+    {
+        filePath += "/breadboard.json";
+
+        using (StreamWriter file = File.CreateText(filePath))
+        {
+            JsonSerializer serializer = new JsonSerializer
+            {
+                Formatting = Formatting.Indented
+            };
+
+            serializer.Serialize(file, fabricator.breadBoardData);
         }
     }
 }

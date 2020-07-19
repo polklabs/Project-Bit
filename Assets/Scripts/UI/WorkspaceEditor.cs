@@ -39,6 +39,7 @@ public class WorkspaceEditor : MonoBehaviour
 
     /* For Probing */
     public Text ProbeText;
+    public GameObject ProbeObj;
     public GameObject HighLight;
 
     void Update()
@@ -124,9 +125,11 @@ public class WorkspaceEditor : MonoBehaviour
         ClearIC();
         if (Action == WorkspaceAction.Probe)
         {
+            ProbeObj.gameObject.SetActive(false);
             Action = WorkspaceAction.None;
             return;
         }
+        ProbeObj.gameObject.SetActive(true);
         Action = WorkspaceAction.Probe;
     }
 
@@ -404,8 +407,24 @@ public class WorkspaceEditor : MonoBehaviour
                 stateString = "Off";
             }
 
+            string[] s = nodeId.Split('x');
+            bool rotated = CircuitHelper.IsNodeRotated(nodeId);
 
-            ProbeText.text = "Probing Node\n" + hit.transform.name + ':' + index + "\n\nState\n" + stateString;
+            string pin = "";
+            switch(s[0])
+            {
+                case "0":
+                    pin = (index + 1).ToString() + (char)(int.Parse(s[3]) + 64);
+                    break;
+                case "1":
+                    pin = s[3] + (char)(index + 65);
+                    break;
+                case "2":
+                    pin = s[3] + (char)(index + 70);
+                    break;
+            }
+            
+            ProbeText.text = "Probing Node\nBoard: " + s[1] + "x" + s[2] + "\nPin: " + pin + "\n\nState: " + stateString;
 
             HighLight.transform.position = new Vector3(Mathf.RoundToInt(hit.point.x), 0, Mathf.RoundToInt(hit.point.z));
 

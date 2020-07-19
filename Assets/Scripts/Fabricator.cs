@@ -1,7 +1,26 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+
+public class BreadBoardData
+{
+    public BreadBoardData(string _t, int _x, int _y, bool _r)
+    {
+        t = _t;
+        x = _x;
+        y = _y;
+        r = _r;
+    }
+
+    public string t;
+    public int x;
+    public int y;
+    public bool r;
+}
 
 public class Fabricator : MonoBehaviour
 {
+    public List<BreadBoardData> breadBoardData = new List<BreadBoardData>();
+
     public Transform breadBoardParent;
 
     public GameObject pinZ;
@@ -13,16 +32,31 @@ public class Fabricator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        newBoard(0, 0, false);
-        newBoard(0, -1, true);
+        //newBoard("0", 0, 0, false);
+        //newBoard("0", 0, -1, true);
 
-        newBoard(0, 25, false);
+        //newBoard("0", 0, 25, false);
 
-        newBoard(-25, 66, true);
+        //newBoard("0", -25, 66, true);
     }
 
-    void newBoard(int x, int y, bool rotation)
+    public void loadFromBreadBoardData()
     {
+        foreach (BreadBoardData bbd in breadBoardData)
+        {
+            createBoard(bbd.t, bbd.x, bbd.y, bbd.r);
+        }
+    }
+
+    public void addBoard(string t, int x, int y, bool rotation)
+    {
+        breadBoardData.Add(new BreadBoardData(t, x, y, rotation));
+        createBoard(t, x, y, rotation);
+    }
+
+    void createBoard(string t, int x, int y, bool rotation)
+    {
+
         if (rotation)
         {
             placeBreadBoard(0, x, y, rotation);
