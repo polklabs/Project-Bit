@@ -1201,7 +1201,7 @@ GameObject:
   - component: {fileID: 459491535}
   - component: {fileID: 459491534}
   - component: {fileID: 459491533}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2030,6 +2030,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   breadBoard: {fileID: 930396054}
   circuitPool: {fileID: 1328502840}
+  fabricator: {fileID: 774481795}
   mono_Switch: {fileID: 2039763903}
   oscilloscope: {fileID: 137900732}
   outlineMat: {fileID: 2100000, guid: 0be52a9d79227f74bba759623ba9f7f1, type: 2}

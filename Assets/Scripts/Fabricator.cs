@@ -29,17 +29,6 @@ public class Fabricator : MonoBehaviour
 
     public BreadBoard breadBoard;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //newBoard("0", 0, 0, false);
-        //newBoard("0", 0, -1, true);
-
-        //newBoard("0", 0, 25, false);
-
-        //newBoard("0", -25, 66, true);
-    }
-
     public void loadFromBreadBoardData()
     {
         foreach (BreadBoardData bbd in breadBoardData)
@@ -52,6 +41,18 @@ public class Fabricator : MonoBehaviour
     {
         breadBoardData.Add(new BreadBoardData(t, x, y, rotation));
         createBoard(t, x, y, rotation);
+    }
+
+    public bool canPlaceBreadBoard(int x, int z, bool rotation)
+    {
+        foreach (BreadBoardData bb in breadBoardData)
+        {
+            if(Helper.CircuitHelper.breadboardsOverlap(x, z, bb.x, bb.y))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     void createBoard(string t, int x, int y, bool rotation)

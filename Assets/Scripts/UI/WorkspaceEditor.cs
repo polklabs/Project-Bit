@@ -15,6 +15,7 @@ public class WorkspaceEditor : MonoBehaviour
     //Referances
     public BreadBoard breadBoard;
     public CircuitPool circuitPool;
+    public Fabricator fabricator;
     public Mono_Switch mono_Switch;
     public Oscilloscope oscilloscope;
 
@@ -152,16 +153,22 @@ public class WorkspaceEditor : MonoBehaviour
 
     private void PlaceAction()
     {
+        if (ic != null && ic.IcType == ICType.breadboard)
+        {
+            PlaceActionBreadBoard();
+            return;
+        }
+
         int layer_mask = LayerMask.GetMask("Pin");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
-        {
-            string nodeId = hit.transform.gameObject.name;
-            int index = CircuitHelper.GetIndexFromNode(nodeId, hit.point);
-
+        {           
             if (ic != null && icModel != null)
             {
+
+                string nodeId = hit.transform.gameObject.name;
+                int index = CircuitHelper.GetIndexFromNode(nodeId, hit.point);
 
                 int x = Mathf.RoundToInt(hit.point.x);
                 int z = Mathf.RoundToInt(hit.point.z);
@@ -184,6 +191,40 @@ public class WorkspaceEditor : MonoBehaviour
         }
     }
 
+    private void PlaceActionBreadBoard()
+    {
+        int layer_mask = LayerMask.GetMask("Ground");
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            if (ic != null && icModel != null)
+            {
+
+                string nodeId = hit.transform.gameObject.name;
+                int index = CircuitHelper.GetIndexFromNode(nodeId, hit.point);
+
+                int x = Mathf.RoundToInt(hit.point.x);
+                int z = Mathf.RoundToInt(hit.point.z);
+                icModel.transform.position = new Vector3(x, 0, z);
+
+                if (fabricator.canPlaceBreadBoard(x, z, false))
+                {
+                    fabricator.addBoard("0", x, z, false);
+                }
+                else
+                {
+                    Debug.Log("Cannot place item here");
+                }
+            }
+
+        }
+        else
+        {
+            icModel.transform.position = GameObjectPool;
+        }
+    }
+
     private void PlaceActionWireNode()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -195,6 +236,44 @@ public class WorkspaceEditor : MonoBehaviour
             wireNodes.Add(point);
             icModel.GetComponentInChildren<LineRenderer>().positionCount = wireNodes.Count;
             icModel.GetComponentInChildren<LineRenderer>().SetPositions(wireNodes.ToArray());
+        }
+    }
+
+    private void PlaceActionBreadboard_Hover()
+    {
+        int layer_mask = LayerMask.GetMask("Ground");
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            int x = Mathf.RoundToInt(hit.point.x);
+            int z = Mathf.RoundToInt(hit.point.z);
+
+            if (ic != null && icModel != null)
+            {
+
+                Vector3 location = new Vector3(x, 0, z);
+                icModel.transform.position = location;
+                icModel.transform.rotation = Quaternion.Euler(0, false ? 90 : 0, 0);
+
+                if (fabricator.canPlaceBreadBoard(x, z, false))
+                {
+                    if (showsError)
+                    {
+                        showsError = false;
+                        RemoveOutline(icModel.GetComponentInChildren<Renderer>());
+                    }
+                }
+                else
+                {
+                    if (!showsError)
+                    {
+                        showsError = true;
+                        AddOutline(icModel.GetComponentInChildren<Renderer>());
+                    }
+                }
+            }
+
         }
     }
 
@@ -271,6 +350,12 @@ public class WorkspaceEditor : MonoBehaviour
         if(ic != null && ic.IcType == ICType.wire)
         {
             PlaceActionWire_Hover();
+            return;
+        }
+
+        if (ic != null && ic.IcType == ICType.breadboard)
+        {
+            PlaceActionBreadboard_Hover();
             return;
         }
 

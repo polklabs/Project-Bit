@@ -106,6 +106,27 @@ namespace Helper
             return nodeId[nodeId.Length-1] == '1';
         }
 
+        public static bool breadboardsOverlap(float x1,  float z1, float x2, float z2)
+        {
+            Vector2 l1 = new Vector2(x1 - 0.5f, z1 - 0.5f);
+            Vector2 r1 = new Vector2(x1 + 64.5f, z1 + 21.5f);
+
+            Vector2 l2 = new Vector2(x2 - 0.5f, z2 - 0.5f);
+            Vector2 r2 = new Vector2(x2 + 64.5f, z2 + 21.5f);
+
+            if (l1.x >= r2.x || l2.x >= r1.x)
+            {
+                return false;
+            }
+
+            if (l1.y >= r2.y || l2.y >= r1.y)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public static void CreateColliderChain(GameObject obj, Vector3[] wireNodes)
         {
             for (int i = 1; i < wireNodes.Length; i++)
