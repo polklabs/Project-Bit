@@ -156,7 +156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 720.11, y: 361.82}
+  m_AnchoredPosition: {x: 720, y: 361.75}
   m_SizeDelta: {x: -1440.2, y: -723.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &93496369
@@ -2430,6 +2430,8 @@ MonoBehaviour:
   pinZ: {fileID: 1688334977463724981, guid: af5e288599d622a4ab5067b6f5997a73, type: 3}
   pinX: {fileID: 5944286026081452655, guid: f8776a7753a83504e9fc324de8dbd852, type: 3}
   breadBoardPrefab: {fileID: 1524150623000132578, guid: 2a8d7d10601726549b8ac46c02f86810,
+    type: 3}
+  powerRailPrefab: {fileID: 5067205674758132331, guid: 45bfedb0f9dd0ae4e9b7efa24f0ed819,
     type: 3}
   breadBoard: {fileID: 930396054}
 --- !u!1 &780821963

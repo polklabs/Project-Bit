@@ -153,7 +153,7 @@ public class WorkspaceEditor : MonoBehaviour
 
     private void PlaceAction()
     {
-        if (ic != null && ic.IcType == ICType.breadboard)
+        if (ic != null && (ic.IcType == ICType.breadboard || ic.IcType == ICType.powerrail))
         {
             PlaceActionBreadBoard();
             return;
@@ -208,9 +208,11 @@ public class WorkspaceEditor : MonoBehaviour
                 int z = Mathf.RoundToInt(hit.point.z);
                 icModel.transform.position = new Vector3(x, 0, z);
 
-                if (fabricator.canPlaceBreadBoard(x, z, false))
+                string type = (ic.IcType == ICType.breadboard ? "0" : "1");
+
+                if (fabricator.canPlaceBreadBoard(type, x, z, false))
                 {
-                    fabricator.addBoard("0", x, z, false);
+                    fabricator.addBoard(type, x, z, false);
                 }
                 else
                 {
@@ -256,7 +258,9 @@ public class WorkspaceEditor : MonoBehaviour
                 icModel.transform.position = location;
                 icModel.transform.rotation = Quaternion.Euler(0, false ? 90 : 0, 0);
 
-                if (fabricator.canPlaceBreadBoard(x, z, false))
+                string type = (ic.IcType == ICType.breadboard ? "0" : "1");
+
+                if (fabricator.canPlaceBreadBoard(type, x, z, false))
                 {
                     if (showsError)
                     {
@@ -353,7 +357,7 @@ public class WorkspaceEditor : MonoBehaviour
             return;
         }
 
-        if (ic != null && ic.IcType == ICType.breadboard)
+        if (ic != null && (ic.IcType == ICType.breadboard || ic.IcType == ICType.powerrail))
         {
             PlaceActionBreadboard_Hover();
             return;

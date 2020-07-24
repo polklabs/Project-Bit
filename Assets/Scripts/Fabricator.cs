@@ -26,6 +26,7 @@ public class Fabricator : MonoBehaviour
     public GameObject pinZ;
     public GameObject pinX;
     public GameObject breadBoardPrefab;
+    public GameObject powerRailPrefab;
 
     public BreadBoard breadBoard;
 
@@ -43,11 +44,11 @@ public class Fabricator : MonoBehaviour
         createBoard(t, x, y, rotation);
     }
 
-    public bool canPlaceBreadBoard(int x, int z, bool rotation)
+    public bool canPlaceBreadBoard(string t, int x, int z, bool rotation)
     {
         foreach (BreadBoardData bb in breadBoardData)
         {
-            if(Helper.CircuitHelper.breadboardsOverlap(x, z, bb.x, bb.y))
+            if(Helper.CircuitHelper.breadboardsOverlap(t, x, z, bb.t, bb.x, bb.y))
             {
                 return false;
             }
@@ -57,20 +58,26 @@ public class Fabricator : MonoBehaviour
 
     void createBoard(string t, int x, int y, bool rotation)
     {
-
-        if (rotation)
+        if (t == "0")
+        {
+            if (rotation)
+            {
+                placeBreadBoard(0, x, y, rotation);
+                placeBreadBoard(0, x + 18, y, rotation);
+                placeBreadBoard(1, x + 4, y, rotation);
+                placeBreadBoard(3, x, y, rotation);
+            }
+            else
+            {
+                placeBreadBoard(0, x, y, rotation);
+                placeBreadBoard(0, x, y + 18, rotation);
+                placeBreadBoard(1, x, y + 4, rotation);
+                placeBreadBoard(3, x, y, rotation);
+            }
+        } else
         {
             placeBreadBoard(0, x, y, rotation);
-            placeBreadBoard(0, x + 18, y, rotation);
-            placeBreadBoard(1, x + 4, y, rotation);
-            placeBreadBoard(3, x, y, rotation);
-        }
-        else
-        {
-            placeBreadBoard(0, x, y, rotation);
-            placeBreadBoard(0, x, y + 18, rotation);
-            placeBreadBoard(1, x, y + 4, rotation);
-            placeBreadBoard(3, x, y, rotation);
+            placeBreadBoard(4, x, y, rotation);
         }
     }
 
@@ -84,6 +91,16 @@ public class Fabricator : MonoBehaviour
         else if (type == 3)
         {
             GameObject obj = Instantiate(breadBoardPrefab, new Vector3(x + (rotation ? 10.5f : 32), 0, y + (rotation ? -32 : 10.5f)), Quaternion.identity) as GameObject;
+            obj.transform.parent = breadBoardParent;
+
+            if (rotation)
+            {
+                obj.transform.rotation = Quaternion.Euler(0, 90, 0);
+            }
+        }
+        else if (type == 4)
+        {
+            GameObject obj = Instantiate(powerRailPrefab, new Vector3(x + (rotation ? 1.5f : 32), 0, y + (rotation ? -32 : 1.5f)), Quaternion.identity) as GameObject;
             obj.transform.parent = breadBoardParent;
 
             if (rotation)

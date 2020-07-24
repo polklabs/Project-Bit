@@ -7,7 +7,7 @@ using UnityEngine;
 namespace IntegratedCircuits
 {
     public enum PinMode { Input, Ouput };
-    public enum ICType { ic4, ic6, solo, dual, wire, breadboard, unknown };
+    public enum ICType { ic4, ic6, solo, dual, wire, breadboard, powerrail, unknown };
     public enum State { LOW = -1, OFF = 0, HIGH = 1 };
     public enum SwitchTypes { Toggle, Momentary, Pulse };
 

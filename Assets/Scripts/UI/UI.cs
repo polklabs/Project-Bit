@@ -140,6 +140,7 @@ namespace userInterface {
         public static Part WIRE_ORANGE      = new Part("Wire, Orange",      "Wire_Orange",  PartGroups.Wires).SetMultiPoint();
 
         public static Part BREAD_BOARD = new Part("Bread Board", "BreadBoardTemp", PartGroups.Wires);
+        public static Part POWER_RAIL = new Part("Power Rail", "PowerRailTemp", PartGroups.Wires);
 
         // Basic ------------------------------------------------------------------------------------
         public static Part QUAD_AND   = new Part("And Gates, Quad 2-Input (PQ010G)",      "PQ010G_AndGate",       PartGroups.BasicCircuit); // 74LS08
