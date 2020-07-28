@@ -5,6 +5,8 @@ using IntegratedCircuits;
 
 public class BreadBoard : MonoBehaviour
 {
+    public GeneralManager generalManager;
+
     public readonly Dictionary<Guid, IntegratedCircuit> components = new Dictionary<Guid, IntegratedCircuit>();
     public Dictionary<string, Node> nodes = new Dictionary<string, Node>();
     public Queue<Guid> updates = new Queue<Guid>();
@@ -19,12 +21,31 @@ public class BreadBoard : MonoBehaviour
 
     public void Update()
     {
-        while (updates.Count > 0)
+        if (!generalManager.paused)
         {
-            Guid id = updates.Dequeue();
-            if (components.ContainsKey(id))
+            while (updates.Count > 0)
             {
-                components[id].Update();
+                Guid id = updates.Dequeue();
+                if (components.ContainsKey(id))
+                {
+                    components[id].Update();
+                }
+
+                if (generalManager.paused)
+                {
+                    break;
+                }
+            }
+        } else
+        {
+            if (generalManager.step > 0 && updates.Count > 0)
+            {
+                Guid id = updates.Dequeue();
+                if (components.ContainsKey(id))
+                {
+                    components[id].Update();
+                }
+                generalManager.step--;
             }
         }
     }
@@ -95,7 +116,7 @@ public class BreadBoard : MonoBehaviour
             Node node = nodes[nodeId];
             foreach(Connection connection in node.connections)
             {
-                if (connection != null)
+                if (connection != null && !connection.IsNode)
                 {
                     Guid id = Guid.Parse(connection.ID);
                     if (!connection.IsNode && components.ContainsKey(id))

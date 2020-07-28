@@ -24,7 +24,8 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-        baseFilePath = Helper.GameHelper.GetSaveDirectory();
+        Application.targetFrameRate = 30;
+        baseFilePath = GameHelper.GetSaveDirectory();
     }
 
     public void LoadNewMenu()

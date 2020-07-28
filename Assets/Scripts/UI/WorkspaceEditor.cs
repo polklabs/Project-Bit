@@ -37,6 +37,7 @@ public class WorkspaceEditor : MonoBehaviour
     private int indexA = 0;
     private List<Vector3> wireNodes = new List<Vector3>();
     private bool showsError = false;
+    private bool placeRotated = false;
 
     /* For Probing */
     public Text ProbeText;
@@ -99,9 +100,13 @@ public class WorkspaceEditor : MonoBehaviour
                     if (ic.IcType == ICType.wire)
                     {
                         PlaceActionWireNode();
-                    } else if (ic.IcType == ICType.ic4 || ic.IcType == ICType.ic6)
+                    } else if (
+                        ic.IcType == ICType.ic4 ||
+                        ic.IcType == ICType.ic6 ||
+                        ic.IcType == ICType.breadboard ||
+                        ic.IcType == ICType.powerrail)
                     {
-                        // TODO: Rotate chip
+                        placeRotated = !placeRotated;
                     }
                     break;                
                 default:
@@ -210,9 +215,9 @@ public class WorkspaceEditor : MonoBehaviour
 
                 string type = (ic.IcType == ICType.breadboard ? "0" : "1");
 
-                if (fabricator.canPlaceBreadBoard(type, x, z, false))
+                if (fabricator.canPlaceBreadBoard(type, x, z, placeRotated))
                 {
-                    fabricator.addBoard(type, x, z, false);
+                    fabricator.addBoard(type, x, z, placeRotated);
                 }
                 else
                 {
@@ -256,11 +261,11 @@ public class WorkspaceEditor : MonoBehaviour
 
                 Vector3 location = new Vector3(x, 0, z);
                 icModel.transform.position = location;
-                icModel.transform.rotation = Quaternion.Euler(0, false ? 90 : 0, 0);
+                icModel.transform.rotation = Quaternion.Euler(0, placeRotated ? 90 : 0, 0);
 
                 string type = (ic.IcType == ICType.breadboard ? "0" : "1");
 
-                if (fabricator.canPlaceBreadBoard(type, x, z, false))
+                if (fabricator.canPlaceBreadBoard(type, x, z, placeRotated))
                 {
                     if (showsError)
                     {
@@ -651,6 +656,7 @@ public class WorkspaceEditor : MonoBehaviour
         hoverObject = null;
         hoverMaterials = null;
         showsError = false;
+        placeRotated = false;
     }
 
     public void ResetWire()

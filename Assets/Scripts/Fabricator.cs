@@ -48,7 +48,7 @@ public class Fabricator : MonoBehaviour
     {
         foreach (BreadBoardData bb in breadBoardData)
         {
-            if(Helper.CircuitHelper.breadboardsOverlap(t, x, z, bb.t, bb.x, bb.y))
+            if(Helper.CircuitHelper.breadboardsOverlap(t, x, z, rotation, bb.t, bb.x, bb.y, bb.r))
             {
                 return false;
             }

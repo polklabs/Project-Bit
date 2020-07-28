@@ -3172,6 +3172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e13131135d3f89b4b950972909e15e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  generalManager: {fileID: 1766764632}
 --- !u!4 &930396055
 Transform:
   m_ObjectHideFlags: 0
@@ -5229,6 +5230,7 @@ GameObject:
   - component: {fileID: 1766764631}
   - component: {fileID: 1766764630}
   - component: {fileID: 1766764629}
+  - component: {fileID: 1766764632}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -5280,6 +5282,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1766764632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1766764628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea77d009df4df2d40a4d85ef2b97918d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  workSpaceName: 
+  paused: 0
+  step: 0
 --- !u!1 &1785738908
 GameObject:
   m_ObjectHideFlags: 0

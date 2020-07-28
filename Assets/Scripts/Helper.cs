@@ -106,28 +106,37 @@ namespace Helper
             return nodeId[nodeId.Length-1] == '1';
         }
 
-        public static bool breadboardsOverlap(string t1, float x1,  float z1, string t2, float x2, float z2)
+        private static Vector2 BREADBOARD_0_L = new Vector2(-0.5f, -0.5f);
+        private static Vector2 BREADBOARD_1_L = new Vector2(-0.5f, -64f);
+        private static Vector2 BREADBOARD_0_0_R = new Vector2(64.5f, 21.5f);
+        private static Vector2 BREADBOARD_0_1_R = new Vector2(21.5f, 0.5f);
+        private static Vector2 BREADBOARD_1_0_R = new Vector2(64.5f, 3.5f);
+        private static Vector2 BREADBOARD_1_1_R = new Vector2(3.5f, 0.5f);
+        public static bool breadboardsOverlap(string t1, float x1,  float z1, bool rotated1, string t2, float x2, float z2, bool rotated2)
         {
-            Vector2 l1 = new Vector2(x1 - 0.5f, z1 - 0.5f);
+            Vector2 xz1 = new Vector2(x1, z1);
+            Vector2 xz2 = new Vector2(x2, z2);
+
+            Vector2 l1 = xz1 + (rotated1 ? BREADBOARD_1_L : BREADBOARD_0_L);
             Vector2 r1;
             if (t1 == "0")
             {
-                r1 = new Vector2(x1 + 64.5f, z1 + 21.5f);
+                r1 = xz1 + (rotated1 ? BREADBOARD_0_1_R : BREADBOARD_0_0_R);
             } 
             else
             {
-                r1 = new Vector2(x1 + 64.5f, z1 + 3.5f);
+                r1 = xz1 + (rotated1 ? BREADBOARD_1_1_R : BREADBOARD_1_0_R);
             }
 
-            Vector2 l2 = new Vector2(x2 - 0.5f, z2 - 0.5f);
+            Vector2 l2 = xz2 + (rotated2 ? BREADBOARD_1_L : BREADBOARD_0_L);
             Vector2 r2;
             if (t2 == "0")
             {
-                r2 = new Vector2(x2 + 64.5f, z2 + 21.5f);
+                r2 = xz2 + (rotated2 ? BREADBOARD_0_1_R : BREADBOARD_0_0_R);
             }
             else
             {
-                r2 = new Vector2(x2 + 64.5f, z2 + 3.5f);
+                r2 = xz2 + (rotated2 ? BREADBOARD_1_1_R : BREADBOARD_1_0_R);
             }
 
             if (l1.x >= r2.x || l2.x >= r1.x)

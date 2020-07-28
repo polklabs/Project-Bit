@@ -46,7 +46,6 @@ namespace IntegratedCircuits
 
                 // float ts = 1.0f / ((((array[0]+0.0f) / 7.0f) * 29.0f) + 1.0f);
                 float ts = 1.0f / (Mathf.Pow(2, array[0]));
-                Debug.Log(ts);
 
                 if (mono_Clock == null)
                 {
