@@ -555,7 +555,7 @@ public class WorkspaceEditor : MonoBehaviour
         {
             if (hit.transform.tag == "Switch")
             {
-                mono_Switch.TriggerSwitch(hit.transform.parent.name, int.Parse(hit.transform.name));
+                mono_Switch.TriggerSwitch(hit.transform.parent.name, int.Parse(hit.transform.name), hit.transform.gameObject);
             }
         }
     }

@@ -9,28 +9,26 @@ public class Mono_Switch : MonoBehaviour
 
     public BreadBoard breadBoard;
     public float momentaryLength = 0.3f;
+    public float switchLength = 0.3f;
 
-    public void TriggerSwitch(string id, int index)
+    public void TriggerSwitch(string id, int index, GameObject switchObject)
     {
-        //Debug.Log("Trigger Switch");
-        Switch ic = (Switch)breadBoard.GetIntegratedCircuit(Guid.Parse(id));
-
+        Switch ic = (Switch)breadBoard.GetIntegratedCircuit(Guid.Parse(id));       
 
         switch (ic.SwitchType)
         {
             case SwitchTypes.Pulse:
-                //Debug.Log("Pulse");
+                MoveButton(switchObject);
                 PulseSwitch(ic, index);
                 break;
             case SwitchTypes.Momentary:
-                //Debug.Log("Momentary");
                 if (OnSwitch(ic, index))
                 {
+                    MoveButton(switchObject);
                     StartCoroutine(MomentarySwitch(ic, index, momentaryLength));                                        
                 }
                 break;
             case SwitchTypes.Toggle:
-                //Debug.Log("Toggle");
                 ToggleSwitch(ic, index);
                 break;
         }
@@ -71,5 +69,29 @@ public class Mono_Switch : MonoBehaviour
         ic.SwitchState[index] = false;
         ic.Update();
         ic.CustomMethod();
+    }
+
+    private void MoveButton(GameObject child)
+    {
+        Vector3 v = child.transform.localPosition;
+        v.y = 2.45f;
+        child.transform.localPosition = v;
+        child.GetComponentInParent<Mono_Switch_Count>().toggleCount++;
+        StartCoroutine(MoveButtonBack(switchLength, child));
+    }
+
+    private IEnumerator MoveButtonBack(float delayTime, GameObject child)
+    {
+        yield return new WaitForSeconds(delayTime);
+
+        Mono_Switch_Count monoSwitchCount = child.GetComponentInParent<Mono_Switch_Count>();
+
+        monoSwitchCount.toggleCount--;
+        if (monoSwitchCount.toggleCount == 0)
+        {
+            Vector3 v = child.transform.localPosition;
+            v.y = 2.95f;
+            child.transform.localPosition = v;
+        }
     }
 }

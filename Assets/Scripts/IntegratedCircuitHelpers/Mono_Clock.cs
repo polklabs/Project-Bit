@@ -25,12 +25,15 @@ public class Mono_Clock : MonoBehaviour
 
     private IEnumerator TriggerClock(float length)
     {
-        yield return new WaitForSeconds(length);
+        while (true)
+        {
+            yield return new WaitForSeconds(length);
 
-        IcClock.On = !IcClock.On;
-        IcClock.Update();
+            IcClock.On = !IcClock.On;
+            IcClock.Update();
+        }
 
-        Clock = StartCoroutine(TriggerClock(length));
+        // Clock = StartCoroutine(TriggerClock(length));
     }
 
 }

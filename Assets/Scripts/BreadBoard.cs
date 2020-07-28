@@ -309,7 +309,7 @@ public class BreadBoard : MonoBehaviour
         nodeList.Add(nodeIdA);
 
         while (nodeListIndex < nodeList.Count)
-        {
+        {            
             Node node = nodes[nodeList[nodeListIndex]];
             nodeListIndex++;
 
