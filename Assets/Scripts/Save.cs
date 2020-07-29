@@ -7,16 +7,19 @@ using System.Linq;
 
 public class Save : MonoBehaviour
 {
+    public GeneralManager gm;
 
     public BreadBoard bb;
     public Fabricator fabricator;
 
     public void SaveWorkspaceGUI()
     {
+        gm.paused = true;
         if (SaveWorkspace())
         {
             Debug.Log("Saved Workspace!");
         }
+        gm.paused = false;
     }
 
     public bool SaveWorkspace()
@@ -43,7 +46,7 @@ public class Save : MonoBehaviour
             JsonSerializer serializer = new JsonSerializer
             {
                 TypeNameHandling = TypeNameHandling.Auto,
-                Formatting = Formatting.Indented,
+                Formatting = Formatting.None,
                 Converters = { new BitArrayConverter(), new Vector3Converter(), new WireDictionaryConverter() }
             };            
 
@@ -69,7 +72,7 @@ public class Save : MonoBehaviour
         {
             JsonSerializer serializer = new JsonSerializer
             {
-                Formatting = Formatting.Indented
+                Formatting = Formatting.None
             };
 
             serializer.Serialize(file, nodeDict);
@@ -84,7 +87,7 @@ public class Save : MonoBehaviour
         {
             JsonSerializer serializer = new JsonSerializer
             {
-                Formatting = Formatting.Indented
+                Formatting = Formatting.None
             };
 
             serializer.Serialize(file, bb.updates);
@@ -99,7 +102,8 @@ public class Save : MonoBehaviour
         {
             JsonSerializer serializer = new JsonSerializer
             {
-                Formatting = Formatting.Indented
+                Formatting = Formatting.None,
+                Converters = { new BreadBoardConverter() }
             };
 
             serializer.Serialize(file, fabricator.breadBoardData);

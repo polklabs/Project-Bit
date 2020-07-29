@@ -169,7 +169,10 @@ public class Load : MonoBehaviour
 
         using (StreamReader file = File.OpenText(filePath))
         {
-            JsonSerializer serializer = new JsonSerializer();
+            JsonSerializer serializer = new JsonSerializer
+            {
+                Converters = { new BreadBoardConverter() }
+            };
             fabricator.breadBoardData = (List<BreadBoardData>)serializer.Deserialize(file, typeof(List<BreadBoardData>));
             fabricator.loadFromBreadBoardData();
         }
