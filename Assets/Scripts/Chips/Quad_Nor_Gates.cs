@@ -1,8 +1,8 @@
 ﻿using Gates;
 
 /**
- * Quad And Gates based on the 74LS02
- * Used in the PQ010G_NorGate
+ * Quad Nor Gates based on the 74LS02
+ * Used in the PQ021G_NorGate
  */
 
 namespace Chips

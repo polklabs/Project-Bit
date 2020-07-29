@@ -1,7 +1,7 @@
 ﻿using Gates;
 
 /**
- * Quad And Gates based on the 74LS00
+ * Quad Nand Gates based on the 74LS00
  * Used in the PQ011G_NandGate
  */
 

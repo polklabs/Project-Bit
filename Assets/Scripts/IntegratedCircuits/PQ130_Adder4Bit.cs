@@ -47,7 +47,7 @@ namespace IntegratedCircuits
             BitArray bitOut = new BitArray(System.BitConverter.GetBytes(output));
          
             //Outputs
-            PinState[8]     = bitOut[4] ? State.HIGH : State.LOW; //C4
+            PinState[8]     = bitOut[4] ? State.HIGH : State.LOW; //C0
             PinState[3]     = bitOut[0] ? State.HIGH : State.LOW; //S1
             PinState[0]     = bitOut[1] ? State.HIGH : State.LOW; //S2
             PinState[12]    = bitOut[2] ? State.HIGH : State.LOW; //S3

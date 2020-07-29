@@ -1,5 +1,10 @@
 ﻿using Gates;
 
+/**
+ * Binary Counter based on the 74LS161
+ * Used in the PQ150G
+ */
+
 namespace Chips
 {
     public class Binary_Counter_4Bit : Chip

@@ -1,8 +1,8 @@
 ﻿using Gates;
 
 /**
- * Quad And Gates based on the 74LS86
- * Used in the PQ010G_XorGate
+ * Quad Xor Gates based on the 74LS86
+ * Used in the PQ030G_XorGate
  */
 
 namespace Chips

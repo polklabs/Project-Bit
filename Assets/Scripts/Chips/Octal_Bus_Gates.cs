@@ -1,5 +1,10 @@
 ﻿using Gates;
 
+/**
+ * Octal Bus Gates based on the 74LS245
+ * Used in the PQ040G_BufferGate
+ */
+
 namespace Chips
 {
     public class Octal_Bus_Gates : Chip

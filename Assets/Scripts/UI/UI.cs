@@ -160,7 +160,7 @@ namespace userInterface {
         //public static Part DUAL_D_FF        = new Part("Dual D Flip Flop (PQ121)",            "PQ121_DFf",        PartGroups.SpecialCircuit);
         //public static Part OCTAL_D_FF       = new Part("Octal D Flip Flop (PQ122)",           "PQ122_DFf",        PartGroups.SpecialCircuit); // 74LS273
         public static Part ADDER_4_BIT      = new Part("4-Bit Binary Adder (PQ130)",          "PQ130_Adder4Bit",  PartGroups.SpecialCircuit); // 74LS283
-        //public static Part ADDER_4_BIT      = new Part("4-Bit Binary Adder (PQ130G)",         "PQ130G_Adder4Bit", PartGroups.SpecialCircuit); // 74LS283
+        public static Part ADDER_4_BIT_GATE = new Part("4-Bit Binary Adder (PQ130G)",         "PQ130G_Adder4Bit", PartGroups.SpecialCircuit); // 74LS283
         //public static Part DECODE_3_8       = new Part("3-To-8 Line Decoder (PQ140)",         "PQ140_Decode3To8", PartGroups.SpecialCircuit); // 74LS138
         //public static Part DUAL_DECODE_2_4  = new Part("Dual 2-To-4 Line Decoder (PQ141)",    "PQ141_Decode2To4", PartGroups.SpecialCircuit); // 74LS139
         //public static Part QUAD_SEL_2_1     = new Part("Quad 2-To-1 Data Selector (PQ142)",   "PQ142_Sel2To1",    PartGroups.SpecialCircuit); // 74LS157

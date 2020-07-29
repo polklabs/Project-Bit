@@ -1,5 +1,10 @@
 ﻿using Gates;
 
+/**
+ * Hex Not Gates based on the 74LS04
+ * Used in the PQ041G_NotGate
+ */
+
 namespace Chips
 {
     public class Hex_Not_Gates : Chip

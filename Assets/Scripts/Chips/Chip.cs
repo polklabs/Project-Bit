@@ -14,8 +14,15 @@ namespace Chips
         public int CircuitIndex { get; set; }
         public int FromIndex { get; set; }
         public int ToIndex { get; set; }
-
-        public Wire(int fromIndex, int toIndex, int circuitIndex, bool isChip)
+        
+        /// <summary>
+        /// Creates a "wire" connecting two inputs/outputs and or gates/chips
+        /// </summary>
+        /// <param name="fromIndex">Index of output to grab value from (Input for .this)</param>
+        /// <param name="toIndex">Index of input to send value to (Output for .this)</param>
+        /// <param name="circuitIndex">Index of circuit to connect to (-1 for .this)</param>
+        /// <param name="isChip">If the circuit is of type Chip</param>
+        public Wire(int fromIndex, int toIndex, int circuitIndex, bool isChip = false)
         {
             IsChip = isChip;
             CircuitIndex = circuitIndex;
@@ -46,6 +53,11 @@ namespace Chips
         [DataMember]
         protected BitArray Dirty { get; set; }
 
+        /// <summary>
+        /// Create a new chip object
+        /// </summary>
+        /// <param name="inputs">Size of input array</param>
+        /// <param name="outputs">Size of output array</param>
         public Chip(int inputs, int outputs)
         {
             ID = Guid.NewGuid();
@@ -71,6 +83,10 @@ namespace Chips
             return Chips.Count - 1;
         }
 
+        /// <summary>
+        /// Adds a new connecting wire to the chip
+        /// </summary>
+        /// <param name="id">Id of circuit to use as start of wire</param>        
         protected void AddWire(Guid id, Wire wire)
         {
             if (!WireDict.ContainsKey(id))
