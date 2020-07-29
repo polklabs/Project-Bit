@@ -6,7 +6,7 @@ namespace Chips
     {
         public Binary_Counter_4Bit() : base(2, 4)
         {
-            D_FlipFlop_Re chipA = new D_FlipFlop_Re();
+            D_FlipFlop_Re chipA = new D_FlipFlop_Re();            
             int indexA = AddChip(chipA);
 
             D_FlipFlop_Re chipB = new D_FlipFlop_Re();

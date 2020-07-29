@@ -55,7 +55,7 @@ public class Load : MonoBehaviour
             {
                 TypeNameHandling = TypeNameHandling.Auto,
                 ObjectCreationHandling = ObjectCreationHandling.Replace,
-                Converters = { new BitArrayConverter(), new Vector3Converter() }
+                Converters = { new BitArrayConverter(), new Vector3Converter(), new WireDictionaryConverter() }
             };
             Dictionary<Guid, IntegratedCircuit> components = (Dictionary<Guid, IntegratedCircuit>)serializer.Deserialize(file, typeof(Dictionary<Guid, IntegratedCircuit>));
 
@@ -133,7 +133,10 @@ public class Load : MonoBehaviour
             JsonSerializer serializer = new JsonSerializer();
             Dictionary<string, Node> nodes = (Dictionary<string, Node>)serializer.Deserialize(file, typeof(Dictionary<string, Node>));
 
-            bb.nodes = nodes;
+            foreach (string s in nodes.Keys)
+            {
+                bb.nodes[s] = nodes[s];
+            }            
 
         }
     }

@@ -29,11 +29,9 @@ namespace IntegratedCircuits
         protected readonly State[] PinState;
         protected State[] oldState;
 
-        [DataMember]
         //Whether the pin is input or output
         protected readonly PinMode[] PinModes;
 
-        [DataMember]
         //State for input if input is unknown
         protected readonly State[] DefaultState;
         

@@ -69,9 +69,9 @@ public class BreadBoard : MonoBehaviour
 
     public void RemoveNodeConnection(string nodeId, int index)
     {
-        if (nodes.ContainsKey(nodeId))
+        if (nodes.ContainsKey(nodeId) && nodes[nodeId].connections.ContainsKey(index))
         {
-            nodes[nodeId].connections[index] = null;
+            nodes[nodeId].connections.Remove(index);
         }
     }
 
@@ -104,7 +104,7 @@ public class BreadBoard : MonoBehaviour
     {
         if (nodes.ContainsKey(nodeId))
         {
-            return nodes[nodeId].connections[index] != null;
+            return nodes[nodeId].connections.ContainsKey(index);
         }
         return true;
     }
@@ -114,9 +114,9 @@ public class BreadBoard : MonoBehaviour
         if (nodes.ContainsKey(nodeId))
         {
             Node node = nodes[nodeId];
-            foreach(Connection connection in node.connections)
+            foreach(Connection connection in node.connections.Values)
             {
-                if (connection != null && !connection.IsNode)
+                if (!connection.IsNode)
                 {
                     Guid id = Guid.Parse(connection.ID);
                     if (!connection.IsNode && components.ContainsKey(id))
@@ -186,10 +186,10 @@ public class BreadBoard : MonoBehaviour
 
             //Debug.Log("Old Pos: " + oldPos.ToString() + ", New Pos: " + node.valuePos.ToString() + ", Old Neg: " + oldNeg.ToString() + ", New Neg: " + node.valueNeg.ToString());
 
-            foreach (Connection connection in node.connections)
+            foreach (Connection connection in node.connections.Values)
             {
 
-                if (connection != null && !connection.ID.Equals(""))
+                if (!connection.ID.Equals(""))
                 {                    
                     if (connection.IsNode)
                     {
@@ -265,13 +265,12 @@ public class BreadBoard : MonoBehaviour
 
         while (nodeListIndex < nodeList.Count)
         {
-            Debug.Log("Checking: " + nodeList[nodeListIndex]);
             Node node = nodes[nodeList[nodeListIndex]];
             nodeListIndex++;
 
-            foreach (Connection connection in node.connections)
+            foreach (Connection connection in node.connections.Values)
             {
-                if (connection != null && !connection.ID.Equals(""))
+                if (!connection.ID.Equals(""))
                 {
                     if (connection.IsNode)
                     {
@@ -297,8 +296,6 @@ public class BreadBoard : MonoBehaviour
             }
 
         }
-
-        //Debug.Log("Pos: " + result.x.ToString() + ", Neg: " + result.y.ToString());
         return result;
     }
 
@@ -313,9 +310,9 @@ public class BreadBoard : MonoBehaviour
             Node node = nodes[nodeList[nodeListIndex]];
             nodeListIndex++;
 
-            foreach (Connection connection in node.connections)
+            foreach (Connection connection in node.connections.Values)
             {
-                if (connection != null && !connection.ID.Equals(""))
+                if (!connection.ID.Equals(""))
                 {
                     if (connection.IsNode)
                     {
@@ -345,11 +342,12 @@ public class Node
 {
     public int valuePos = 0;
     public int valueNeg = 0;
-    public Connection[] connections;
+    public Dictionary<int, Connection> connections = new Dictionary<int, Connection>();
+    public int maxIndex;
 
     public Node(int indexes)
     {
-        connections = new Connection[indexes];
+        maxIndex = indexes;        
     }
 
     public int GetState()
@@ -357,19 +355,20 @@ public class Node
         if (valuePos > 0)
         {
             return 1;
-            //return valuePos;
         }
         if (valueNeg < 0)
         {
             return -1;
-            //return valueNeg;
         }
         return 0;
     }
 
     public void SetConnection(Connection connection, int index)
     {
-        connections[index] = connection;
+        if (index < maxIndex)
+        {
+            connections[index] = connection;
+        }
     }
 
 }

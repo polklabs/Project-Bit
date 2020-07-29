@@ -10,13 +10,9 @@ namespace Chips
     [DataContract]
     public class Wire
     {
-        [DataMember]
         public bool IsChip { get; set; }
-        [DataMember]
         public int CircuitIndex { get; set; }
-        [DataMember]
         public int FromIndex { get; set; }
-        [DataMember]
         public int ToIndex { get; set; }
 
         public Wire(int fromIndex, int toIndex, int circuitIndex, bool isChip)

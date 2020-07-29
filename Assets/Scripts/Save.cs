@@ -2,6 +2,8 @@
 using System;
 using UnityEngine;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 public class Save : MonoBehaviour
 {
@@ -42,7 +44,7 @@ public class Save : MonoBehaviour
             {
                 TypeNameHandling = TypeNameHandling.Auto,
                 Formatting = Formatting.Indented,
-                Converters = { new BitArrayConverter(), new Vector3Converter() }
+                Converters = { new BitArrayConverter(), new Vector3Converter(), new WireDictionaryConverter() }
             };            
 
             serializer.Serialize(file, bb.components);
@@ -53,6 +55,16 @@ public class Save : MonoBehaviour
     {
         filePath += "/nodes.json";
 
+        Dictionary<string, Node> nodeDict = new Dictionary<string, Node>();
+
+        foreach (string key in bb.nodes.Keys)
+        {
+            if (bb.nodes[key].connections.Count > 0)
+            {
+                nodeDict.Add(key, bb.nodes[key]);
+            }
+        }
+
         using (StreamWriter file = File.CreateText(filePath))
         {
             JsonSerializer serializer = new JsonSerializer
@@ -60,7 +72,7 @@ public class Save : MonoBehaviour
                 Formatting = Formatting.Indented
             };
 
-            serializer.Serialize(file, bb.nodes);
+            serializer.Serialize(file, nodeDict);
         }
     }
 

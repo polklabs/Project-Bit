@@ -18,13 +18,13 @@ public class Mono_Switch : MonoBehaviour
         switch (ic.SwitchType)
         {
             case SwitchTypes.Pulse:
-                MoveButton(switchObject);
+                //MoveButton(switchObject);
                 PulseSwitch(ic, index);
                 break;
             case SwitchTypes.Momentary:
                 if (OnSwitch(ic, index))
                 {
-                    MoveButton(switchObject);
+                    //MoveButton(switchObject);
                     StartCoroutine(MomentarySwitch(ic, index, momentaryLength));                                        
                 }
                 break;
