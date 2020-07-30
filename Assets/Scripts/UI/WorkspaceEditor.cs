@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
 
-public enum WorkspaceAction { Place, Remove, Probe, None };
+public enum WorkspaceAction { Place, Remove, Demolish, Probe, None };
 
 public class WorkspaceEditor : MonoBehaviour
 {
@@ -69,6 +69,9 @@ public class WorkspaceEditor : MonoBehaviour
             case WorkspaceAction.Remove:
                 RemoveAction_Hover();
                 break;
+            case WorkspaceAction.Demolish:
+                DemolishAction_Hover();
+                break;
             default:
                 break;
         }
@@ -85,6 +88,9 @@ public class WorkspaceEditor : MonoBehaviour
                     break;
                 case WorkspaceAction.Remove:
                     RemoveAction();
+                    break;
+                case WorkspaceAction.Demolish:
+                    DemolishAction();
                     break;
                 default:
                     NoneAction();
@@ -124,6 +130,17 @@ public class WorkspaceEditor : MonoBehaviour
             return;
         }
         Action = WorkspaceAction.Remove;
+    }
+
+    public void SetActionDemolish()
+    {
+        ClearIC();        
+        if (Action == WorkspaceAction.Demolish)
+        {
+            Action = WorkspaceAction.None;
+            return;
+        }
+        Action = WorkspaceAction.Demolish;
     }
 
     public void SetActionProbe()
@@ -443,29 +460,120 @@ public class WorkspaceEditor : MonoBehaviour
         }
     }
 
+    private void DemolishAction()
+    {
+        int layer_mask = LayerMask.GetMask("Breadboard");
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            HashSet<string> nodesToDelete = new HashSet<string>();
+            HashSet<Guid> componentsToDelete = new HashSet<Guid>();
+            HashSet<Guid> wiresToDelete = new HashSet<Guid>();
+
+            for (int i = 0; i < hit.transform.childCount; i++)
+            {
+                string id = hit.transform.GetChild(i).name;
+                if (id == "none")
+                {
+                    continue;
+                }                
+
+                foreach(string s in breadBoard.nodes.Keys)
+                {
+                    if (s.StartsWith(id))
+                    {
+                        nodesToDelete.Add(s);
+                        foreach (Connection c in breadBoard.nodes[s].connections.Values)
+                        {
+                            if (!c.IsNode)
+                            {
+                                componentsToDelete.Add(Guid.Parse(c.ID));
+                            }
+                        }
+                    }
+                }
+
+                foreach(Guid g in breadBoard.components.Keys)
+                {
+                    if (breadBoard.components[g].IcType == ICType.wire)
+                    {
+                        Wire w = (Wire)breadBoard.components[g];
+                        if (w.GetPinNode(0).StartsWith(id) || w.GetPinNode(1).StartsWith(id))
+                        {
+                            wiresToDelete.Add(g);
+                        }
+                    }
+                }                
+            }
+
+            for (int i = fabricator.breadBoardData.Count - 1; i >= 0; i--)
+            {
+                if (hit.transform.name == fabricator.breadBoardData[i].ToString())
+                {
+                    fabricator.breadBoardData.RemoveAt(i);
+                }
+            }
+
+            foreach(Guid g in componentsToDelete)
+            {
+                circuitPool.RemoveIntegratedCircuit(g.ToString());
+                Destroy(GameObject.Find(g.ToString()));
+            }
+            foreach(Guid g in wiresToDelete)
+            {
+                circuitPool.RemoveWire(g.ToString());                
+                Destroy(GameObject.Find(g.ToString()));
+            }
+            foreach(string s in nodesToDelete)
+            {
+                breadBoard.nodes.Remove(s);
+            }
+            Destroy(hit.transform.gameObject);
+
+        }
+    }
+
     private void RemoveAction_Hover()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
+        int layer_mask = LayerMask.GetMask("Component");
+        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
         {
-            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Component"))
+            if (hoverObject != hit.transform.gameObject)
             {
-                if (hoverObject != hit.transform.gameObject)
+                if (hoverObject != null)
                 {
-                    if (hoverObject != null)
-                    {
-                        RemoveOutline(hoverObject.GetComponentInChildren<Renderer>());
-                    }
-
-                    AddOutline(hit.transform.parent.gameObject.GetComponentInChildren<Renderer>());
-                    hoverObject = hit.transform.parent.gameObject;
+                    RemoveOutline(hoverObject.GetComponentInChildren<Renderer>());
                 }
+
+                AddOutline(hit.transform.parent.gameObject.GetComponentInChildren<Renderer>());
+                hoverObject = hit.transform.parent.gameObject;
             }
-            else if(hoverObject != null)
+        }
+        else if (hoverObject != null)
+        {
+            RemoveOutline(hoverObject.GetComponentInChildren<Renderer>());
+            hoverObject = null;
+        }
+    }
+
+    private void DemolishAction_Hover()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        int layer_mask = LayerMask.GetMask("Breadboard");
+        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            if (hoverObject != hit.transform.gameObject)
             {
-                RemoveOutline(hoverObject.GetComponentInChildren<Renderer>());
-                hoverObject = null;
+                if (hoverObject != null)
+                {
+                    RemoveOutline(hoverObject.GetComponentInChildren<Renderer>());
+                }
+                AddOutline(hit.transform.gameObject.GetComponentInChildren<Renderer>());
+                hoverObject = hit.transform.gameObject;
             }
         }
         else if (hoverObject != null)

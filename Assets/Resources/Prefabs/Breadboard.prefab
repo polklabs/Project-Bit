@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1524150623000132583}
   - component: {fileID: 1524150623000132576}
   - component: {fileID: 1524150623000132577}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Breadboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 3996484937036682271}
   - component: {fileID: 7629228280022569736}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: none
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
