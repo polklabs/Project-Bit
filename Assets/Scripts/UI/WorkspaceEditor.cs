@@ -13,6 +13,7 @@ public enum WorkspaceAction { Place, Remove, Demolish, Probe, None };
 public class WorkspaceEditor : MonoBehaviour
 {
     //Referances
+    public GeneralManager gm;
     public BreadBoard breadBoard;
     public CircuitPool circuitPool;
     public Fabricator fabricator;
@@ -46,6 +47,15 @@ public class WorkspaceEditor : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            gm.paused = !gm.paused;
+        }
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            gm.step++;
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (locationASelected)

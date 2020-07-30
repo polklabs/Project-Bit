@@ -10,6 +10,8 @@ using UnityEngine.UI;
 
 public class Load : MonoBehaviour
 {
+    public GeneralManager gm;
+
     public BreadBoard bb;
     public CircuitPool cp;
     public Fabricator fabricator;
@@ -34,6 +36,7 @@ public class Load : MonoBehaviour
             LoadUpdates(filePath);
             LoadNodes(filePath);
             LoadComponents(filePath);
+            LoadGeneral(filePath);
         } else
         {
             fabricator.addBoard("0", 0, 0, false);            
@@ -175,6 +178,24 @@ public class Load : MonoBehaviour
             };
             fabricator.breadBoardData = (List<BreadBoardData>)serializer.Deserialize(file, typeof(List<BreadBoardData>));
             fabricator.loadFromBreadBoardData();
+        }
+    }
+
+    private void LoadGeneral(string filePath)
+    {
+        filePath += "/general.json";
+        if (!File.Exists(filePath))
+        {
+            return;
+        }
+
+        using (StreamReader file = File.OpenText(filePath))
+        {
+            JsonSerializer serializer = new JsonSerializer
+            {
+                Converters = { new Vector3Converter() }
+            };
+            gm.CopyStruct((GeneralManagerStruct)serializer.Deserialize(file, typeof(GeneralManagerStruct)));
         }
     }
 

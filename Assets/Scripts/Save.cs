@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 
 public class Save : MonoBehaviour
 {
@@ -14,12 +12,10 @@ public class Save : MonoBehaviour
 
     public void SaveWorkspaceGUI()
     {
-        gm.paused = true;
         if (SaveWorkspace())
         {
             Debug.Log("Saved Workspace!");
         }
-        gm.paused = false;
     }
 
     public bool SaveWorkspace()
@@ -32,6 +28,7 @@ public class Save : MonoBehaviour
         SaveNodes(filePath);
         SaveUpdates(filePath);
         SaveBreadBoards(filePath);
+        SaveGeneral(filePath);
 
         return true;
 
@@ -107,6 +104,22 @@ public class Save : MonoBehaviour
             };
 
             serializer.Serialize(file, fabricator.breadBoardData);
+        }
+    }
+
+    private void SaveGeneral(string filePath)
+    {
+        filePath += "/general.json";
+
+        using (StreamWriter file = File.CreateText(filePath))
+        {
+            JsonSerializer serializer = new JsonSerializer
+            {
+                Formatting = Formatting.None,
+                Converters = { new Vector3Converter() }
+            };
+
+            serializer.Serialize(file, gm.GenerateStruct());
         }
     }
 }

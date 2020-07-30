@@ -20,16 +20,12 @@ public class BreadBoard : MonoBehaviour
     }
 
     public void Update()
-    {
+    {        
         if (!generalManager.paused)
         {
             while (updates.Count > 0)
             {
-                Guid id = updates.Dequeue();
-                if (components.ContainsKey(id))
-                {
-                    components[id].Update();
-                }
+                UpdateFromQueue();
 
                 if (generalManager.paused)
                 {
@@ -40,13 +36,21 @@ public class BreadBoard : MonoBehaviour
         {
             if (generalManager.step > 0 && updates.Count > 0)
             {
-                Guid id = updates.Dequeue();
-                if (components.ContainsKey(id))
+                while (updates.Count > 0)
                 {
-                    components[id].Update();
+                    UpdateFromQueue();
                 }
                 generalManager.step--;
             }
+        }
+    }
+
+    private void UpdateFromQueue()
+    {
+        Guid id = updates.Dequeue();
+        if (components.ContainsKey(id))
+        {
+            components[id].Update();
         }
     }
 

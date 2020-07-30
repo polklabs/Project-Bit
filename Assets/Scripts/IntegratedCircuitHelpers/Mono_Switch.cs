@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using IntegratedCircuits;
 
 public class Mono_Switch : MonoBehaviour
 {
-
+    public GeneralManager gm;
     public BreadBoard breadBoard;
     public float momentaryLength = 0.3f;
     public float switchLength = 0.3f;
@@ -18,13 +17,13 @@ public class Mono_Switch : MonoBehaviour
         switch (ic.SwitchType)
         {
             case SwitchTypes.Pulse:
-                //MoveButton(switchObject);
+                MoveButton(switchObject);
                 PulseSwitch(ic, index);
                 break;
             case SwitchTypes.Momentary:
                 if (OnSwitch(ic, index))
                 {
-                    //MoveButton(switchObject);
+                    MoveButton(switchObject);
                     StartCoroutine(MomentarySwitch(ic, index, momentaryLength));                                        
                 }
                 break;
@@ -65,7 +64,18 @@ public class Mono_Switch : MonoBehaviour
 
     private IEnumerator MomentarySwitch(Switch ic, int index, float delayTime)
     {
-        yield return new WaitForSeconds(delayTime);
+        float timer = 0f;
+        while (timer < delayTime)
+        {
+            while (gm.paused)
+            {
+                yield return null;
+            }
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
         ic.SwitchState[index] = false;
         ic.Update();
         ic.CustomMethod();
@@ -82,7 +92,17 @@ public class Mono_Switch : MonoBehaviour
 
     private IEnumerator MoveButtonBack(float delayTime, GameObject child)
     {
-        yield return new WaitForSeconds(delayTime);
+        float timer = 0f;
+        while (timer < delayTime)
+        {
+            while (gm.paused)
+            {
+                yield return null;
+            }
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
 
         Mono_Switch_Count monoSwitchCount = child.GetComponentInParent<Mono_Switch_Count>();
 
