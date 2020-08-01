@@ -176,10 +176,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'PQ160
-
-
-    3cd133e9-0e31-4939-ae6f-e63d3dbd702f'
+  m_Text: PQ160
 --- !u!65 &2062001741216474121
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -238,6 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0758b5940b99354fb3d21cd91021e45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gm: {fileID: 0}
 --- !u!1001 &4100988517578377866
 PrefabInstance:
   m_ObjectHideFlags: 0

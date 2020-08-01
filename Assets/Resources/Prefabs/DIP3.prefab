@@ -54,6 +54,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -196,6 +197,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.8207547, g: 0.8207547, b: 0.8207547, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -315,6 +317,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -393,6 +396,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -613,16 +617,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3284085786245024111}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 00c4d3a8805d65d4b904bdcf6b9e493f,
-        type: 3}
-      propertyPath: m_Name
-      value: dip3
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 00c4d3a8805d65d4b904bdcf6b9e493f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 00c4d3a8805d65d4b904bdcf6b9e493f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -698,6 +692,16 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[2]
       value: 
       objectReference: {fileID: 2100000, guid: 468fabdd38d8227478dc5ac14f911cd2, type: 2}
+    - target: {fileID: -927199367670048503, guid: 00c4d3a8805d65d4b904bdcf6b9e493f,
+        type: 3}
+      propertyPath: m_Name
+      value: dip3
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 00c4d3a8805d65d4b904bdcf6b9e493f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00c4d3a8805d65d4b904bdcf6b9e493f, type: 3}
 --- !u!1 &4298550270564124597 stripped

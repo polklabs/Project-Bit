@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraMove : MonoBehaviour
 {
@@ -35,10 +36,13 @@ public class CameraMove : MonoBehaviour
         }
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        pos.y -= scroll * (scrollSpeed + (pos.y / 5)) * 100f * Time.deltaTime;
-        if (pos.y > minY && pos.y < maxY)
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            pos.z += scroll * (scrollSpeed + (pos.z / 5)) * 100f * Time.deltaTime;
+            pos.y -= scroll * (scrollSpeed + (pos.y / 5)) * 100f * Time.deltaTime;
+            if (pos.y > minY && pos.y < maxY)
+            {
+                pos.z += scroll * (scrollSpeed + (pos.z / 5)) * 100f * Time.deltaTime;
+            }
         }
 
         pos.x = Mathf.Clamp(pos.x, -panLimit.x, panLimit.x);

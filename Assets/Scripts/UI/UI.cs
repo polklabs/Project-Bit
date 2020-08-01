@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,126 +7,132 @@ namespace userInterface {
     public class UI : MonoBehaviour
     {
         public Color32 SelectedColor = new Color32(0, 174, 255, 255);
+        public Color32 UnselectedColor = new Color32(255, 255, 255, 255);
 
         public Button[] ActionButtons = new Button[3];
+        private int selectedButton = -1;
+
+        public WorkspaceEditor workspaceEditor;
+        public GeneralManager generalManager;
 
         public GameObject Inventory;
         public GameObject ScrollViewContent;
         public GameObject ButtonTemplate;
 
-        public Button[] GroupButtons = new Button[6];
-
-        private int selectedGroup = -1;
+        public Image playPauseImage;
+        public Sprite paused;
+        public Sprite played;
 
         void Start()
         {
-            foreach(Button b in ActionButtons)
-            {
-                ColorBlock colors_temp = b.colors;
-                colors_temp.selectedColor = SelectedColor;
-                b.colors = colors_temp;
-            }
+            clearButtonColors();
+        }
 
-            foreach (Button b in GroupButtons)
+        private void clearButtonColors()
+        {
+            foreach (Button b in ActionButtons)
             {
-                ColorBlock colors_temp = b.colors;
-                colors_temp.selectedColor = SelectedColor;
-                b.colors = colors_temp;
+                if (b != null)
+                {
+                    setButtonColor(b, UnselectedColor);
+                }
             }
         }
 
-        public void SelectActionButton(int buttonIndex)
+        private void setButtonColor(Button b, Color32 color)
         {
-            foreach(Button b in ActionButtons)
-            {                
-                ColorBlock colors_temp = b.colors;
-                colors_temp.normalColor = new Color32(255, 255, 255, 255);
-                b.colors = colors_temp;
-            }
+            ColorBlock colors_temp = b.colors;
+            colors_temp.normalColor = color;
+            b.colors = colors_temp;
+        }
+
+        public void SelectButton(int buttonIndex)
+        {
+            clearButtonColors();
 
             ColorBlock colors = ActionButtons[buttonIndex].colors;
-            colors.normalColor = SelectedColor;
+            colors.normalColor = (selectedButton == buttonIndex) ? UnselectedColor : SelectedColor;
             ActionButtons[buttonIndex].colors = colors;
 
-            if (buttonIndex == 0 && selectedGroup == -1)
-            {                    
-                SelectGroupButton(0);
-                Inventory.SetActive(true);
-            }
-            else
+            if (buttonIndex == selectedButton)
             {
-                SelectAndDrawGroup(-1);
+                selectedButton = -1;                
+            } else
+            {
+                selectedButton = buttonIndex;
+            }
+            
+            DrawGroup();            
+        }
+
+        public void DrawGroup()
+        {
+            if (selectedButton == -1 || selectedButton >= Part.GroupCount())
+            {
+                workspaceEditor.SetActionPlace(false);
                 Inventory.SetActive(false);
+                return;
+            }
+
+            workspaceEditor.SetActionPlace(true);
+            Inventory.SetActive(true);
+
+            string groupString = Part.IntToGroupString(selectedButton);
+
+            //Delete children in scroll
+            for (int i = 1; i < ScrollViewContent.transform.childCount; i++)
+            {
+                Destroy(ScrollViewContent.transform.GetChild(i).gameObject);
+            }
+
+            //Repopulate the scroll
+            if (Part.PartList.ContainsKey(groupString))
+            {
+                foreach (Part part in Part.PartList[groupString])
+                {
+                    GameObject go = Instantiate(ButtonTemplate) as GameObject;
+                    go.SetActive(true);
+                    go.transform.SetParent(ScrollViewContent.transform, false);
+                    go.GetComponentInChildren<Text>().text = part.PartName;
+                    go.name = part.ClassName;
+                    go.GetComponent<Component_Button>().isMultiPoint = part.IsMultiPoint;
+                }
             }            
         }
 
-        public void SelectGroupButton(int buttonIndex)
+        public void PlayPause()
         {
-            foreach (Button b in GroupButtons)
+            generalManager.paused = !generalManager.paused;
+
+            if (generalManager.paused)
             {
-                ColorBlock colors_temp = b.colors;
-                colors_temp.normalColor = new Color32(255, 255, 255, 255);
-                b.colors = colors_temp;
+                playPauseImage.sprite = played;
+            } 
+            else
+            {
+                playPauseImage.sprite = paused;
             }
-
-            ColorBlock colors = GroupButtons[buttonIndex].colors;
-            colors.normalColor = SelectedColor;
-            GroupButtons[buttonIndex].colors = colors;
-
-            SelectAndDrawGroup(buttonIndex);
         }
 
-        public void SelectAndDrawGroup(int groupIndex)
+        public void Step()
         {
-            string groupString = groupIndex == -1 ? "" : Part.IntToGroupString(groupIndex);
-            if (selectedGroup != groupIndex)
+            if (generalManager.paused)
             {
-                foreach (Button b in GroupButtons)
-                {
-                    ColorBlock colors_temp = b.colors;
-                    colors_temp.normalColor = new Color32(255, 255, 255, 255);
-                    b.colors = colors_temp;
-                }
-
-                if (groupIndex != -1)
-                {
-
-                    //Set color of new to blue
-                    ColorBlock colors = GroupButtons[groupIndex].colors;
-                    colors.normalColor = SelectedColor;
-                    GroupButtons[groupIndex].colors = colors;
-
-                    //Delete children in scroll
-                    for (int i = 1; i < ScrollViewContent.transform.childCount; i++)
-                    {
-                        Destroy(ScrollViewContent.transform.GetChild(i).gameObject);
-                    }
-
-                    //Repopulate the scroll
-                    if (Part.PartList.ContainsKey(groupString))
-                    {
-                        foreach (Part part in Part.PartList[groupString])
-                        {
-                            GameObject go = Instantiate(ButtonTemplate) as GameObject;
-                            go.SetActive(true);
-                            go.transform.SetParent(ScrollViewContent.transform, false);
-                            go.GetComponentInChildren<Text>().text = part.PartName;
-                            go.name = part.ClassName;
-                            go.GetComponent<Component_Button>().isMultiPoint = part.IsMultiPoint;
-                        }
-                    }
-                }
+                generalManager.step++;
             }
-            selectedGroup = groupIndex;
         }
 
     }
 
-    public enum PartGroups { Wires, Inputs, Outputs, BasicCircuit, Memory, SpecialCircuit };
+    public enum PartGroups { Breadboard, Wires, Inputs, Outputs, BasicCircuit, Memory, SpecialCircuit };
 
     public class Part
     {
         public static Dictionary<string, List<Part>> PartList = new Dictionary<string, List<Part>>();
+
+        // Breadboards ------------------------------------------------------------------------------
+        public static Part BREAD_BOARD = new Part("Bread Board", "BreadBoardTemp", PartGroups.Breadboard);
+        public static Part POWER_RAIL = new Part("Power Rail", "PowerRailTemp", PartGroups.Breadboard);
 
         // Wires ------------------------------------------------------------------------------------
         public static Part VDD              = new Part("Power",             "Vdd",          PartGroups.Wires);
@@ -137,10 +144,7 @@ namespace userInterface {
         public static Part WIRE_BLACK       = new Part("Wire, Black",       "Wire_Black",   PartGroups.Wires).SetMultiPoint();
         public static Part WIRE_WHITE       = new Part("Wire, White",       "Wire_White",   PartGroups.Wires).SetMultiPoint();
         public static Part WIRE_PURPLE      = new Part("Wire, Purple",      "Wire_Purple",  PartGroups.Wires).SetMultiPoint();
-        public static Part WIRE_ORANGE      = new Part("Wire, Orange",      "Wire_Orange",  PartGroups.Wires).SetMultiPoint();
-
-        public static Part BREAD_BOARD = new Part("Bread Board", "BreadBoardTemp", PartGroups.Wires);
-        public static Part POWER_RAIL = new Part("Power Rail", "PowerRailTemp", PartGroups.Wires);
+        public static Part WIRE_ORANGE      = new Part("Wire, Orange",      "Wire_Orange",  PartGroups.Wires).SetMultiPoint();        
 
         // Basic ------------------------------------------------------------------------------------
         public static Part QUAD_AND   = new Part("And Gates, Quad 2-Input (PQ010G)",      "PQ010G_AndGate",       PartGroups.BasicCircuit); // 74LS08
@@ -213,6 +217,11 @@ namespace userInterface {
             return this;
         }
 
+        public static int GroupCount()
+        {
+            return Enum.GetNames(typeof(PartGroups)).Length;
+        }
+
         public static string IntToGroupString(int i)
         {
             PartGroups partGroups = (PartGroups)i;
@@ -223,6 +232,8 @@ namespace userInterface {
         {
             switch (partGroup)
             {
+                case PartGroups.Breadboard:
+                    return "Bread Boards";
                 case PartGroups.BasicCircuit:
                     return "Basic Chips";
                 case PartGroups.SpecialCircuit:

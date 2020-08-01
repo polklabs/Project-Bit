@@ -172,10 +172,10 @@ public class WorkspaceEditor : MonoBehaviour
         Action = WorkspaceAction.None;
     }
 
-    public void SetActionPlace()
+    public void SetActionPlace(bool set = false)
     {
         ClearIC();
-        if (Action == WorkspaceAction.Place)
+        if (Action == WorkspaceAction.Place && !set)
         {
             Action = WorkspaceAction.None;
             return;

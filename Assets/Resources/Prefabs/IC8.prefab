@@ -90,10 +90,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'PQ150G
-
-
-    6e8d6176-e6b9-4b05-b9ca-c287fe852dca'
+  m_Text: PQ150G
 --- !u!1 &4752948229570114979
 GameObject:
   m_ObjectHideFlags: 0
