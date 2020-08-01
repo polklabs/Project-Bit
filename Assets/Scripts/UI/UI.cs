@@ -67,7 +67,7 @@ namespace userInterface {
         {
             if (selectedButton == -1 || selectedButton >= Part.GroupCount())
             {
-                workspaceEditor.SetActionPlace(false);
+                //workspaceEditor.SetActionPlace(true);
                 Inventory.SetActive(false);
                 return;
             }
