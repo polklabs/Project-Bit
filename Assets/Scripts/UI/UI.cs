@@ -42,6 +42,7 @@ namespace userInterface {
         private void setButtonColor(Button b, Color32 color)
         {
             ColorBlock colors_temp = b.colors;
+            colors_temp.selectedColor = color;
             colors_temp.normalColor = color;
             b.colors = colors_temp;
         }
@@ -49,10 +50,7 @@ namespace userInterface {
         public void SelectButton(int buttonIndex)
         {
             clearButtonColors();
-
-            ColorBlock colors = ActionButtons[buttonIndex].colors;
-            colors.normalColor = (selectedButton == buttonIndex) ? UnselectedColor : SelectedColor;
-            ActionButtons[buttonIndex].colors = colors;
+            setButtonColor(ActionButtons[buttonIndex], (selectedButton == buttonIndex) ? UnselectedColor : SelectedColor);
 
             if (buttonIndex == selectedButton)
             {

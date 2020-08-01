@@ -27,7 +27,7 @@ public class WorkspaceEditor : MonoBehaviour
     private readonly Vector3 GameObjectPool = new Vector3(0, 500, 0);
 
     private GameObject hoverObject = null;
-    private Material[] hoverMaterials = null;
+    private List<Material[]> hoverMaterials = new List<Material[]>();
 
     /* For Placing Objects */
     private GameObject icModel = null;
@@ -297,7 +297,7 @@ public class WorkspaceEditor : MonoBehaviour
                     if (showsError)
                     {
                         showsError = false;
-                        RemoveOutline(icModel.GetComponentInChildren<Renderer>());
+                        RemoveOutline(icModel.GetComponentsInChildren<Renderer>());
                     }
                 }
                 else
@@ -305,7 +305,7 @@ public class WorkspaceEditor : MonoBehaviour
                     if (!showsError)
                     {
                         showsError = true;
-                        AddOutline(icModel.GetComponentInChildren<Renderer>());
+                        AddOutline(icModel.GetComponentsInChildren<Renderer>());
                     }
                 }
             }
@@ -359,7 +359,7 @@ public class WorkspaceEditor : MonoBehaviour
                 if (showsError)
                 {
                     showsError = false;
-                    RemoveOutline(icModel.GetComponentInChildren<Renderer>());
+                    RemoveOutline(icModel.GetComponentsInChildren<Renderer>());
                 }
             }
             else
@@ -367,7 +367,7 @@ public class WorkspaceEditor : MonoBehaviour
                 if (!showsError)
                 {
                     showsError = true;
-                    AddOutline(icModel.GetComponentInChildren<Renderer>());
+                    AddOutline(icModel.GetComponentsInChildren<Renderer>());
                 }
             }
 
@@ -425,7 +425,7 @@ public class WorkspaceEditor : MonoBehaviour
                     if (showsError)
                     {
                         showsError = false;
-                        RemoveOutline(icModel.GetComponentInChildren<Renderer>());
+                        RemoveOutline(icModel.GetComponentsInChildren<Renderer>());
                     }
                 }
                 else
@@ -433,7 +433,7 @@ public class WorkspaceEditor : MonoBehaviour
                     if (!showsError)
                     {
                         showsError = true;
-                        AddOutline(icModel.GetComponentInChildren<Renderer>());
+                        AddOutline(icModel.GetComponentsInChildren<Renderer>());
                     }
                 }
             }
@@ -555,16 +555,16 @@ public class WorkspaceEditor : MonoBehaviour
             {
                 if (hoverObject != null)
                 {
-                    RemoveOutline(hoverObject.GetComponentInChildren<Renderer>());
+                    RemoveOutline(hoverObject.GetComponentsInChildren<Renderer>());
                 }
 
-                AddOutline(hit.transform.parent.gameObject.GetComponentInChildren<Renderer>());
+                AddOutline(hit.transform.parent.gameObject.GetComponentsInChildren<Renderer>());
                 hoverObject = hit.transform.parent.gameObject;
             }
         }
         else if (hoverObject != null)
         {
-            RemoveOutline(hoverObject.GetComponentInChildren<Renderer>());
+            RemoveOutline(hoverObject.GetComponentsInChildren<Renderer>());
             hoverObject = null;
         }
     }
@@ -580,15 +580,16 @@ public class WorkspaceEditor : MonoBehaviour
             {
                 if (hoverObject != null)
                 {
-                    RemoveOutline(hoverObject.GetComponentInChildren<Renderer>());
+                    RemoveOutline(hoverObject.GetComponentsInChildren<Renderer>());
                 }
-                AddOutline(hit.transform.gameObject.GetComponentInChildren<Renderer>());
+
+                AddOutline(hit.transform.gameObject.GetComponentsInChildren<Renderer>());
                 hoverObject = hit.transform.gameObject;
             }
         }
         else if (hoverObject != null)
         {
-            RemoveOutline(hoverObject.GetComponentInChildren<Renderer>());
+            RemoveOutline(hoverObject.GetComponentsInChildren<Renderer>());
             hoverObject = null;
         }
     }
@@ -772,7 +773,7 @@ public class WorkspaceEditor : MonoBehaviour
         icModel = null;
         ic = null;
         hoverObject = null;
-        hoverMaterials = null;
+        hoverMaterials.Clear();
         showsError = false;
         placeRotated = false;
     }
@@ -787,15 +788,22 @@ public class WorkspaceEditor : MonoBehaviour
         icModel.GetComponentInChildren<LineRenderer>().SetPositions(new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 1, 0) });
     }
 
-    private void AddOutline(Renderer r)
+    private void AddOutline(Renderer[] renderers)
     {
-        hoverMaterials = r.materials;
-        r.materials = Enumerable.Repeat(outlineMat, r.materials.Length).ToArray();   
+        hoverMaterials.Clear();
+        foreach(Renderer r in renderers)
+        {
+            hoverMaterials.Add(r.materials);
+            r.materials = Enumerable.Repeat(outlineMat, r.materials.Length).ToArray();
+        }        
     }
 
-    private void RemoveOutline(Renderer r)
+    private void RemoveOutline(Renderer[] renderers)
     {
-        r.materials = hoverMaterials;
+        for(int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].materials = hoverMaterials[i];
+        }        
     }
 
 }

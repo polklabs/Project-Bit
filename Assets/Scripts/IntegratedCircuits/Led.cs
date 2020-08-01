@@ -32,14 +32,12 @@ namespace IntegratedCircuits
 
         protected override void InternalUpdate()
         {
-            if (PinState[0] == State.HIGH /*&& PinState[1] == -1*/)
+            if (PinState[0] == State.HIGH)
             {
-                //Debug.Log("LIGHT ON");
                 On = true;                
             }
             else
             {
-                //Debug.Log("LIGHT OFF");
                 On = false;
             }
 
