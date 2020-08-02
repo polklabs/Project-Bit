@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using IntegratedCircuits;
+using System.Diagnostics;
 
 public class BreadBoard : MonoBehaviour
 {
@@ -23,31 +24,39 @@ public class BreadBoard : MonoBehaviour
     {        
         if (!generalManager.paused)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             while (updates.Count > 0)
             {
-                UpdateFromQueue();
+
+                UpdateFromQueue(updates.Dequeue());
+
+                if (stopwatch.ElapsedMilliseconds > 33)
+                {
+                    break;
+                }
 
                 if (generalManager.paused)
                 {
                     break;
                 }
             }
+            stopwatch.Stop();
         } else
         {
             if (generalManager.step > 0 && updates.Count > 0)
             {
-                while (updates.Count > 0)
+                Queue<Guid> stepQueue = new Queue<Guid>(updates);
+                while (stepQueue.Count > 0)
                 {
-                    UpdateFromQueue();
+                    UpdateFromQueue(stepQueue.Dequeue());
                 }
                 generalManager.step--;
             }
         }
     }
 
-    private void UpdateFromQueue()
+    private void UpdateFromQueue(Guid id)
     {
-        Guid id = updates.Dequeue();
         if (components.ContainsKey(id))
         {
             components[id].Update();
@@ -144,14 +153,13 @@ public class BreadBoard : MonoBehaviour
 
     public void PropagateValue(string nodeId, string id, int index, int value, int posValue, int negValue)
     {
-        //Debug.Log("PropagateValue: " + nodeId + " : " + value + ", pos: " + posValue + ", neg: " + negValue);
         int nodeListIndex = 0;
         List<string> nodeList = new List<string>();
         nodeList.Add(nodeId);
+        bool addSelfToQueue = false;
 
         while(nodeListIndex < nodeList.Count)
         {
-            //Debug.Log(nodeList[nodeListIndex]);
             Node node = nodes[nodeList[nodeListIndex]];
             nodeListIndex++;
 
@@ -186,9 +194,7 @@ public class BreadBoard : MonoBehaviour
                     node.valueNeg = negValue;
                     node.valuePos = posValue;
                     break;
-            }
-
-            //Debug.Log("Old Pos: " + oldPos.ToString() + ", New Pos: " + node.valuePos.ToString() + ", Old Neg: " + oldNeg.ToString() + ", New Neg: " + node.valueNeg.ToString());
+            }            
 
             foreach (Connection connection in node.connections.Values)
             {
@@ -203,24 +209,35 @@ public class BreadBoard : MonoBehaviour
                         }
                     }
                     else if (value == 0 || (oldPos + node.valuePos == 1) || (oldPos == 0 && node.valuePos == 0 && (oldNeg + node.valueNeg == -1)))
-                    {
-                        //Debug.Log(connection.ID + " => " + id + ", " + connection.Index.ToString() + " => " + index.ToString());
-                        if (connection.ID != id || connection.Index != index)
+                    {                        
+                        if (connection.ID != id)
                         {
                             if (!updates.Contains(Guid.Parse(connection.ID)))
                             {
                                 updates.Enqueue(Guid.Parse(connection.ID));
                             }
+                        } else if (connection.Index != index)
+                        {
+                            addSelfToQueue = true;
                         }
                     }
                 }
             }
         }
+
+        // If a component feeds back to itself then add that to the queue last. Otherwise it can cause weird race conditions
+        if (addSelfToQueue)
+        {
+            if (!updates.Contains(Guid.Parse(id)))
+            {
+                updates.Enqueue(Guid.Parse(id));
+            }
+        }
+
     }
 
     public void UnlinkNodes(string nodeIdA, int indexA, string nodeIdB, int indexB)
     {
-        //Debug.Log("A: " + nodeIdA + ", B: " + nodeIdB);
 
         RemoveNodeConnection(nodeIdA, indexA);
         RemoveNodeConnection(nodeIdB, indexB);
