@@ -4,18 +4,18 @@ namespace Chips
 {
     public class D_FlipFlop_Re : Chip
     {
-        public D_FlipFlop_Re() : base(2, 2)
+        public D_FlipFlop_Re() : base(3, 2)
         {
             Gate gateA = new NANDGate();
             int indexA = AddGate(gateA);
 
-            Gate gateB = new NANDGate();
+            Gate gateB = new NANDGate(3);
             int indexB = AddGate(gateB);
 
-            Gate gateC = new NANDGate(3);
+            Gate gateC = new NANDGate();
             int indexC = AddGate(gateC);
 
-            Gate gateD = new NANDGate();
+            Gate gateD = new NANDGate(3);
             int indexD = AddGate(gateD);
 
             Gate gateE = new NANDGate();
@@ -30,6 +30,10 @@ namespace Chips
 
             //Data
             AddWire(ID, new Wire(1, 1, indexD, false));
+
+            //Clr
+            AddWire(ID, new Wire(2, 2, indexB, false));
+            AddWire(ID, new Wire(2, 2, indexD, false));
 
             //Gate A
             AddWire(gateA.ID, new Wire(0, 0, indexB, false));

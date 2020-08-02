@@ -9,7 +9,7 @@ namespace Chips
 {
     public class Binary_Counter_4Bit : Chip
     {
-        public Binary_Counter_4Bit() : base(2, 4)
+        public Binary_Counter_4Bit() : base(3, 4)
         {
             D_FlipFlop_Re chipA = new D_FlipFlop_Re();            
             int indexA = AddChip(chipA);
@@ -23,15 +23,27 @@ namespace Chips
             D_FlipFlop_Re chipD = new D_FlipFlop_Re();
             int indexD = AddChip(chipD);
 
-            Gate gateE = new XORGate();
+            Gate gateE = new NANDGate();
             int indexE = AddGate(gateE);
 
+            Gate gateF = new ANDGate();
+            int indexF = AddGate(gateF);
+
             //Inputs
+            AddWire(ID, new Wire(0, 0, indexA, true));
             AddWire(ID, new Wire(0, 0, indexE, false));
             AddWire(ID, new Wire(1, 1, indexE, false));
 
+            AddWire(ID, new Wire(2, 0, indexF, false));
+
             //Gate E
-            AddWire(gateE.ID, new Wire(0, 0, indexA, true));
+            AddWire(gateE.ID, new Wire(0, 1, indexF, false));
+
+            //Gate F
+            AddWire(gateF.ID, new Wire(0, 2, indexA, true));
+            AddWire(gateF.ID, new Wire(0, 2, indexB, true));
+            AddWire(gateF.ID, new Wire(0, 2, indexC, true));
+            AddWire(gateF.ID, new Wire(0, 2, indexD, true));
 
             //Chip A
             AddWire(chipA.ID, new Wire(0, 0, -1, true));

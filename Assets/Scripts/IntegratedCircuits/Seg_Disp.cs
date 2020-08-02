@@ -38,10 +38,10 @@ namespace IntegratedCircuits
             }
             for(int i = 0; i < 8; i++)
             {
-                if (Ons[i] != OldOns[i])
-                {
+                //if (Ons[i] != OldOns[i])
+                //{
                     mono.ToggleLed(i, Ons[i]);
-                }
+                //}
             }
             
         }

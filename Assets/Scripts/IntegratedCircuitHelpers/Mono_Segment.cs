@@ -8,21 +8,8 @@ public class Mono_Segment : MonoBehaviour
 
     private string[] childNames = { "A", "B", "C", "D", "E", "F", "G", "DP" };
 
-    private Coroutine[] coroutines;
-    private MeshRenderer[] meshRenderers;
-
-    public void Start()
-    {
-        coroutines = new Coroutine[8];
-        meshRenderers = new MeshRenderer[8];
-
-        for(int i = 0; i < 8; i++)
-        {
-            string name = childNames[i];
-            Transform t = transform.Find(name);
-            meshRenderers[i] = t.gameObject.GetComponent<MeshRenderer>();
-        }
-    }
+    private Coroutine[] coroutines = new Coroutine[8];
+    private MeshRenderer[] meshRenderers = new MeshRenderer[8];
 
     public void ToggleLed(int index, bool value)
     {
@@ -57,6 +44,11 @@ public class Mono_Segment : MonoBehaviour
 
     private void setMaterial(int index, Material m)
     {
+        if(meshRenderers[index] == null)
+        {
+            meshRenderers[index] = transform.Find(childNames[index]).gameObject.GetComponent<MeshRenderer>();
+        }
+
         meshRenderers[index].material = m;
     }
 }
