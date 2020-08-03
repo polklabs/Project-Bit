@@ -150,7 +150,7 @@ public class Fabricator : MonoBehaviour
                         GameObject temp = Instantiate(pinX, new Vector3(i + x, -0.4f, j + y), Quaternion.Euler(0, 0, 0)) as GameObject;
                         temp.name = string.Format("{0}x{1}x{2}", parent.name, j, (rotation ? "1" : "0"));
                         temp.transform.parent = parent.transform;
-                        breadBoard.AddNode(temp.name, type);
+                        breadBoard.AddNode(temp.name, type, temp.GetComponent<MeshRenderer>());
                     }
                 }
             }
@@ -185,7 +185,7 @@ public class Fabricator : MonoBehaviour
             GameObject temp = Instantiate(pinZ, new Vector3(i + x, -0.4f, 3 + y), Quaternion.Euler(0, 0, 0)) as GameObject;
             temp.name = string.Format("{0}x{1}x{2}", parent.name, i, (rotation ? "1" : "0"));
             temp.transform.parent = parent.transform;
-            breadBoard.AddNode(temp.name, type);       
+            breadBoard.AddNode(temp.name, type, temp.GetComponent<MeshRenderer>());       
         }
 
         if (rotation)

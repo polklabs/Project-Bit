@@ -100,7 +100,7 @@ namespace userInterface {
 
         public void PlayPause()
         {
-            generalManager.paused = !generalManager.paused;
+            generalManager.PlayPause();
 
             if (generalManager.paused)
             {
@@ -114,10 +114,7 @@ namespace userInterface {
 
         public void Step()
         {
-            if (generalManager.paused)
-            {
-                generalManager.step++;
-            }
+            generalManager.Step();
         }
 
     }

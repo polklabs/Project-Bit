@@ -16,7 +16,6 @@ namespace IntegratedCircuits
             IcType = ICType.solo;
             ModelName = "Led_Green";
             On = false;
-            NeedsObjRef = true;
             Vdd = 0;
             Gnd = 0;
         }

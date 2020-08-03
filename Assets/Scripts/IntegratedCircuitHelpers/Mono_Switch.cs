@@ -37,15 +37,17 @@ public class Mono_Switch : MonoBehaviour
     private void ToggleSwitch(Switch ic, int index)
     {
         ic.SwitchState[index] = !ic.SwitchState[index];
-        ic.Update();
+        ic.Update();        
         ic.CustomMethod();
+        breadBoard.SetComponentDisplay();
     }
 
     private void PulseSwitch(Switch ic, int index)
     {
         ic.SwitchState[index] = !ic.SwitchState[index];
-        ic.Update();
+        ic.Update();        
         ic.CustomMethod();
+        breadBoard.SetComponentDisplay();
         ic.SwitchState[index] = !ic.SwitchState[index];
         breadBoard.UpdateComponent(ic.GetId());
     }
@@ -57,6 +59,7 @@ public class Mono_Switch : MonoBehaviour
             ic.SwitchState[index] = true;
             ic.Update();
             ic.CustomMethod();
+            breadBoard.SetComponentDisplay();
             return true;
         }
         return false;

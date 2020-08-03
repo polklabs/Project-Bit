@@ -49,11 +49,11 @@ public class WorkspaceEditor : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            gm.paused = !gm.paused;
+            gm.PlayPause();
         }
         if (Input.GetKeyDown(KeyCode.N))
         {
-            gm.step++;
+            gm.Step();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -528,12 +528,12 @@ public class WorkspaceEditor : MonoBehaviour
             foreach(Guid g in componentsToDelete)
             {
                 circuitPool.RemoveIntegratedCircuit(g.ToString());
-                Destroy(GameObject.Find(g.ToString()));
+                Destroy(breadBoard.components[g].GetObjRef());                
             }
             foreach(Guid g in wiresToDelete)
             {
-                circuitPool.RemoveWire(g.ToString());                
-                Destroy(GameObject.Find(g.ToString()));
+                circuitPool.RemoveWire(g.ToString());
+                Destroy(breadBoard.components[g].GetObjRef());
             }
             foreach(string s in nodesToDelete)
             {

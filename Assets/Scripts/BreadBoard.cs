@@ -3,14 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using IntegratedCircuits;
 using System.Diagnostics;
+using System.Runtime.Serialization;
+using UnityEngine.UI;
+using System.Linq;
 
 public class BreadBoard : MonoBehaviour
 {
     public GeneralManager generalManager;
 
     public readonly Dictionary<Guid, IntegratedCircuit> components = new Dictionary<Guid, IntegratedCircuit>();
-    public Dictionary<string, Node> nodes = new Dictionary<string, Node>();
+    public readonly Dictionary<string, Node> nodes = new Dictionary<string, Node>();
     public Queue<Guid> updates = new Queue<Guid>();
+
+    public readonly Dictionary<Guid, GameObject> updateOverlays = new Dictionary<Guid, GameObject>();
+
+    public Material stateOn;
+    public Material stateOff;
+
+    public GameObject overlayPrefab;
+    public Transform overlayParent;
 
     public void UpdateComponent(Guid id)
     {
@@ -46,21 +57,28 @@ public class BreadBoard : MonoBehaviour
             if (generalManager.step > 0 && updates.Count > 0)
             {
                 Queue<Guid> stepQueue = new Queue<Guid>(updates);
+                updates.Clear();
+
                 while (stepQueue.Count > 0)
                 {
                     UpdateFromQueue(stepQueue.Dequeue());
                 }
+                SetComponentDisplay();
                 generalManager.step--;
+            } else
+            {
+                generalManager.step = 0;
             }
         }
     }
 
-    private void UpdateFromQueue(Guid id)
+    private Guid UpdateFromQueue(Guid id)
     {
         if (components.ContainsKey(id))
         {
             components[id].Update();
         }
+        return id;
     }
 
     public IntegratedCircuit GetIntegratedCircuit(Guid id)
@@ -88,11 +106,14 @@ public class BreadBoard : MonoBehaviour
         }
     }
 
-    public void AddNode(string nodeId, int type)
+    public void AddNode(string nodeId, int type, MeshRenderer meshRenderer)
     {
         if (!nodes.ContainsKey(nodeId))
         {
-            nodes.Add(nodeId, new Node(type == 0 ? 63 : 5));
+            nodes.Add(nodeId, new Node(type == 0 ? 63 : 5, meshRenderer));
+        } else
+        {
+            nodes[nodeId].addMeshRenderer(meshRenderer);
         }
     }
 
@@ -159,8 +180,10 @@ public class BreadBoard : MonoBehaviour
         bool addSelfToQueue = false;
 
         while(nodeListIndex < nodeList.Count)
-        {
+        {            
+
             Node node = nodes[nodeList[nodeListIndex]];
+            string nodeUpdateId = nodeList[nodeListIndex];
             nodeListIndex++;
 
             int oldNeg = node.valueNeg;
@@ -223,6 +246,11 @@ public class BreadBoard : MonoBehaviour
                     }
                 }
             }
+
+            if (generalManager.paused)
+            {
+                UpdateNodeDisplay(nodeUpdateId);
+            }
         }
 
         // If a component feeds back to itself then add that to the queue last. Otherwise it can cause weird race conditions
@@ -234,6 +262,107 @@ public class BreadBoard : MonoBehaviour
             }
         }
 
+    }
+
+    public void UpdateNodeDisplay(string id)
+    {
+        Node n = nodes[id];
+        foreach(MeshRenderer meshRenderer in n.meshRenderers)
+        {
+            switch (n.GetState())
+            {
+                case 1:
+                    meshRenderer.material = stateOn;
+                    meshRenderer.enabled = true;
+                    break;
+                case -1:
+                    meshRenderer.material = stateOff;
+                    meshRenderer.enabled = true;
+                    break;
+                default:
+                    meshRenderer.enabled = false;
+                    break;
+            }
+        }        
+    }
+
+    public void SetNodeDisplay()
+    {
+        foreach (string id in nodes.Keys)
+        {
+            UpdateNodeDisplay(id);            
+        }
+    }
+
+    public void ClearNodeDisplay()
+    {
+        foreach(string id in nodes.Keys)
+        {
+            foreach(MeshRenderer meshRenderer in nodes[id].meshRenderers)
+            {
+                meshRenderer.enabled = false;
+            }                        
+        }
+    }
+
+    public void SetComponentDisplay()
+    {
+        if (!generalManager.paused)
+        {
+            return;
+        }
+
+        Guid[] guids = updateOverlays.Keys.ToArray();
+        foreach (Guid g in guids)
+        {
+            if (!updates.Contains(g))
+            {
+                Destroy(updateOverlays[g]);
+                updateOverlays.Remove(g);
+            }
+        }
+
+        guids = updates.ToArray();
+        for (int i = 0; i < guids.Length; i++)
+        {
+            GameObject overlayObject;
+            if (updateOverlays.ContainsKey(guids[i]))
+            {
+                overlayObject = updateOverlays[guids[i]];
+            } else
+            {
+                Vector3 position;
+                
+                BoxCollider bc = components[guids[i]].GetObjRef().GetComponentInChildren<BoxCollider>();
+                if (bc == null)
+                {
+                    Vector3 componentPosition = components[guids[i]].GetObjRef().transform.position;
+                    position = new Vector3(componentPosition.x, 3, componentPosition.z);
+                } else
+                {
+                    position = bc.transform.TransformPoint(bc.center);
+                    position.y = 3;
+                }
+                
+                overlayObject = Instantiate(overlayPrefab, position, Quaternion.Euler(90, 0, 0)) as GameObject;
+                overlayObject.transform.SetParent(overlayParent, false);
+                updateOverlays[guids[i]] = overlayObject;
+            }
+
+            Text text = overlayObject.GetComponentInChildren<Text>();
+            text.text = (i + 1).ToString();
+        }
+
+    }
+
+    public void ClearComponentDisplay()
+    {
+        Guid[] guids = updateOverlays.Keys.ToArray();
+        foreach (Guid g in guids)
+        {
+            Destroy(updateOverlays[g]);
+            updateOverlays.Remove(g);
+        }
     }
 
     public void UnlinkNodes(string nodeIdA, int indexA, string nodeIdB, int indexB)
@@ -359,16 +488,29 @@ public class BreadBoard : MonoBehaviour
 
 }
 
+[DataContract]
 public class Node
 {
+    [DataMember]
     public int valuePos = 0;
+    [DataMember]
     public int valueNeg = 0;
+    [DataMember]
     public Dictionary<int, Connection> connections = new Dictionary<int, Connection>();
+    [DataMember]
     public int maxIndex;
 
-    public Node(int indexes)
+    public List<MeshRenderer> meshRenderers = new List<MeshRenderer>();
+
+    public Node(int indexes, MeshRenderer meshRenderer)
     {
-        maxIndex = indexes;        
+        maxIndex = indexes;
+        meshRenderers.Add(meshRenderer);
+    }
+
+    public void addMeshRenderer(MeshRenderer meshRenderer)
+    {
+        meshRenderers.Add(meshRenderer);
     }
 
     public int GetState()

@@ -35,8 +35,7 @@ namespace IntegratedCircuits
         //State for input if input is unknown
         protected readonly State[] DefaultState;
         
-        public ICType IcType;
-        public bool NeedsObjRef;      
+        public ICType IcType;    
         public string ModelName;
         public readonly int Pins;
         public bool OverwriteObjText;
@@ -50,7 +49,6 @@ namespace IntegratedCircuits
         {
             Id = Guid.NewGuid();
             IcType = ICType.unknown;
-            NeedsObjRef = false;
             ModelName = "Unknown";
             OverwriteObjText = true;
 
@@ -74,6 +72,11 @@ namespace IntegratedCircuits
         public void AssignObjRef(GameObject obj)
         {
             GameObjectRef = obj;
+        }
+
+        public GameObject GetObjRef()
+        {
+            return GameObjectRef;
         }
 
         public Guid SetBreadBoard(BreadBoard newBoard)

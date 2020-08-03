@@ -28,10 +28,7 @@ public class CircuitPool : MonoBehaviour
         GameObject obj = Instantiate(GetIntegratedCircuitObj(ic), new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         obj.transform.parent = parent;
 
-        if (ic.NeedsObjRef)
-        {
-            ic.AssignObjRef(obj);
-        }
+        ic.AssignObjRef(obj);
 
         obj.name = ic.SetBreadBoard(breadBoard).ToString();
 
@@ -166,10 +163,7 @@ public class CircuitPool : MonoBehaviour
     {
         GameObject obj = GetIntegratedCircuitObj(circuit.ModelName);
 
-        if (circuit.NeedsObjRef)
-        {
-            circuit.AssignObjRef(obj);
-        }
+        circuit.AssignObjRef(obj);
 
         obj.name = circuit.SetBreadBoard(breadBoard).ToString();
 

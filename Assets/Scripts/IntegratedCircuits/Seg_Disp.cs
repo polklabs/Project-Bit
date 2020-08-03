@@ -20,7 +20,6 @@ namespace IntegratedCircuits
             ModelName = "7SegmentDisplay";
             Ons = Enumerable.Repeat(false, 8).ToArray();
             OldOns = Enumerable.Repeat(false, 8).ToArray();
-            NeedsObjRef = true;
 
             DefaultState[Vdd] = State.LOW;
             DefaultState[Gnd] = State.LOW;

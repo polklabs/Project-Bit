@@ -138,7 +138,9 @@ public class Load : MonoBehaviour
 
             foreach (string s in nodes.Keys)
             {
+                List<MeshRenderer> tempRenderer = bb.nodes[s].meshRenderers;
                 bb.nodes[s] = nodes[s];
+                bb.nodes[s].meshRenderers = tempRenderer;
             }            
 
         }

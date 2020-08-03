@@ -22,7 +22,6 @@ namespace IntegratedCircuits
             IcType = ICType.ic4;
             ModelName = "IC_Clock";
             On = false;
-            NeedsObjRef = true;
             PinModes[4] = PinMode.Ouput;
         }
 

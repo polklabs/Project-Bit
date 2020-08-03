@@ -6,7 +6,6 @@
         {
             SwitchType = SwitchTypes.Toggle;
             ModelName = "DIP3";
-            NeedsObjRef = true;
             OverwriteObjText = false;
         }
 

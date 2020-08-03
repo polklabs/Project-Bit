@@ -6,7 +6,6 @@
         {
             SwitchType = SwitchTypes.Toggle;
             ModelName = "Switch_Toggle";
-            NeedsObjRef = true;
         }
 
         public override void CustomMethod()

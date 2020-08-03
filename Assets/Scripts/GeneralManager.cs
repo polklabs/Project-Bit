@@ -16,6 +16,8 @@ public class GeneralManager : MonoBehaviour
     public int step = 0;
 
     public Transform gameCamera;
+
+    public BreadBoard breadBoard;
    
     void Start()
     {
@@ -37,5 +39,28 @@ public class GeneralManager : MonoBehaviour
         paused = gms.paused;
         step = gms.step;
         gameCamera.position = gms.position;
+    }
+
+    public void PlayPause()
+    {
+        paused = !paused;
+
+        if (paused)
+        {
+            breadBoard.SetNodeDisplay();
+            breadBoard.SetComponentDisplay();
+        } else
+        {
+            breadBoard.ClearNodeDisplay();
+            breadBoard.ClearComponentDisplay();
+        }
+    }
+
+    public void Step()
+    {
+        if (paused)
+        {
+            step++;
+        }
     }
 }
