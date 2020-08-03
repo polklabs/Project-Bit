@@ -34,6 +34,8 @@ namespace IntegratedCircuits
 
         //State for input if input is unknown
         protected readonly State[] DefaultState;
+
+        protected readonly Dictionary<string, int> NodeToPin = new Dictionary<string, int>();
         
         public ICType IcType;    
         public string ModelName;
@@ -95,6 +97,7 @@ namespace IntegratedCircuits
         public void SetPinNode(int index, string node)
         {
             PinNodes[index] = node;
+            NodeToPin.Add(node, index);
         }
         public string GetPinNode(int index)
         {
@@ -112,6 +115,11 @@ namespace IntegratedCircuits
                 return (int)PinState[index];
             }
             return 0;
+        }
+
+        public PinMode GetPinMode(string node)
+        {
+            return PinModes[NodeToPin[node]];
         }
 
         public void Update()

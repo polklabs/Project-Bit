@@ -10,9 +10,13 @@ namespace Chips
     [DataContract]
     public class Wire
     {
+        [DataMember]
         public bool IsChip { get; set; }
+        [DataMember]
         public int CircuitIndex { get; set; }
+        [DataMember]
         public int FromIndex { get; set; }
+        [DataMember]
         public int ToIndex { get; set; }
         
         /// <summary>
@@ -53,6 +57,11 @@ namespace Chips
         [DataMember]
         protected BitArray Dirty { get; set; }
 
+        [IgnoreDataMember]
+        protected BitArray OldInput { get; set; }
+        [IgnoreDataMember]
+        protected bool FirstRun = true;
+
         /// <summary>
         /// Create a new chip object
         /// </summary>
@@ -63,8 +72,9 @@ namespace Chips
             ID = Guid.NewGuid();
 
             Input = new BitArray(inputs, false);
+            OldInput = new BitArray(inputs, true);
             Output = new BitArray(outputs, false);
-            Dirty = new BitArray(outputs, false);
+            Dirty = new BitArray(outputs, false);            
 
             Gates = new List<Gate>();
             Chips = new List<Chip>();
@@ -73,7 +83,7 @@ namespace Chips
 
         protected int AddGate(Gate gate)
         {
-            Gates.Add(gate);            
+            Gates.Add(gate);
             if (!WireDict.ContainsKey(gate.ID))
             {
                 WireDict.Add(gate.ID, new List<Wire>());
@@ -83,7 +93,7 @@ namespace Chips
 
         protected int AddChip(Chip chip)
         {
-            Chips.Add(chip);            
+            Chips.Add(chip);
             if (!WireDict.ContainsKey(chip.ID))
             {
                 WireDict.Add(chip.ID, new List<Wire>());
@@ -150,6 +160,8 @@ namespace Chips
             GetOutput(forceUpdate);
 
             Dirty = Dirty.Or(oldOutput.Xor(Output));
+            OldInput = (BitArray)Input.Clone();
+            FirstRun = false;
 
             return Output;
         }
@@ -172,34 +184,38 @@ namespace Chips
             // Update input wires
             foreach (Wire wire in WireDict[ID])
             {
-                if (wire.IsChip)
+                if (forceUpdate || FirstRun || (OldInput[wire.FromIndex] != Input[wire.FromIndex]))
                 {
-                    Chip chip = Chips[wire.CircuitIndex];
-                    chip.SetInputBit(wire.ToIndex, Input[wire.FromIndex]);
-                    chip.Update(forceUpdate);
-
-                    if (forceUpdate || GetCardinality(chip.Dirty) > 0)
+                    if (wire.IsChip)
                     {
-                        if (!queue.Contains(chip.ID))
+                        Chip chip = Chips[wire.CircuitIndex];
+                        chip.SetInputBit(wire.ToIndex, Input[wire.FromIndex]);
+                        chip.Update(forceUpdate);
+                        //Debug.Log("Updated gate: " + (char)(wire.CircuitIndex + 65));
+
+                        if (forceUpdate || GetCardinality(chip.Dirty) > 0)
                         {
-                            queue.Enqueue(chip.ID);
+                            if (!queue.Contains(chip.ID))
+                            {
+                                queue.Enqueue(chip.ID);
+                            }
                         }
                     }
-                }
-                else
-                {
-                    Gate gate = Gates[wire.CircuitIndex];
-                    gate.SetInputBit(wire.ToIndex, Input[wire.FromIndex]);
-                    gate.Update();
-
-                    if (forceUpdate || gate.IsDirty())
+                    else
                     {
-                        if (!queue.Contains(gate.ID))
+                        Gate gate = Gates[wire.CircuitIndex];
+                        gate.SetInputBit(wire.ToIndex, Input[wire.FromIndex]);
+                        gate.Update();
+                        //Debug.Log("Updated gate: " + (char)(wire.CircuitIndex + 65));
+
+                        if (forceUpdate || gate.IsDirty())
                         {
-                            queue.Enqueue(gate.ID);
+                            if (!queue.Contains(gate.ID))
+                            {
+                                queue.Enqueue(gate.ID);
+                            }
                         }
                     }
-
                 }
             }
 
@@ -249,6 +265,7 @@ namespace Chips
                             Chip chip = Chips[wire.CircuitIndex];
 							chip.SetInputBit(wire.ToIndex, FromValues[wire.FromIndex]);
 							chip.Update(forceUpdate);
+                            //Debug.Log("Updated chip: " + (char)(wire.CircuitIndex + 65));
 
 							if (forceUpdate || GetCardinality(chip.Dirty) > 0)
 							{
@@ -265,6 +282,7 @@ namespace Chips
                         Gate gate = Gates[wire.CircuitIndex];
                         gate.SetInputBit(wire.ToIndex, FromValues[wire.FromIndex]);
                         gate.Update();
+                        //Debug.Log("Updated gate: " + (char)(wire.CircuitIndex + 65));
 
                         if (forceUpdate || gate.IsDirty())
                         {
@@ -341,157 +359,6 @@ namespace Chips
 
         }
 
-    }
-
-    //Working
-    public class AND4Chip : Chip
-    {
-        public AND4Chip() : base(3, 1)
-        {
-            Gate gateA = new ANDGate();
-            int indexA = AddGate(gateA);
-
-            Gate gateB = new ORGate();
-            int indexB = AddGate(gateB);
-
-            AddWire(ID, new Wire(2, 0, indexA, false));
-            AddWire(ID, new Wire(1, 1, indexA, false));
-            AddWire(ID, new Wire(0, 1, indexB, false));
-            AddWire(gateA.ID, new Wire(0, 0, indexB, false));
-            AddWire(gateB.ID, new Wire(0, 0, -1, true));
-
-        }
-    }
-
-    public class TestChip2 : Chip
-    {
-        public TestChip2() : base(3, 1)
-        {
-            Gate gateA = new NANDGate();
-            int indexA = AddGate(gateA);
-
-            Gate gateB = new NORGate();
-            int indexB = AddGate(gateB);
-
-            Gate gateC = new ANDGate(3);
-            int indexC = AddGate(gateC);
-
-            AddWire(ID, new Wire(2, 0, indexA, false));
-            AddWire(ID, new Wire(2, 0, indexB, false));
-            AddWire(ID, new Wire(1, 1, indexC, false));
-            AddWire(ID, new Wire(0, 1, indexA, false));
-            AddWire(ID, new Wire(0, 1, indexB, false));
-
-            AddWire(gateA.ID, new Wire(0, 0, indexC, false));
-            AddWire(gateB.ID, new Wire(0, 2, indexC, false));
-
-            AddWire(gateC.ID, new Wire(0, 0, -1, true));
-
-        }
-    }
-
-    public class TestChip3 : Chip
-    {
-        public TestChip3() : base(4, 1)
-        {
-            Gate gateA = new ORGate();
-            int indexA = AddGate(gateA);
-
-            Gate gateB = new ORGate();
-            int indexB = AddGate(gateB);
-
-            Gate gateC = new ANDGate();
-            int indexC = AddGate(gateC);
-
-            AddWire(ID, new Wire(3, 0, indexA, false));
-            AddWire(ID, new Wire(2, 1, indexA, false));
-            AddWire(ID, new Wire(1, 0, indexB, false));
-            AddWire(ID, new Wire(0, 1, indexB, false));
-
-            AddWire(gateA.ID, new Wire(0, 0, indexC, false));
-            AddWire(gateB.ID, new Wire(0, 1, indexC, false));
-
-            AddWire(gateC.ID, new Wire(0, 0, -1, true));
-
-        }
-    }
-
-    public class FlipFlop : Chip
-    {
-        public FlipFlop() : base(2, 2)
-        {
-            Gate gateA = new NANDGate();
-            int indexA = AddGate(gateA);
-
-            Gate gateB = new NANDGate();
-            int indexB = AddGate(gateB);
-
-            AddWire(ID, new Wire(1, 0, indexA, false));
-            AddWire(ID, new Wire(0, 0, indexB, false));
-
-            AddWire(gateA.ID, new Wire(0, 0, -1, true));
-            AddWire(gateA.ID, new Wire(0, 1, indexB, false));
-
-            AddWire(gateB.ID, new Wire(0, 1, -1, true));
-            AddWire(gateB.ID, new Wire(0, 1, indexA, false));
-        }
-    }
-
-    public class JKFlipFlop : Chip
-    {
-        public JKFlipFlop() : base(2, 2)
-        {
-            Gate gateA = new NANDGate();
-            int indexA = AddGate(gateA);
-
-            Gate gateB = new NANDGate();
-            int indexB = AddGate(gateB);
-
-            Gate gateC = new NANDGate();
-            int indexC = AddGate(gateC);
-
-            Gate gateD = new NANDGate();
-            int indexD = AddGate(gateD);
-
-            AddWire(ID, new Wire(1, 1, indexA, false));
-            AddWire(ID, new Wire(0, 0, indexB, false));
-
-            AddWire(gateA.ID, new Wire(0, 0, indexC, false));
-            AddWire(gateB.ID, new Wire(0, 1, indexD, false));
-
-            AddWire(gateC.ID, new Wire(0, 0, indexD, false));
-            AddWire(gateC.ID, new Wire(0, 1, indexB, false));
-            AddWire(gateC.ID, new Wire(0, 0, -1, true));
-
-            AddWire(gateD.ID, new Wire(0, 1, indexC, false));
-            AddWire(gateD.ID, new Wire(0, 0, indexA, false));
-            AddWire(gateD.ID, new Wire(0, 1, -1, true));
-
-        }
-    }
-
-    public class ChipInChip : Chip
-    {
-        public ChipInChip() : base(4, 1)
-        {
-            Chip chipA = new TestChip3();
-            int indexA = AddChip(chipA);
-
-            Gate gateB = new NotGate();
-            int indexB = AddGate(gateB);
-
-            AddWire(ID, new Wire(3, 3, indexA, true));
-            AddWire(ID, new Wire(2, 2, indexA, true));
-            AddWire(ID, new Wire(1, 1, indexA, true));
-            AddWire(ID, new Wire(0, 0, indexA, true));
-
-            AddWire(chipA.ID, new Wire(0, 0, indexB, false));
-
-            AddWire(gateB.ID, new Wire(0, 0, -1, true));
-
-            Output[0] = true;
-
-        }
     }
 
 }

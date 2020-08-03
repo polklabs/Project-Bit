@@ -41,8 +41,9 @@ public class BreadBoard : MonoBehaviour
 
                 UpdateFromQueue(updates.Dequeue());
 
-                if (stopwatch.ElapsedMilliseconds > 33)
+                if (stopwatch.ElapsedMilliseconds > 45)
                 {
+                    UnityEngine.Debug.Log("Break from stopwatch: " + stopwatch.ElapsedMilliseconds);
                     break;
                 }
 
@@ -232,16 +233,21 @@ public class BreadBoard : MonoBehaviour
                         }
                     }
                     else if (value == 0 || (oldPos + node.valuePos == 1) || (oldPos == 0 && node.valuePos == 0 && (oldNeg + node.valueNeg == -1)))
-                    {                        
-                        if (connection.ID != id)
+                    {
+                        Guid ID = Guid.Parse(connection.ID);
+                        if (components[ID].GetPinMode(nodeUpdateId) == PinMode.Input)
                         {
-                            if (!updates.Contains(Guid.Parse(connection.ID)))
+                            if (connection.ID != id)
                             {
-                                updates.Enqueue(Guid.Parse(connection.ID));
+                                if (!updates.Contains(ID))
+                                {
+                                    updates.Enqueue(ID);
+                                }
                             }
-                        } else if (connection.Index != index)
-                        {
-                            addSelfToQueue = true;
+                            else if (connection.Index != index)
+                            {
+                                addSelfToQueue = true;
+                            }
                         }
                     }
                 }
