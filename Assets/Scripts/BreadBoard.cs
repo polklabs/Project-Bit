@@ -55,20 +55,27 @@ public class BreadBoard : MonoBehaviour
             stopwatch.Stop();
         } else
         {
-            if (generalManager.step > 0 && updates.Count > 0)
+            
+            if (generalManager.step > 0)
             {
-                Queue<Guid> stepQueue = new Queue<Guid>(updates);
-                updates.Clear();
+                generalManager.DecrementStep();
 
-                while (stepQueue.Count > 0)
+                if (generalManager.step == 0 && updates.Count == 0)
                 {
-                    UpdateFromQueue(stepQueue.Dequeue());
+                    generalManager.Step(1);
                 }
-                SetComponentDisplay();
-                generalManager.step--;
-            } else
-            {
-                generalManager.step = 0;
+
+                if (generalManager.step > 0 && updates.Count > 0)
+                {
+                    Queue<Guid> stepQueue = new Queue<Guid>(updates);
+                    updates.Clear();
+
+                    while (stepQueue.Count > 0)
+                    {
+                        UpdateFromQueue(stepQueue.Dequeue());
+                    }
+                }
+                SetComponentDisplay();                
             }
         }
     }

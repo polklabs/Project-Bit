@@ -33,11 +33,10 @@ public class Mono_Clock : MonoBehaviour
     {
         while (true)
         {
-            //yield return new WaitForSeconds(length);
             float timer = 0f;
             while (timer < length)
             {
-                while (gm && gm.paused && gm.step == 0)
+                while (gm && gm.paused && gm.step <= 0)
                 {
                     yield return null;
                 }

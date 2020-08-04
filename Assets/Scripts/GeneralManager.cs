@@ -56,11 +56,19 @@ public class GeneralManager : MonoBehaviour
         }
     }
 
-    public void Step()
+    public void Step(int inc = 2)
     {
         if (paused)
         {
-            step++;
+            step += inc;
+        }
+    }
+
+    public void DecrementStep()
+    {
+        if (step > 0)
+        {
+            step--;
         }
     }
 }
