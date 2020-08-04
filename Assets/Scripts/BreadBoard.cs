@@ -77,6 +77,15 @@ public class BreadBoard : MonoBehaviour
                 }
                 SetComponentDisplay();                
             }
+            else if(generalManager.singleStep > 0)
+            {
+                generalManager.DecrementSingleStep();
+                if (updates.Count > 0)
+                {
+                    UpdateFromQueue(updates.Dequeue());
+                    SetComponentDisplay();
+                }
+            }
         }
     }
 

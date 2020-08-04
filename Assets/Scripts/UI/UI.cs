@@ -117,6 +117,11 @@ namespace userInterface {
             generalManager.Step();
         }
 
+        public void SingleStep()
+        {
+            generalManager.SingleStep();
+        }
+
     }
 
     public enum PartGroups { Breadboard, Wires, Inputs, Outputs, BasicCircuit, Memory, SpecialCircuit };
