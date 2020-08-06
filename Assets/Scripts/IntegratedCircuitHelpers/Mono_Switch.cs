@@ -70,7 +70,7 @@ public class Mono_Switch : MonoBehaviour
         float timer = 0f;
         while (timer < delayTime)
         {
-            while (gm.paused)
+            while (gm.paused && gm.step <= 0)
             {
                 yield return null;
             }
@@ -98,7 +98,7 @@ public class Mono_Switch : MonoBehaviour
         float timer = 0f;
         while (timer < delayTime)
         {
-            while (gm.paused)
+            while (gm.paused && gm.step <= 0)
             {
                 yield return null;
             }
