@@ -9,28 +9,20 @@ public class DataSheet
     // Wires ------------------------------------------------------------------------------------
     public static DataSheet VDD = new DataSheet("Power", "Vdd").SetText("Provides a positive voltage to the pin it is connected to.");
     public static DataSheet GND = new DataSheet("Ground", "Gnd").SetText("Provides a negative voltage to the pin it is connected to.");
-    public static DataSheet WIRE_GREEN = new DataSheet("Wire, Green", "Wire_Green");
-    public static DataSheet WIRE_RED = new DataSheet("Wire, Red", "Wire_Red");
-    public static DataSheet WIRE_BLUE = new DataSheet("Wire, Blue", "Wire_Blue");
-    public static DataSheet WIRE_YELLOW = new DataSheet("Wire, Yellow", "Wire_Yellow");
-    public static DataSheet WIRE_BLACK = new DataSheet("Wire, Black", "Wire_Black");
-    public static DataSheet WIRE_WHITE = new DataSheet("Wire, White", "Wire_White");
-    public static DataSheet WIRE_PURPLE = new DataSheet("Wire, Purple", "Wire_Purple");
-    public static DataSheet WIRE_ORANGE = new DataSheet("Wire, Orange", "Wire_Orange");
 
     // Basic ------------------------------------------------------------------------------------
-    public static DataSheet QUAD_AND = new DataSheet("And Gates, Quad 2-Input (PQ010G)", "PQ010G_AndGate").SetLayers("IC14_PQ010", "IC14_outline", "IC14_VG", "IC14_dip_2");
-    public static DataSheet QUAD_NAND = new DataSheet("Nand Gates, Quad 2-Input (PQ011G)", "PQ011G_NandGate").SetLayers("IC14_PQ011", "IC14_outline", "IC14_VG", "IC14_dip_2");
-    public static DataSheet QUAD_OR = new DataSheet("Or Gates, Quad 2-Input (PQ020G)", "PQ020G_OrGate").SetLayers("IC14_PQ020", "IC14_outline", "IC14_VG", "IC14_dip_2");
-    public static DataSheet QUAD_NOR = new DataSheet("Nor Gates, Quad 2-Input (PQ021G)", "PQ021G_NorGate").SetLayers("IC14_PQ021", "IC14_outline", "IC14_VG", "IC14_dip_2");
-    public static DataSheet QUAD_XOR = new DataSheet("Xor Gates, Quad 2-Input (PQ030G)", "PQ030G_XorGate").SetLayers("IC14_PQ030", "IC14_outline", "IC14_VG", "IC14_dip_2");
-    public static DataSheet QUAD_XNOR = new DataSheet("Xnor Gates, Quad 2-Input (PQ031G)", "PQ031G_XnorGate").SetLayers("IC14_PQ031", "IC14_outline", "IC14_VG", "IC14_dip_2");
-    public static DataSheet OCTAL_BUS = new DataSheet("Buffer Gates, Octal 1-Input (PQ040G)", "PQ040G_BufferGate"); // 74LS245
-    public static DataSheet HEX_NOT = new DataSheet("Not Gates, Hex 1-Input (PQ041G)", "PQ041G_NotGate"); // 74LS04
+    public static DataSheet QUAD_AND = new DataSheet("And Gates, Quad 2-Input (PQ010G)", "PQ010G_AndGate").SetLayers("IC14_PQ010", "IC14_outline", "IC14_VG", "IC14_dip_2").SetText("This chip contains four AND gates and each gate has two inputs.\n\nInputs | Outputs\nA | B   | Y\n0 | 0    | 0\n0 | 1    | 0\n1 | 0    | 0\n1 | 1    | 1");
+    public static DataSheet QUAD_NAND = new DataSheet("Nand Gates, Quad 2-Input (PQ011G)", "PQ011G_NandGate").SetLayers("IC14_PQ011", "IC14_outline", "IC14_VG", "IC14_dip_2").SetText("This chip contains four NAND gates and each gate has two inputs.\n\nInputs | Outputs\nA | B   | Y\n0 | 0    | 1\n0 | 1    | 1\n1 | 0    | 1\n1 | 1    | 0");
+    public static DataSheet QUAD_OR = new DataSheet("Or Gates, Quad 2-Input (PQ020G)", "PQ020G_OrGate").SetLayers("IC14_PQ020", "IC14_outline", "IC14_VG", "IC14_dip_2").SetText("This chip contains four OR gates and each gate has two inputs.\n\nInputs | Outputs\nA | B   | Y\n0 | 0    | 0\n0 | 1    | 1\n1 | 0    | 1\n1 | 1    | 1");
+    public static DataSheet QUAD_NOR = new DataSheet("Nor Gates, Quad 2-Input (PQ021G)", "PQ021G_NorGate").SetLayers("IC14_PQ021", "IC14_outline", "IC14_VG", "IC14_dip_2").SetText("This chip contains four NOR gates and each gate has two inputs.\n\nInputs | Outputs\nA | B   | Y\n0 | 0    | 1\n0 | 1    | 0\n1 | 0    | 0\n1 | 1    | 0");
+    public static DataSheet QUAD_XOR = new DataSheet("Xor Gates, Quad 2-Input (PQ030G)", "PQ030G_XorGate").SetLayers("IC14_PQ030", "IC14_outline", "IC14_VG", "IC14_dip_2").SetText("This chip contains four XOR gates and each gate has two inputs.\n\nInputs | Outputs\nA | B   | Y\n0 | 0    | 0\n0 | 1    | 1\n1 | 0    | 1\n1 | 1    | 0");
+    public static DataSheet QUAD_XNOR = new DataSheet("Xnor Gates, Quad 2-Input (PQ031G)", "PQ031G_XnorGate").SetLayers("IC14_PQ031", "IC14_outline", "IC14_VG", "IC14_dip_2").SetText("This chip contains four XNOR gates and each gate has two inputs.\n\nInputs | Outputs\nA | B   | Y\n0 | 0    | 1\n0 | 1    | 0\n1 | 0    | 0\n1 | 1    | 1");
+    public static DataSheet OCTAL_BUS = new DataSheet("Buffer Gates, Octal 1-Input (PQ040G)", "PQ040G_BufferGate").SetLayers("IC20_PQ040", "IC20_outline", "IC20_VG", "IC20_dip_2").SetText("This chip contains four buffer gates and can output in one of two directions. If DIR is <b>HIGH</b> it will pass the value from A to B and vice versa if DIR is <b>LOW</b>\n\nInputs               | Outputs\nDIR | E | A | B   | A | B\n   0  | 0  | x | 0   | 0  | x\n   0  | 0  | x | 1   | 1  | x\n   1  |  0 | 0 | x   | x  | 0\n   1  |  0 | 1 | x   | x  | 1\n   x  |  1 | x | x   | 0  | 0");
+    public static DataSheet HEX_NOT = new DataSheet("Not Gates, Hex 1-Input (PQ041G)", "PQ041G_NotGate").SetLayers("IC14_PQ041", "IC14_outline", "IC14_VG", "IC14_dip_2").SetText("This chip contains six NOT gates and each gate has one input.\n\nInputs | Outputs\nA         | B\n0         | 1\n1         | 0");
 
     // Special ----------------------------------------------------------------------------------
-    public static DataSheet CLOCK = new DataSheet("Clock (PQ160)", "PQ160_Clock");    
-    public static DataSheet BCD_7SEG_DECODE = new DataSheet("Bcd to 7 segment decoder (PQ111)", "PQ111_BcdToSeg");
+    public static DataSheet CLOCK = new DataSheet("Clock (PQ160)", "PQ160_Clock").SetLayers("IC6_PQ160", "IC6_outline", "IC6_VG", "IC6_dip_1").SetText("This chip provides a constant clock pulse from pin 5. The frequency of the clock is determined by the values of A, B, and C.\n\nA | B | C | Y\n0 | 0 | 0  | 1s\n0 | 0 | 1  | .5s\n0 | 1 | 0  | .25s\n0 | 1 | 1  | .125s\n1 | 0 | 0  | 62.5ms\n1 | 0 | 1  | 31.25ms\n1 | 1 | 0  | 15.6ms\n1 | 1 | 1  | 7.8ms");
+    public static DataSheet BCD_7SEG_DECODE = new DataSheet("Bcd to 7 segment decoder (PQ111)", "PQ111_BcdToSeg").SetLayers("IC16_PQ111", "IC16_outline", "IC16_VG", "IC16_dip_2").SetText("A Bcd (binary coded decimla) to 7 segment decoder converts 4 bits into it's respective digit on a display. This chip can covert to any of the 10 digits.\nA, B, C, D maps to the outputs a, b, c, d, e, f, g with A being the LSB and D being the MSB");
     public static DataSheet ADDER_4_BIT = new DataSheet("4-Bit Binary Adder (PQ130)", "PQ130_Adder4Bit"); // 74LS283
     public static DataSheet ADDER_4_BIT_GATE = new DataSheet("4-Bit Binary Adder (PQ130G)", "PQ130G_Adder4Bit"); // 74LS283
     public static DataSheet BIN_COUNT_4 = new DataSheet("4-Bit Binary Counter (PQ150G)", "PQ150G"); // 74LS161
@@ -75,11 +67,6 @@ public class DataSheet
 
     public DataSheet SetText(string text)
     {
-        if (text.Length > 230)
-        {
-            throw new Exception("Max text length is 230 characters (" + text.Length + ")");
-        }
-
         Text = text;
         return this;
     }
