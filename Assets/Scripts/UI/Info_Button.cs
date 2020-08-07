@@ -9,8 +9,15 @@ public class Info_Button : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        button = gameObject.GetComponent<Button>();
-        button.onClick.AddListener(ShowDataSheet);
+        if (DataSheet.HasDataSheet(gameObject.transform.parent.name))
+        {
+            button = gameObject.GetComponent<Button>();
+            button.onClick.AddListener(ShowDataSheet);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }        
     }
     
     void ShowDataSheet()
