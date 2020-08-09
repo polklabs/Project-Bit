@@ -30,12 +30,12 @@ public class DataSheet
     // Memory -----------------------------------------------------------------------------------
 
     // Inputs -----------------------------------------------------------------------------------        
-    public static DataSheet SWITCH_TOGGLE = new DataSheet("Switch, Toggle", "Switch_Toggle").SetLayers("Switch");
-    public static DataSheet SWITCH_MOMENT = new DataSheet("Switch, Momentary", "Switch_Momentary").SetLayers("Switch");
-    public static DataSheet SWITCH_PULSE = new DataSheet("Switch, Pulse", "Switch_Pulse").SetLayers("Switch");
-    public static DataSheet SWITCH_DIP3 = new DataSheet("Switch, Dip 3", "Switch_Dip_3");
-    public static DataSheet SWITCH_DIP4 = new DataSheet("Switch, Dip 4", "Switch_Dip_4");
-    public static DataSheet SWITCH_DIP8 = new DataSheet("Switch, Dip 8", "Switch_Dip_8");
+    public static DataSheet SWITCH_TOGGLE = new DataSheet("Switch, Toggle", "Switch_Toggle").SetLayers("Switch").SetText("Connects two pins together based on the user's input.");
+    public static DataSheet SWITCH_MOMENT = new DataSheet("Switch, Momentary", "Switch_Momentary").SetLayers("Switch").SetText("Connects two pins together based on the user's input.");
+    public static DataSheet SWITCH_PULSE = new DataSheet("Switch, Pulse", "Switch_Pulse").SetLayers("Switch").SetText("Connects two pins together based on the user's input.");
+    public static DataSheet SWITCH_DIP3 = new DataSheet("Switch, Dip 3", "Switch_Dip_3").SetLayers("IC6_Switch", "IC6_outline").SetText("Connects two pins together based on the user's input.");
+    public static DataSheet SWITCH_DIP4 = new DataSheet("Switch, Dip 4", "Switch_Dip_4").SetLayers("IC8_Switch", "IC8_outline").SetText("Connects two pins together based on the user's input.");
+    public static DataSheet SWITCH_DIP8 = new DataSheet("Switch, Dip 8", "Switch_Dip_8").SetLayers("IC16_Switch", "IC16_outline").SetText("Connects two pins together based on the user's input.");
 
     // Outputs ----------------------------------------------------------------------------------
     public static DataSheet LED_GREEN = new DataSheet("LED, Green", "Led_Green");
