@@ -41,6 +41,7 @@ namespace IntegratedCircuits
         public string ModelName;
         public readonly int Pins;
         public bool OverwriteObjText;
+        public bool WriteToNodes;
 
         protected BreadBoard BreadBoardRef;
         protected GameObject GameObjectRef;
@@ -53,6 +54,7 @@ namespace IntegratedCircuits
             IcType = ICType.unknown;
             ModelName = "Unknown";
             OverwriteObjText = true;
+            WriteToNodes = true;
 
             Pins = numPins;
             Vdd  = numPins - 1;

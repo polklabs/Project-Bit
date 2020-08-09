@@ -20,19 +20,7 @@ namespace IntegratedCircuits
 
             IcType = ICType.ic4;
             ModelName = "momentary_switch";
-
-            if (pins == 1)
-            {
-                PinModes[2] = PinMode.Ouput;
-                PinModes[3] = PinMode.Ouput;
-            }
-            else
-            {
-                for(int i = pins/2; i < pins; i++)
-                {
-                    PinModes[i] = PinMode.Ouput;
-                }
-            }
+            WriteToNodes = false;
         }
 
         protected override void InternalReset(bool disable)
@@ -41,33 +29,50 @@ namespace IntegratedCircuits
             {
                 if (SwitchPins == 1)
                 {
-                    PinState[2] = State.OFF;
-                    PinState[3] = State.OFF;
+                    BreadBoardRef.UnlinkNodes(GetPinNode(0), GetPinNodeIndex(0), GetPinNode(2), GetPinNodeIndex(2));
+                    BreadBoardRef.UnlinkNodes(GetPinNode(5), GetPinNodeIndex(5), GetPinNode(3), GetPinNodeIndex(3));
                 }
                 else
                 {
-                    for (int i = SwitchPins / 2; i < SwitchPins; i++)
+                    for (int i = 0; i < SwitchPins / 2; i++)
                     {
-                        PinState[i] = State.OFF;
+                        BreadBoardRef.UnlinkNodes(GetPinNode(i), GetPinNodeIndex(i), GetPinNode(SwitchPins - 1 - i), GetPinNodeIndex(SwitchPins - 1 - i));
                     }
                 }
                 return;
             }
-            InternalUpdate();
+            else
+            {
+                InternalUpdate();
+            }
         }
 
         protected override void InternalUpdate()
         {
             if (SwitchPins == 1)
             {
-                PinState[2] = SwitchState[0] ? PinState[0] : State.OFF;
-                PinState[3] = SwitchState[0] ? PinState[5] : State.OFF;
+                if (SwitchState[0])
+                {
+                    BreadBoardRef.LinkNodes(GetPinNode(0), GetPinNodeIndex(0), GetPinNode(2), GetPinNodeIndex(2));
+                    BreadBoardRef.LinkNodes(GetPinNode(5), GetPinNodeIndex(5), GetPinNode(3), GetPinNodeIndex(3));
+                } else
+                {
+                    BreadBoardRef.UnlinkNodes(GetPinNode(0), GetPinNodeIndex(0), GetPinNode(2), GetPinNodeIndex(2));
+                    BreadBoardRef.UnlinkNodes(GetPinNode(5), GetPinNodeIndex(5), GetPinNode(3), GetPinNodeIndex(3));
+                }
             }
             else
             {
-                for (int i = SwitchPins / 2; i < SwitchPins; i++)
+                for (int i = 0; i < SwitchPins / 2; i++)
                 {
-                    PinState[i] = SwitchState[i - (SwitchPins / 2)] ? PinState[(SwitchPins / 2) - ((i - (SwitchPins / 2)) + 1)] : State.OFF;
+                    if (SwitchState[SwitchState.Length - 1 - i])
+                    {
+                        BreadBoardRef.LinkNodes(GetPinNode(i), GetPinNodeIndex(i), GetPinNode(SwitchPins - 1 - i), GetPinNodeIndex(SwitchPins - 1 - i));
+                    }
+                    else
+                    {
+                        BreadBoardRef.UnlinkNodes(GetPinNode(i), GetPinNodeIndex(i), GetPinNode(SwitchPins - 1 - i), GetPinNodeIndex(SwitchPins - 1 - i));
+                    }
                 }
             }
         }

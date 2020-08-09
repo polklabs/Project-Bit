@@ -82,7 +82,10 @@ public class CircuitPool : MonoBehaviour
                         int index = i == 0 ? 4 : 0;
                         int pinIndex = i == 0 ? j : (ic.Pins - 1) - j;
 
-                        breadBoard.SetNodeConnection(false, nodeId, index, pinIndex, ic.GetId().ToString());
+                        if (ic.WriteToNodes)
+                        {
+                            breadBoard.SetNodeConnection(false, nodeId, index, pinIndex, ic.GetId().ToString());
+                        }
                         ic.SetPinIndex(pinIndex, index);
                         ic.SetPinNode(pinIndex, nodeId);
                     }
@@ -113,7 +116,10 @@ public class CircuitPool : MonoBehaviour
                         int index = i == 0 ? indexA : indexA - 1;
                         int pinIndex = i == 0 ? j : (ic.Pins - 1) - j;
 
-                        breadBoard.SetNodeConnection(false, nodeId, index, pinIndex, ic.GetId().ToString());
+                        if (ic.WriteToNodes)
+                        {
+                            breadBoard.SetNodeConnection(false, nodeId, index, pinIndex, ic.GetId().ToString());
+                        }
                         ic.SetPinIndex(pinIndex, index);
                         ic.SetPinNode(pinIndex, nodeId);
                     }

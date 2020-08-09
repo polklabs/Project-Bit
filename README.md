@@ -11,8 +11,6 @@ https://eater.net/8bit
 1. Does not simulate - voltage, resistance, current
 2. Ignores gate propagation delay
 3. Application runs at 60fps, any updates faster than that may not function properly
-4. Switches are one way gates. This can be changed to work in both directions but would most likely harm performance 
-(Further testing needed)
 5. Gates and Chips are ideal aproximations and will most likely behave differently in real life
 
 ## Components
