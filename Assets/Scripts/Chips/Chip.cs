@@ -57,9 +57,9 @@ namespace Chips
         [DataMember]
         protected BitArray Dirty { get; set; }
 
-        [IgnoreDataMember]
+        [DataMember]
         protected BitArray OldInput { get; set; }
-        [IgnoreDataMember]
+        [DataMember]
         protected bool FirstRun = true;        
         [IgnoreDataMember]
         // When updating gates should the gate be updated everytime output changes or only based on the original output
@@ -163,7 +163,7 @@ namespace Chips
 
             GetOutput(forceUpdate);
 
-            Dirty = Dirty.Or(oldOutput.Xor(Output));
+            Dirty = (BitArray)(oldOutput.Xor(Output)).Clone();
             OldInput = (BitArray)Input.Clone();
             FirstRun = false;
 

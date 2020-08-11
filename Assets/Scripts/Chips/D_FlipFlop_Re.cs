@@ -6,6 +6,8 @@ namespace Chips
     {
         public D_FlipFlop_Re() : base(3, 2)
         {
+            ScrubOutput = true;
+
             Gate gateA = new NANDGate();
             int indexA = AddGate(gateA);
 

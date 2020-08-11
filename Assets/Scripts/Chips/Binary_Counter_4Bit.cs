@@ -30,11 +30,11 @@ namespace Chips
             int indexF = AddGate(gateF);
 
             //Inputs
-            AddWire(ID, new Wire(0, 0, indexA, true));
             AddWire(ID, new Wire(0, 0, indexE, false));
             AddWire(ID, new Wire(1, 1, indexE, false));
-
             AddWire(ID, new Wire(2, 0, indexF, false));
+
+            AddWire(ID, new Wire(0, 0, indexA, true));            
 
             //Gate E
             AddWire(gateE.ID, new Wire(0, 1, indexF, false));
