@@ -1,5 +1,4 @@
 ﻿using Gates;
-using UnityEngine;
 
 namespace Chips
 {
