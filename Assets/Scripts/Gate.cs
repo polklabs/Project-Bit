@@ -67,8 +67,13 @@ namespace Gates
             return this;
         }
 
-        public bool Update()
+        public bool Update(bool ScrubOutput)
         {
+            if (ScrubOutput)
+            {
+                SetClean();
+            }
+
             Output = GetOutput();
 
             Dirty = oldOutput != Output;

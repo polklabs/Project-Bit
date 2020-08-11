@@ -60,7 +60,11 @@ namespace Chips
         [IgnoreDataMember]
         protected BitArray OldInput { get; set; }
         [IgnoreDataMember]
-        protected bool FirstRun = true;
+        protected bool FirstRun = true;        
+        [IgnoreDataMember]
+        // When updating gates should the gate be updated everytime output changes or only based on the original output
+        // Helps when dealing with gates that loop back onto themselves (Flip Flops)
+        protected bool ScrubOutput = false;
 
         /// <summary>
         /// Create a new chip object
@@ -191,7 +195,7 @@ namespace Chips
                         Chip chip = Chips[wire.CircuitIndex];
                         chip.SetInputBit(wire.ToIndex, Input[wire.FromIndex]);
                         chip.Update(forceUpdate);
-                        //Debug.Log("Updated gate: " + (char)(wire.CircuitIndex + 65));
+                        //Debug.Log("Updated chip: " + (char)(wire.CircuitIndex + 65));
 
                         if (forceUpdate || GetCardinality(chip.Dirty) > 0)
                         {
@@ -205,7 +209,7 @@ namespace Chips
                     {
                         Gate gate = Gates[wire.CircuitIndex];
                         gate.SetInputBit(wire.ToIndex, Input[wire.FromIndex]);
-                        gate.Update();
+                        gate.Update(ScrubOutput);
                         //Debug.Log("Updated gate: " + (char)(wire.CircuitIndex + 65));
 
                         if (forceUpdate || gate.IsDirty())
@@ -224,9 +228,9 @@ namespace Chips
             {
                 //Stop infinite loops from continuing
                 loops++;
-                if (loops >= 1000)
+                if (loops >= 100)
                 {
-                    Console.WriteLine("Infinite loop, breaking");
+                    Debug.Log("Infinite loop, breaking");
                     return;
                 }
 
@@ -259,6 +263,7 @@ namespace Chips
                                 outputQueue.Enqueue(guid);
                             }
                             Output[wire.ToIndex] = FromValues[wire.FromIndex];
+                            //Debug.Log("Updated output: " + wire.ToIndex);
                         }
                         else if (FromDirty[wire.FromIndex])
                         {
@@ -281,7 +286,7 @@ namespace Chips
                     {
                         Gate gate = Gates[wire.CircuitIndex];
                         gate.SetInputBit(wire.ToIndex, FromValues[wire.FromIndex]);
-                        gate.Update();
+                        gate.Update(ScrubOutput);
                         //Debug.Log("Updated gate: " + (char)(wire.CircuitIndex + 65));
 
                         if (forceUpdate || gate.IsDirty())
