@@ -49,7 +49,7 @@ public class MainMenu : MonoBehaviour
         foreach(string dir in dirs)
         {
             string[] path = dir.Split('/');
-            string name = path[path.Length - 1].Substring(0, path[path.Length - 1].LastIndexOf('.') + 1);
+            string name = path[path.Length - 1].Substring(0, path[path.Length - 1].LastIndexOf('.'));
 
             GameObject obj = Instantiate(TemplateButton, TemplateButton.transform.parent) as GameObject;
             obj.GetComponentInChildren<Text>().text = name;

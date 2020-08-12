@@ -58,14 +58,14 @@ namespace userInterface {
                 selectedButton = buttonIndex;
             }
             
-            DrawGroup();            
+            DrawGroup(buttonIndex);            
         }
 
-        public void DrawGroup()
+        public void DrawGroup(int buttonIndex)
         {
             if (selectedButton == -1 || selectedButton >= Part.GroupCount())
             {
-                if (selectedButton == -1)
+                if (selectedButton == -1 && buttonIndex < Part.GroupCount())
                 {
                     workspaceEditor.SetActionNone();
                 }
