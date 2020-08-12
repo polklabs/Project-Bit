@@ -43,7 +43,7 @@ namespace userInterface
         public static Part BCD_DEC_DECODE   = new Part("Bcd to decimal decoder (PQ110)", "PQ110_BcdToDec", PartGroups.SpecialCircuit);
         public static Part BCD_7SEG_DECODE  = new Part("Bcd to 7 segment decoder (PQ111)", "PQ111_BcdToSeg", PartGroups.SpecialCircuit);
         public static Part DUAL_JK_FF       = new Part("Dual JK Flip Flop (PQ120)", "PQ120_JkFf", PartGroups.SpecialCircuit); // 74LS107
-        //public static Part DUAL_D_FF        = new Part("Dual D Flip Flop (PQ121)", "PQ121_DFf", PartGroups.SpecialCircuit);
+        public static Part DUAL_D_FF        = new Part("Dual D Flip Flop (PQ121)", "PQ121_DFf", PartGroups.SpecialCircuit);
         public static Part OCTAL_D_FF       = new Part("Octal D Flip Flop (PQ122)", "PQ122_DFf", PartGroups.SpecialCircuit); // 74LS273
         public static Part ADDER_4_BIT      = new Part("4-Bit Binary Adder (PQ130)", "PQ130_Adder4Bit", PartGroups.SpecialCircuit); // 74LS283
         public static Part ADDER_4_BIT_GATE = new Part("4-Bit Binary Adder (PQ130G)", "PQ130G_Adder4Bit", PartGroups.SpecialCircuit); // 74LS283

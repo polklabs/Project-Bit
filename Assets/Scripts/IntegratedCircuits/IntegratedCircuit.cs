@@ -12,7 +12,7 @@ namespace IntegratedCircuits
     public enum SwitchTypes { Toggle, Momentary, Pulse };
 
     [DataContract]
-    public class IntegratedCircuit
+    public abstract class IntegratedCircuit
     {
         [DataMember]
         protected Guid Id;

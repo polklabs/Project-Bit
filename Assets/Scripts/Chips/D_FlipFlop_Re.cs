@@ -8,21 +8,22 @@ namespace Chips
         /// Clk = 0,
         /// Data = 1,
         /// Clr = 2,
+        /// Pr = 3
         /// 
         /// Q = 0
         /// Q' = 1
         /// </summary>
-        public D_FlipFlop_Re() : base(3, 2)
+        public D_FlipFlop_Re() : base(4, 2)
         {
             ScrubOutput = true;
 
-            Gate gateA = new NANDGate();
+            Gate gateA = new NANDGate(3);
             int indexA = AddGate(gateA);
 
             Gate gateB = new NANDGate(3);
             int indexB = AddGate(gateB);
 
-            Gate gateC = new NANDGate();
+            Gate gateC = new NANDGate(3);
             int indexC = AddGate(gateC);
 
             Gate gateD = new NANDGate(3);
@@ -44,6 +45,10 @@ namespace Chips
             //Clr
             AddWire(ID, new Wire(2, 2, indexB, false));
             AddWire(ID, new Wire(2, 2, indexD, false));
+
+            //Pr
+            AddWire(ID, new Wire(3, 2, indexA, false));
+            AddWire(ID, new Wire(3, 2, indexC, false));
 
             //Gate A
             AddWire(gateA.ID, new Wire(0, 0, indexB, false));
