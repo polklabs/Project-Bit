@@ -45,15 +45,16 @@ public class MainMenu : MonoBehaviour
         UnloadAll();
         LoadGameObj.SetActive(true);
 
-        string[] dirs = Directory.GetDirectories(baseFilePath, "*", SearchOption.TopDirectoryOnly);
+        string[] dirs = Directory.GetFiles(baseFilePath, "*.bit", SearchOption.TopDirectoryOnly);
         foreach(string dir in dirs)
         {
             string[] path = dir.Split('/');
+            string name = path[path.Length - 1].Substring(0, path[path.Length - 1].LastIndexOf('.') + 1);
 
             GameObject obj = Instantiate(TemplateButton, TemplateButton.transform.parent) as GameObject;
-            obj.GetComponentInChildren<Text>().text = path[path.Length - 1];
-            obj.GetComponent<Button>().onClick.AddListener(delegate { ClickSavedWorkspace(path[path.Length - 1]); });
-            obj.name = path[path.Length - 1];
+            obj.GetComponentInChildren<Text>().text = name;
+            obj.GetComponent<Button>().onClick.AddListener(delegate { ClickSavedWorkspace(name); });
+            obj.name = name;
             obj.SetActive(true);
         }
     }

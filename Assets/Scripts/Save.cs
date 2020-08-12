@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using System.IO.Compression;
 
 public class Save : MonoBehaviour
 {
@@ -21,24 +22,38 @@ public class Save : MonoBehaviour
     public bool SaveWorkspace()
     {
         string filePath = Helper.GameHelper.GetSaveDirectory();
-        filePath += PlayerPrefs.GetString("Workspace");
-        Directory.CreateDirectory(filePath);
+        filePath += PlayerPrefs.GetString("Workspace") + ".bit";
 
-        SaveComponents(filePath);
-        SaveNodes(filePath);
-        SaveUpdates(filePath);
-        SaveBreadBoards(filePath);
-        SaveGeneral(filePath);
+        using (ZipArchive archive = ZipFile.Open(filePath, ZipArchiveMode.Update))
+        {
+            SaveComponents(archive);
+            SaveNodes(archive);
+            SaveUpdates(archive);
+            SaveBreadBoards(archive);
+            SaveGeneral(archive);
+        }
 
         return true;
 
     }
 
-    private void SaveComponents(string filePath)
+    private ZipArchiveEntry GetZipArchiveEntry(string name, ZipArchive archive)
     {
-        filePath += "/components.json";
+        for (int i = 0; i < archive.Entries.Count; i++)
+        {
+            if (archive.Entries[i].Name == name)
+            {
+                return archive.Entries[i];
+            }
+        }
+        return archive.CreateEntry(name);
+    }
 
-        using(StreamWriter file = File.CreateText(filePath))
+    private void SaveComponents(ZipArchive archive)
+    {
+        ZipArchiveEntry entry = GetZipArchiveEntry("components.json", archive);
+
+        using(StreamWriter file = new StreamWriter(entry.Open()))
         {
             JsonSerializer serializer = new JsonSerializer
             {
@@ -51,9 +66,9 @@ public class Save : MonoBehaviour
         }
     }
 
-    private void SaveNodes(string filePath)
+    private void SaveNodes(ZipArchive archive)
     {
-        filePath += "/nodes.json";
+        ZipArchiveEntry entry = GetZipArchiveEntry("nodes.json", archive);
 
         Dictionary<string, Node> nodeDict = new Dictionary<string, Node>();
 
@@ -65,7 +80,7 @@ public class Save : MonoBehaviour
             }
         }
 
-        using (StreamWriter file = File.CreateText(filePath))
+        using (StreamWriter file = new StreamWriter(entry.Open()))
         {
             JsonSerializer serializer = new JsonSerializer
             {
@@ -76,11 +91,11 @@ public class Save : MonoBehaviour
         }
     }
 
-    private void SaveUpdates(string filePath)
+    private void SaveUpdates(ZipArchive archive)
     {
-        filePath += "/updates.json";
+        ZipArchiveEntry entry = GetZipArchiveEntry("updates.json", archive);        
 
-        using (StreamWriter file = File.CreateText(filePath))
+        using (StreamWriter file = new StreamWriter(entry.Open()))
         {
             JsonSerializer serializer = new JsonSerializer
             {
@@ -91,11 +106,11 @@ public class Save : MonoBehaviour
         }
     }
 
-    private void SaveBreadBoards(string filePath)
+    private void SaveBreadBoards(ZipArchive archive)
     {
-        filePath += "/breadboard.json";
+        ZipArchiveEntry entry = GetZipArchiveEntry("breadboard.json", archive);        
 
-        using (StreamWriter file = File.CreateText(filePath))
+        using (StreamWriter file = new StreamWriter(entry.Open()))
         {
             JsonSerializer serializer = new JsonSerializer
             {
@@ -107,11 +122,11 @@ public class Save : MonoBehaviour
         }
     }
 
-    private void SaveGeneral(string filePath)
+    private void SaveGeneral(ZipArchive archive)
     {
-        filePath += "/general.json";
+        ZipArchiveEntry entry = GetZipArchiveEntry("general.json", archive);        
 
-        using (StreamWriter file = File.CreateText(filePath))
+        using (StreamWriter file = new StreamWriter(entry.Open()))
         {
             JsonSerializer serializer = new JsonSerializer
             {

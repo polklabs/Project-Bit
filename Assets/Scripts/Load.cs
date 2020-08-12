@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using IntegratedCircuits;
 using Helper;
 using UnityEngine.UI;
+using System.IO.Compression;
 
 public class Load : MonoBehaviour
 {
@@ -28,31 +28,49 @@ public class Load : MonoBehaviour
     public void LoadWorkspace(string workSpaceName)
     {
         string filePath = GameHelper.GetSaveDirectory();
-        filePath += workSpaceName;
-
-        if (Directory.Exists(filePath))
+        filePath += workSpaceName + ".bit";
+        
+        if (File.Exists(filePath))
         {
-            LoadBreadBoards(filePath);
-            LoadUpdates(filePath);
-            LoadNodes(filePath);
-            LoadComponents(filePath);
-            LoadGeneral(filePath);
-        } else
+            using (ZipArchive archive = ZipFile.OpenRead(filePath))
+            {
+                LoadBreadBoards(archive);
+                LoadUpdates(archive);
+                LoadNodes(archive);
+                LoadComponents(archive);
+                LoadGeneral(archive);
+            }
+        }
+        else
         {
-            fabricator.addBoard("0", 0, 0, false);            
+            fabricator.addBoard("0", 0, 0, false);
         }
 
     }
 
-    private void LoadComponents(string filePath)
+    private int GetZipArchiveEntryIndex(string name, ZipArchive archive)
     {
-        filePath += "/components.json";
-        if (!File.Exists(filePath))
+        for(int i = 0; i < archive.Entries.Count; i++)
+        {
+            if (archive.Entries[i].Name == name)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void LoadComponents(ZipArchive archive)
+    {
+        int index = GetZipArchiveEntryIndex("components.json", archive);               
+        if (index == -1)
         {
             return;
         }
 
-        using (StreamReader file = File.OpenText(filePath))
+        ZipArchiveEntry entry = archive.Entries[index];
+
+        using (StreamReader file = new StreamReader(entry.Open()))
         {
             JsonSerializer serializer = new JsonSerializer
             {
@@ -62,9 +80,8 @@ public class Load : MonoBehaviour
             };
             Dictionary<Guid, IntegratedCircuit> components = (Dictionary<Guid, IntegratedCircuit>)serializer.Deserialize(file, typeof(Dictionary<Guid, IntegratedCircuit>));
 
-            foreach(Guid g in components.Keys)
+            foreach (Guid g in components.Keys)
             {
-                //Debug.Log(components[g].GetType().Name);
 
                 IntegratedCircuit ic = components[g];
                 GameObject obj;
@@ -119,19 +136,20 @@ public class Load : MonoBehaviour
                 ic.CustomMethod();
 
             }
-
         }
     }    
 
-    private void LoadNodes(string filePath)
+    private void LoadNodes(ZipArchive archive)
     {
-        filePath += "/nodes.json";
-        if (!File.Exists(filePath))
+        int index = GetZipArchiveEntryIndex("nodes.json", archive);
+        if (index == -1)
         {
             return;
         }
 
-        using (StreamReader file = File.OpenText(filePath))
+        ZipArchiveEntry entry = archive.Entries[index];
+
+        using (StreamReader file = new StreamReader(entry.Open()))
         {
             JsonSerializer serializer = new JsonSerializer();
             Dictionary<string, Node> nodes = (Dictionary<string, Node>)serializer.Deserialize(file, typeof(Dictionary<string, Node>));
@@ -141,38 +159,40 @@ public class Load : MonoBehaviour
                 List<MeshRenderer> tempRenderer = bb.nodes[s].meshRenderers;
                 bb.nodes[s] = nodes[s];
                 bb.nodes[s].meshRenderers = tempRenderer;
-            }            
-
+            }
         }
     }
 
-    private void LoadUpdates(string filePath)
+    private void LoadUpdates(ZipArchive archive)
     {
-        filePath += "/updates.json";
-        if (!File.Exists(filePath))
+        int index = GetZipArchiveEntryIndex("updates.json", archive);
+        if (index == -1)
         {
             return;
         }
 
-        using (StreamReader file = File.OpenText(filePath))
+        ZipArchiveEntry entry = archive.Entries[index];
+
+        using (StreamReader file = new StreamReader(entry.Open()))
         {
             JsonSerializer serializer = new JsonSerializer();
             Queue<Guid> updates = (Queue<Guid>)serializer.Deserialize(file, typeof(Queue<Guid>));
 
             bb.updates = updates;
-
         }
     }
 
-    private void LoadBreadBoards(string filePath)
+    private void LoadBreadBoards(ZipArchive archive)
     {
-        filePath += "/breadboard.json";
-        if (!File.Exists(filePath))
+        int index = GetZipArchiveEntryIndex("breadboard.json", archive);
+        if (index == -1)
         {
             return;
         }
 
-        using (StreamReader file = File.OpenText(filePath))
+        ZipArchiveEntry entry = archive.Entries[index];
+
+        using (StreamReader file = new StreamReader(entry.Open()))
         {
             JsonSerializer serializer = new JsonSerializer
             {
@@ -183,15 +203,17 @@ public class Load : MonoBehaviour
         }
     }
 
-    private void LoadGeneral(string filePath)
+    private void LoadGeneral(ZipArchive archive)
     {
-        filePath += "/general.json";
-        if (!File.Exists(filePath))
+        int index = GetZipArchiveEntryIndex("general.json", archive);
+        if (index == -1)
         {
             return;
         }
 
-        using (StreamReader file = File.OpenText(filePath))
+        ZipArchiveEntry entry = archive.Entries[index];
+
+        using (StreamReader file = new StreamReader(entry.Open()))
         {
             JsonSerializer serializer = new JsonSerializer
             {
