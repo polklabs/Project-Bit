@@ -20,3 +20,6 @@ The basic building blocks (And, Or, Xor...)
 Logic grouping made up of gates and or other chips
 #### Components
 Contains chips/gates or custom logic
+
+### Credit
+If you use any significant portion of the code in this project please give me credit
