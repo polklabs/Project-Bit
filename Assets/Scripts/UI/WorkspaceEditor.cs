@@ -345,7 +345,8 @@ public class WorkspaceEditor : MonoBehaviour
             if (locationASelected)
             {
                 List<Vector3> hoverLinePos = new List<Vector3>(wireNodes);
-                hoverLinePos.Add(hit.point);
+                //hoverLinePos.Add(hit.point);
+                hoverLinePos.Add(new Vector3(Mathf.Round(hit.point.x * 2) / 2, hit.point.y, Mathf.Round(hit.point.z * 2) / 2));
                 icModel.GetComponentInChildren<LineRenderer>().positionCount = hoverLinePos.Count;
                 icModel.GetComponentInChildren<LineRenderer>().SetPositions(hoverLinePos.ToArray());
             }
@@ -738,8 +739,6 @@ public class WorkspaceEditor : MonoBehaviour
                 }
                 break;
             default:
-
-                Debug.Log("Placing at " + nodeId + index);
                 GameObject placed = circuitPool.PlaceIntegratedCircuit(icName, nodeId, index, false);
                 placed.transform.position = location;
                 if (CircuitHelper.IsNodeRotated(nodeId))
