@@ -4,6 +4,14 @@ namespace Chips
 {
     public class D_FlipFlop_Re : Chip
     {
+        /// <summary>
+        /// Clk = 0,
+        /// Data = 1,
+        /// Clr = 2,
+        /// 
+        /// Q = 0
+        /// Q' = 1
+        /// </summary>
         public D_FlipFlop_Re() : base(3, 2)
         {
             ScrubOutput = true;
