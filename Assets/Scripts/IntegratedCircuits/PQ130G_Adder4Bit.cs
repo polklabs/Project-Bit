@@ -23,7 +23,7 @@ namespace IntegratedCircuits
             PinModes[12]    = PinMode.Ouput;            
         }
 
-        protected override void InternalUpdate()
+        protected override void InternalUpdate(bool reset)
         {
             //Inputs
             Chip.Input[0] = PinState[10] == State.HIGH ? true : false; //B4
@@ -51,7 +51,7 @@ namespace IntegratedCircuits
 
         protected override void InternalReset(bool disable)
         {
-            InternalUpdate();
+            InternalUpdate(true);
             base.InternalReset(disable);
         }
 

@@ -18,10 +18,10 @@
                 PinState[0] = State.OFF;
                 return;
             }
-            InternalUpdate();
+            InternalUpdate(true);
         }
 
-        protected override void InternalUpdate()
+        protected override void InternalUpdate(bool reset)
         {
             PinState[0] = State.HIGH;
         }

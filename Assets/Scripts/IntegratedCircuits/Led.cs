@@ -29,7 +29,7 @@ namespace IntegratedCircuits
             mono.ToggleLed(On);
         }
 
-        protected override void InternalUpdate()
+        protected override void InternalUpdate(bool reset)
         {
             if (PinState[0] == State.HIGH)
             {
@@ -46,7 +46,7 @@ namespace IntegratedCircuits
 
         protected override void InternalReset(bool disable)
         {
-            InternalUpdate();
+            InternalUpdate(true);
         }
     }
 }

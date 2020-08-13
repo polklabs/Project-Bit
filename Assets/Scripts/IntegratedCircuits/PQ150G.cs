@@ -26,11 +26,11 @@ namespace IntegratedCircuits
             Chip.Input[2] = true;
         }
 
-        protected override void InternalUpdate()
+        protected override void InternalUpdate(bool reset)
         {
             Chip.Input[0] = PinState[0] == State.HIGH ? true : false;
             Chip.Input[1] = PinState[1] == State.HIGH ? true : false;
-            Chip.Update();
+            Chip.Update(reset);
             PinState[2] = Chip.Output[0] ? State.HIGH : State.LOW;
             PinState[4] = Chip.Output[1] ? State.HIGH : State.LOW;
             PinState[5] = Chip.Output[2] ? State.HIGH : State.LOW;
@@ -40,7 +40,7 @@ namespace IntegratedCircuits
         protected override void InternalReset(bool disable)
         {
             Chip.Input[2] = false;
-            InternalUpdate();
+            InternalUpdate(true);
             Chip.Input[2] = true;
             base.InternalReset(disable);            
         }

@@ -216,9 +216,9 @@ namespace IntegratedCircuits
 
         protected virtual void InternalUpdate(State[] oldState)
         {
-            InternalUpdate();
+            InternalUpdate(false);
         }
-        protected virtual void InternalUpdate()
+        protected virtual void InternalUpdate(bool reset)
         {
             //Override this
             Debug.Log("Internal Update");

@@ -21,7 +21,7 @@ namespace IntegratedCircuits
             PinModes[12]     = PinMode.Ouput;            
         }
 
-        protected override void InternalUpdate()
+        protected override void InternalUpdate(bool reset)
         {
             BitArray a = new BitArray(new bool[4] 
             { 

@@ -9,8 +9,6 @@ namespace IntegratedCircuits
     {
         [DataMember]
         public bool[] Ons;
-        [DataMember]
-        public bool[] OldOns;
 
         private Mono_Segment mono;
 
@@ -19,7 +17,6 @@ namespace IntegratedCircuits
             IcType = ICType.ic6;
             ModelName = "7SegmentDisplay";
             Ons = Enumerable.Repeat(false, 8).ToArray();
-            OldOns = Enumerable.Repeat(false, 8).ToArray();
 
             DefaultState[Vdd] = State.LOW;
             DefaultState[Gnd] = State.LOW;
@@ -37,17 +34,13 @@ namespace IntegratedCircuits
             }
             for(int i = 0; i < 8; i++)
             {
-                //if (Ons[i] != OldOns[i])
-                //{
-                    mono.ToggleLed(i, Ons[i]);
-                //}
+                mono.ToggleLed(i, Ons[i]);
             }
             
         }
 
-        protected override void InternalUpdate()
+        protected override void InternalUpdate(bool reset)
         {
-            Array.Copy(Ons, 0, OldOns, 0, Ons.Length);
 
             if (PinState[Vdd] != State.HIGH && PinState[Gnd] != State.HIGH && (PinState[Vdd] == State.LOW || PinState[Gnd] == State.LOW))
             {
@@ -74,7 +67,7 @@ namespace IntegratedCircuits
 
         protected override void InternalReset(bool disable)
         {
-            InternalUpdate();
+            InternalUpdate(true);
         }
     }
 }

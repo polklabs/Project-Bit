@@ -70,11 +70,11 @@ namespace IntegratedCircuits
                 this.oldState = (State[])PinState.Clone();
             }
 
-            InternalUpdate();
+            InternalUpdate(false);
 
         }
 
-        protected override void InternalUpdate()
+        protected override void InternalUpdate(bool reset)
         {
             Chip.Input[0] = PinState[0]   == State.HIGH ? true : false;
             Chip.Input[1] = PinState[18]  == State.HIGH ? true : false;
@@ -124,7 +124,7 @@ namespace IntegratedCircuits
 
         protected override void InternalReset(bool disable)
         {
-            InternalUpdate();
+            InternalUpdate(true);
             base.InternalReset(disable);
         }
 

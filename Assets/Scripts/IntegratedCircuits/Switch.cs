@@ -43,11 +43,11 @@ namespace IntegratedCircuits
             }
             else
             {
-                InternalUpdate();
+                InternalUpdate(true);
             }
         }
 
-        protected override void InternalUpdate()
+        protected override void InternalUpdate(bool reset)
         {
             if (SwitchPins == 1)
             {
