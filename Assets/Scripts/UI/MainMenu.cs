@@ -10,8 +10,7 @@ using Helper;
 
 public class MainMenu : MonoBehaviour
 {    
-    public GameObject NewGameObj;
-    public GameObject MainMenuObj;
+    public GameObject NewGameObj;    
     public GameObject LoadGameObj;
     public GameObject LoadedGameObj;
 
@@ -32,12 +31,6 @@ public class MainMenu : MonoBehaviour
     {
         UnloadAll();
         NewGameObj.SetActive(true);
-    }
-
-    public void LoadMainMenu()
-    {
-        UnloadAll();        
-        MainMenuObj.SetActive(true);        
     }
 
     public void LoadLoadMenu()
@@ -86,7 +79,6 @@ public class MainMenu : MonoBehaviour
     private void UnloadAll()
     {
         NewGameObj.SetActive(false);
-        MainMenuObj.SetActive(false);
         LoadGameObj.SetActive(false);
         LoadedGameObj.SetActive(false);
     }
