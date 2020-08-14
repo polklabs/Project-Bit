@@ -511,12 +511,19 @@ public class WorkspaceEditor : MonoBehaviour
 
                 foreach(Guid g in breadBoard.components.Keys)
                 {
-                    if (breadBoard.components[g].IcType == ICType.wire)
-                    {
-                        Wire w = (Wire)breadBoard.components[g];
-                        if (w.GetPinNode(0).StartsWith(id) || w.GetPinNode(1).StartsWith(id))
+                    IntegratedCircuit ic = breadBoard.components[g];
+                    if (ic.IcType == ICType.wire)
+                    {                        
+                        if (ic.GetPinNode(0).StartsWith(id) || ic.GetPinNode(1).StartsWith(id))
                         {
                             wiresToDelete.Add(g);
+                        }
+                    }
+                    else if (!ic.WriteToNodes)
+                    {
+                        if (ic.GetPinNode(0).StartsWith(id))
+                        {
+                            componentsToDelete.Add(g);
                         }
                     }
                 }                
@@ -532,13 +539,13 @@ public class WorkspaceEditor : MonoBehaviour
 
             foreach(Guid g in componentsToDelete)
             {
-                circuitPool.RemoveIntegratedCircuit(g.ToString());
-                Destroy(breadBoard.components[g].GetObjRef());                
+                Destroy(breadBoard.components[g].GetObjRef());
+                circuitPool.RemoveIntegratedCircuit(g.ToString());                          
             }
             foreach(Guid g in wiresToDelete)
             {
-                circuitPool.RemoveWire(g.ToString());
                 Destroy(breadBoard.components[g].GetObjRef());
+                circuitPool.RemoveWire(g.ToString());                
             }
             foreach(string s in nodesToDelete)
             {
