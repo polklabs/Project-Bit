@@ -197,14 +197,12 @@ public class BreadBoard : MonoBehaviour
         bool addSelfToQueue = false;
 
         while(nodeListIndex < nodeList.Count)
-        {            
-
-            Node node = nodes[nodeList[nodeListIndex]];
+        {
             string nodeUpdateId = nodeList[nodeListIndex];
+            Node node = nodes[nodeUpdateId];            
             nodeListIndex++;
 
-            int oldNeg = node.valueNeg;
-            int oldPos = node.valuePos;
+            State oldState = (State)GetNodeState(nodeUpdateId);
             
             switch(value)
             {
@@ -234,7 +232,9 @@ public class BreadBoard : MonoBehaviour
                     node.valueNeg = negValue;
                     node.valuePos = posValue;
                     break;
-            }            
+            }
+
+            State newState = (State)GetNodeState(nodeUpdateId);
 
             foreach (Connection connection in node.connections.Values)
             {
@@ -248,7 +248,7 @@ public class BreadBoard : MonoBehaviour
                             nodeList.Add(connection.ID);
                         }
                     }
-                    else if (value == 0 || (oldPos + node.valuePos == 1) || (oldPos == 0 && node.valuePos == 0 && (oldNeg + node.valueNeg == -1)))
+                    else if (oldState != newState)
                     {
                         Guid ID = Guid.Parse(connection.ID);
                         if (components[ID].GetPinMode(nodeUpdateId) == PinMode.Input)
