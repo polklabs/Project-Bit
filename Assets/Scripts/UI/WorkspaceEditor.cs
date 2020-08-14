@@ -53,6 +53,10 @@ public class WorkspaceEditor : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.N))
         {
+            gm.SingleStep();
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
             gm.Step();
         }
 

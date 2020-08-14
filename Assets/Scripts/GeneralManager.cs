@@ -39,15 +39,22 @@ public class GeneralManager : MonoBehaviour
 
     public void CopyStruct(GeneralManagerStruct gms)
     {
-        paused = gms.paused;
+        PlayPause(gms.paused, true);
         step = gms.step;
         singleStep = gms.singleStep;
         gameCamera.position = gms.position;
     }
 
-    public void PlayPause()
+    public void PlayPause(bool value = false, bool useValue = false)
     {
-        paused = !paused;
+        if (useValue)
+        {
+            paused = value;
+        }
+        else
+        {
+            paused = !paused;
+        }
 
         if (paused)
         {
