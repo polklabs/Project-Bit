@@ -38,6 +38,11 @@ public class MainMenu : MonoBehaviour
         UnloadAll();
         LoadGameObj.SetActive(true);
 
+        for(int i = 1; i < TemplateButton.transform.parent.childCount; i++)
+        {
+            Destroy(TemplateButton.transform.parent.GetChild(i));
+        }
+
         string[] dirs = Directory.GetFiles(baseFilePath, "*.bit", SearchOption.TopDirectoryOnly);
         foreach(string dir in dirs)
         {
