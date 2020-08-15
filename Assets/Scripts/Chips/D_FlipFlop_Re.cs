@@ -43,12 +43,12 @@ namespace Chips
             AddWire(ID, new Wire(1, 1, indexD, false));
 
             //Clr
-            AddWire(ID, new Wire(2, 2, indexB, false));
-            AddWire(ID, new Wire(2, 2, indexD, false));
+            AddWire(ID, new Wire(2, 2, indexB, false, true));
+            AddWire(ID, new Wire(2, 2, indexD, false, true));
 
             //Pr
-            AddWire(ID, new Wire(3, 2, indexA, false));
-            AddWire(ID, new Wire(3, 2, indexC, false));
+            AddWire(ID, new Wire(3, 2, indexA, false, true));
+            AddWire(ID, new Wire(3, 2, indexC, false, true));
 
             //Gate A
             AddWire(gateA.ID, new Wire(0, 0, indexB, false));

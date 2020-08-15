@@ -53,7 +53,7 @@ namespace userInterface
         public static Part BIN_COUNT_4      = new Part("4-Bit Binary Counter (PQ150G)", "PQ150G", PartGroups.SpecialCircuit); // 74LS161
 
         // Memory -----------------------------------------------------------------------------------
-        //public static Part SHIFT_REG_8  = new Part("8-Bit Shift Register (PQ210)",        "PQ210_SftRegister8Bit",    PartGroups.Memory); // 74HC595
+        public static Part SHIFT_REG_8  = new Part("8-Bit Shift Register (PQ210)", "PQ210_SftRegister8Bit", PartGroups.Memory); // 74HC595
         //public static Part REGISTER_4   = new Part("4-Bit D-type Register (PQ211)",       "PQ211_Register4Bit",       PartGroups.Memory); // 74LS173
         //public static Part EEPROM_16K   = new Part("EEPROM 16K (2K x 8) (PQ220)",         "PQ220_EEPROM16K",          PartGroups.Memory); // 28C16
         public static Part RAM_64       = new Part("64-Bit Random Access Memory (PQ230)", "PQ230_Ram64Bit", PartGroups.Memory); // 74189

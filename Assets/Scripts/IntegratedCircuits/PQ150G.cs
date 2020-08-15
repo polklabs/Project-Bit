@@ -23,7 +23,7 @@ namespace IntegratedCircuits
             PinModes[5] = PinMode.Ouput;
             PinModes[6] = PinMode.Ouput;
 
-            Chip.Input[2] = true;
+            Chip.Input[2] = false;
         }
 
         protected override void InternalUpdate(bool reset)
@@ -39,9 +39,9 @@ namespace IntegratedCircuits
 
         protected override void InternalReset(bool disable)
         {
-            Chip.Input[2] = false;
-            InternalUpdate(true);
             Chip.Input[2] = true;
+            InternalUpdate(true);
+            Chip.Input[2] = false;
             base.InternalReset(disable);            
         }
 

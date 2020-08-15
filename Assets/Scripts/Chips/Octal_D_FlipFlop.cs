@@ -37,7 +37,7 @@ namespace Chips
             D_FlipFlop_Re chip8 = new D_FlipFlop_Re();
             int index8 = AddChip(chip8);
 
-            NotGate gateA = new NotGate();
+            BufferGate gateA = new BufferGate();
             int indexA = AddGate(gateA);
 
             // Clr

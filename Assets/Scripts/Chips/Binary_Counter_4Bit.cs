@@ -34,16 +34,21 @@ namespace Chips
             AddWire(ID, new Wire(1, 1, indexE, false));
             AddWire(ID, new Wire(2, 0, indexF, false));
 
-            AddWire(ID, new Wire(0, 0, indexA, true));            
+            AddWire(ID, new Wire(0, 0, indexA, true));
+
+            AddWire(ID, new Wire(2, 3, indexA, true));
+            AddWire(ID, new Wire(2, 3, indexB, true));
+            AddWire(ID, new Wire(2, 3, indexC, true));
+            AddWire(ID, new Wire(2, 3, indexD, true));
 
             //Gate E
             AddWire(gateE.ID, new Wire(0, 1, indexF, false));
 
             //Gate F
-            AddWire(gateF.ID, new Wire(0, 2, indexA, true));
-            AddWire(gateF.ID, new Wire(0, 2, indexB, true));
-            AddWire(gateF.ID, new Wire(0, 2, indexC, true));
-            AddWire(gateF.ID, new Wire(0, 2, indexD, true));
+            AddWire(gateF.ID, new Wire(0, 2, indexA, true, true));
+            AddWire(gateF.ID, new Wire(0, 2, indexB, true, true));
+            AddWire(gateF.ID, new Wire(0, 2, indexC, true, true));
+            AddWire(gateF.ID, new Wire(0, 2, indexD, true, true));
 
             //Chip A
             AddWire(chipA.ID, new Wire(0, 0, -1, true));
