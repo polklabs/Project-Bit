@@ -2,6 +2,8 @@
 
 namespace Chips
 {
+
+    // TODO: FIX: SRCLR not updating properly
     public class Shift_Register_8Bit : Chip
     {
         /// <summary>
