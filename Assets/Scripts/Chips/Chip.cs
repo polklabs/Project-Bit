@@ -210,7 +210,7 @@ namespace Chips
                         chip.Update(forceUpdate);
                         //Debug.Log("Updated chip: " + (char)(wire.CircuitIndex + 65));
 
-                        if (forceUpdate || GetCardinality(chip.Dirty) > 0)
+                        if (forceUpdate || FirstRun || GetCardinality(chip.Dirty) > 0)
                         {
                             if (!queue.Contains(chip.ID))
                             {
@@ -225,7 +225,7 @@ namespace Chips
                         gate.Update(ScrubOutput);
                         //Debug.Log("Updated gate: " + (char)(wire.CircuitIndex + 65));
 
-                        if (forceUpdate || gate.IsDirty())
+                        if (forceUpdate || FirstRun || gate.IsDirty())
                         {
                             if (!queue.Contains(gate.ID))
                             {
@@ -252,6 +252,7 @@ namespace Chips
                 BitArray FromValues;
 				BitArray FromDirty;
 
+                // Find a better way to get values
                 int findIndex = Gates.FindIndex(x => x.ID == guid);
                 if (findIndex != -1)
                 {					
@@ -285,7 +286,7 @@ namespace Chips
 							chip.Update(forceUpdate);
                             //Debug.Log("Updated chip: " + (char)(wire.CircuitIndex + 65));
 
-							if (forceUpdate || GetCardinality(chip.Dirty) > 0)
+							if (forceUpdate || FirstRun || GetCardinality(chip.Dirty) > 0)
 							{
 								if (!queue.Contains(chip.ID))
 								{
@@ -302,7 +303,7 @@ namespace Chips
                         gate.Update(ScrubOutput);
                         //Debug.Log("Updated gate: " + (char)(wire.CircuitIndex + 65));
 
-                        if (forceUpdate || gate.IsDirty())
+                        if (forceUpdate || FirstRun || gate.IsDirty())
                         {
                             if (!queue.Contains(gate.ID))
                             {
