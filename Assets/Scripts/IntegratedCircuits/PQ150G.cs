@@ -22,14 +22,12 @@ namespace IntegratedCircuits
             PinModes[4] = PinMode.Ouput;
             PinModes[5] = PinMode.Ouput;
             PinModes[6] = PinMode.Ouput;
-
-            Chip.Input[2] = false;
         }
 
         protected override void InternalUpdate(bool reset)
         {
-            Chip.Input[0] = PinState[0] == State.HIGH ? true : false;
-            Chip.Input[1] = PinState[1] == State.HIGH ? true : false;
+            Chip.Input[0] = PinState[0] == State.HIGH ? true : false; // CLK
+            Chip.Input[1] = PinState[1] == State.HIGH ? true : false; // CLR
             Chip.Update(reset);
             PinState[2] = Chip.Output[0] ? State.HIGH : State.LOW;
             PinState[4] = Chip.Output[1] ? State.HIGH : State.LOW;
@@ -39,9 +37,9 @@ namespace IntegratedCircuits
 
         protected override void InternalReset(bool disable)
         {
-            Chip.Input[2] = true;
+            PinState[1] = State.HIGH;
             InternalUpdate(true);
-            Chip.Input[2] = false;
+            PinState[1] = State.OFF;
             base.InternalReset(disable);            
         }
 

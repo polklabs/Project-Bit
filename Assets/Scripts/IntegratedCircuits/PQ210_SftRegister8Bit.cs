@@ -30,23 +30,23 @@ namespace IntegratedCircuits
 
         protected override void InternalUpdate(bool reset)
         {
-            Chip.Input[0] = PinState[12] == State.HIGH;
-            Chip.Input[1] = PinState[11] == State.HIGH;
-            Chip.Input[2] = PinState[9] == State.HIGH;
-            Chip.Input[3] = PinState[10] == State.HIGH;
-            Chip.Input[4] = PinState[13] == State.HIGH;
-
+            Chip.Input[0] = PinState[12] == State.HIGH; // OE
+            Chip.Input[1] = PinState[11] == State.HIGH; // RCLK
+            Chip.Input[2] = PinState[9] == State.HIGH; // SRCLR
+            Chip.Input[3] = PinState[10] == State.HIGH; // SRCLK
+            Chip.Input[4] = PinState[13] == State.HIGH; // SER
+            
             Chip.Update(reset);
 
-            PinState[14] = Chip.Output[0] ? State.HIGH : State.LOW;
-            PinState[0] = Chip.Output[1] ? State.HIGH : State.LOW;
-            PinState[1] = Chip.Output[2] ? State.HIGH : State.LOW;
-            PinState[2] = Chip.Output[3] ? State.HIGH : State.LOW;
-            PinState[3] = Chip.Output[4] ? State.HIGH : State.LOW;
-            PinState[4] = Chip.Output[5] ? State.HIGH : State.LOW;
-            PinState[5] = Chip.Output[6] ? State.HIGH : State.LOW;
-            PinState[6] = Chip.Output[7] ? State.HIGH : State.LOW;
-            PinState[8] = Chip.Output[8] ? State.HIGH : State.LOW;
+            PinState[14] = Chip.Output[0] ? State.HIGH : State.LOW; // QA
+            PinState[0] = Chip.Output[1] ? State.HIGH : State.LOW; // QB
+            PinState[1] = Chip.Output[2] ? State.HIGH : State.LOW; // QC
+            PinState[2] = Chip.Output[3] ? State.HIGH : State.LOW; // QD
+            PinState[3] = Chip.Output[4] ? State.HIGH : State.LOW; // QE
+            PinState[4] = Chip.Output[5] ? State.HIGH : State.LOW; // QF
+            PinState[5] = Chip.Output[6] ? State.HIGH : State.LOW; // QG
+            PinState[6] = Chip.Output[7] ? State.HIGH : State.LOW; // QH
+            PinState[8] = Chip.Output[8] ? State.HIGH : State.LOW; // QH'
         }
 
         protected override void InternalReset(bool disable)

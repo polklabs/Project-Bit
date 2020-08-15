@@ -7,7 +7,7 @@ namespace Chips
         /// <summary>
         /// Data = 0-7,
         /// Clk = 8,
-        /// Clr = 9
+        /// OE = 9
         /// 
         /// Q = 0-7
         /// </summary>
@@ -37,10 +37,34 @@ namespace Chips
             D_FlipFlop_Re chip8 = new D_FlipFlop_Re();
             int index8 = AddChip(chip8);
 
-            BufferGate gateA = new BufferGate();
+            ANDGate gate1 = new ANDGate();
+            int i1 = AddGate(gate1);
+
+            ANDGate gate2 = new ANDGate();
+            int i2 = AddGate(gate2);
+
+            ANDGate gate3 = new ANDGate();
+            int i3 = AddGate(gate3);
+
+            ANDGate gate4 = new ANDGate();
+            int i4 = AddGate(gate4);
+
+            ANDGate gate5 = new ANDGate();
+            int i5 = AddGate(gate5);
+
+            ANDGate gate6 = new ANDGate();
+            int i6 = AddGate(gate6);
+
+            ANDGate gate7 = new ANDGate();
+            int i7 = AddGate(gate7);
+
+            ANDGate gate8 = new ANDGate();
+            int i8 = AddGate(gate8);
+
+            NotGate gateA = new NotGate();
             int indexA = AddGate(gateA);
 
-            // Clr
+            // OE
             AddWire(ID, new Wire(9, 0, indexA));
 
             // Clk
@@ -64,24 +88,34 @@ namespace Chips
             AddWire(ID, new Wire(7, 1, index8, true));
 
             // Gate A
-            AddWire(gateA.ID, new Wire(0, 2, index1, true));
-            AddWire(gateA.ID, new Wire(0, 2, index2, true));
-            AddWire(gateA.ID, new Wire(0, 2, index3, true));
-            AddWire(gateA.ID, new Wire(0, 2, index4, true));
-            AddWire(gateA.ID, new Wire(0, 2, index5, true));
-            AddWire(gateA.ID, new Wire(0, 2, index6, true));
-            AddWire(gateA.ID, new Wire(0, 2, index7, true));
-            AddWire(gateA.ID, new Wire(0, 2, index8, true));
+            AddWire(gateA, new Wire(0, 1, i1));
+            AddWire(gateA, new Wire(0, 1, i2));
+            AddWire(gateA, new Wire(0, 1, i3));
+            AddWire(gateA, new Wire(0, 1, i4));
+            AddWire(gateA, new Wire(0, 1, i5));
+            AddWire(gateA, new Wire(0, 1, i6));
+            AddWire(gateA, new Wire(0, 1, i7));
+            AddWire(gateA, new Wire(0, 1, i8));
+
+            // D FF
+            AddWire(chip1, new Wire(0, 0, i1));
+            AddWire(chip2, new Wire(0, 0, i2));
+            AddWire(chip3, new Wire(0, 0, i3));
+            AddWire(chip4, new Wire(0, 0, i4));
+            AddWire(chip5, new Wire(0, 0, i5));
+            AddWire(chip6, new Wire(0, 0, i6));
+            AddWire(chip7, new Wire(0, 0, i7));
+            AddWire(chip8, new Wire(0, 0, i8));
 
             // Output
-            AddWire(chip1.ID, new Wire(0, 0, -1, true));
-            AddWire(chip2.ID, new Wire(0, 1, -1, true));
-            AddWire(chip3.ID, new Wire(0, 2, -1, true));
-            AddWire(chip4.ID, new Wire(0, 3, -1, true));
-            AddWire(chip5.ID, new Wire(0, 4, -1, true));
-            AddWire(chip6.ID, new Wire(0, 5, -1, true));
-            AddWire(chip7.ID, new Wire(0, 6, -1, true));
-            AddWire(chip8.ID, new Wire(0, 7, -1, true));
+            AddWire(gate1, new Wire(0, 0, -1, true));
+            AddWire(gate2, new Wire(0, 1, -1, true));
+            AddWire(gate3, new Wire(0, 2, -1, true));
+            AddWire(gate4, new Wire(0, 3, -1, true));
+            AddWire(gate5, new Wire(0, 4, -1, true));
+            AddWire(gate6, new Wire(0, 5, -1, true));
+            AddWire(gate7, new Wire(0, 6, -1, true));
+            AddWire(gate8, new Wire(0, 7, -1, true));
 
         }
     }

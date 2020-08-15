@@ -9,65 +9,47 @@ namespace Chips
 {
     public class Binary_Counter_4Bit : Chip
     {
-        public Binary_Counter_4Bit() : base(3, 4)
+        /// <summary>
+        /// CLK = 0,
+        /// 1 = CLR        
+        /// </summary>
+        public Binary_Counter_4Bit() : base(2, 4)
         {
-            D_FlipFlop_Re chipA = new D_FlipFlop_Re();            
-            int indexA = AddChip(chipA);
+            JK_FlipFlop_Clr chip0 = new JK_FlipFlop_Clr();
+            chip0.SetInputBit(0, true);
+            chip0.SetInputBit(1, true);
+            int index0 = AddChip(chip0);
 
-            D_FlipFlop_Re chipB = new D_FlipFlop_Re();
-            int indexB = AddChip(chipB);
+            JK_FlipFlop_Clr chip1 = new JK_FlipFlop_Clr();
+            chip1.SetInputBit(0, true);
+            chip1.SetInputBit(1, true);
+            int index1 = AddChip(chip1);
 
-            D_FlipFlop_Re chipC = new D_FlipFlop_Re();
-            int indexC = AddChip(chipC);
+            JK_FlipFlop_Clr chip2 = new JK_FlipFlop_Clr();
+            chip2.SetInputBit(0, true);
+            chip2.SetInputBit(1, true);
+            int index2 = AddChip(chip2);
 
-            D_FlipFlop_Re chipD = new D_FlipFlop_Re();
-            int indexD = AddChip(chipD);
+            JK_FlipFlop_Clr chip3 = new JK_FlipFlop_Clr();
+            chip3.SetInputBit(0, true);
+            chip3.SetInputBit(1, true);
+            int index3 = AddChip(chip3);
 
-            Gate gateE = new NANDGate();
-            int indexE = AddGate(gateE);
+            AddWire(ID, new Wire(0, 2, index0, true));            
 
-            Gate gateF = new ANDGate();
-            int indexF = AddGate(gateF);
+            AddWire(ID, new Wire(1, 3, index0, true));
+            AddWire(ID, new Wire(1, 3, index1, true));
+            AddWire(ID, new Wire(1, 3, index2, true));
+            AddWire(ID, new Wire(1, 3, index3, true));
 
-            //Inputs
-            AddWire(ID, new Wire(0, 0, indexE, false));
-            AddWire(ID, new Wire(1, 1, indexE, false));
-            AddWire(ID, new Wire(2, 0, indexF, false));
+            AddWire(chip0, new Wire(0, 2, index1, true));
+            AddWire(chip1, new Wire(0, 2, index2, true));
+            AddWire(chip2, new Wire(0, 2, index3, true));
 
-            AddWire(ID, new Wire(0, 0, indexA, true));
-
-            AddWire(ID, new Wire(2, 3, indexA, true));
-            AddWire(ID, new Wire(2, 3, indexB, true));
-            AddWire(ID, new Wire(2, 3, indexC, true));
-            AddWire(ID, new Wire(2, 3, indexD, true));
-
-            //Gate E
-            AddWire(gateE.ID, new Wire(0, 1, indexF, false));
-
-            //Gate F
-            AddWire(gateF.ID, new Wire(0, 2, indexA, true, true));
-            AddWire(gateF.ID, new Wire(0, 2, indexB, true, true));
-            AddWire(gateF.ID, new Wire(0, 2, indexC, true, true));
-            AddWire(gateF.ID, new Wire(0, 2, indexD, true, true));
-
-            //Chip A
-            AddWire(chipA.ID, new Wire(0, 0, -1, true));
-            AddWire(chipA.ID, new Wire(1, 1, indexA, true));
-            AddWire(chipA.ID, new Wire(1, 0, indexB, true));
-
-            //Chip B
-            AddWire(chipB.ID, new Wire(0, 1, -1, true));
-            AddWire(chipB.ID, new Wire(1, 1, indexB, true));
-            AddWire(chipB.ID, new Wire(1, 0, indexC, true));
-
-            //Chip C
-            AddWire(chipC.ID, new Wire(0, 2, -1, true));
-            AddWire(chipC.ID, new Wire(1, 1, indexC, true));
-            AddWire(chipC.ID, new Wire(1, 0, indexD, true));
-
-            //Chip D
-            AddWire(chipD.ID, new Wire(0, 3, -1, true));
-            AddWire(chipD.ID, new Wire(1, 1, indexD, true));            
+            AddWire(chip0, new Wire(0, 0, -1, true));
+            AddWire(chip1, new Wire(0, 1, -1, true));
+            AddWire(chip2, new Wire(0, 2, -1, true));
+            AddWire(chip3, new Wire(0, 3, -1, true));
         }
     }
 }

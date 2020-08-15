@@ -68,6 +68,8 @@ namespace Chips
         // When updating gates should the gate be updated everytime output changes or only based on the original output
         // Helps when dealing with gates that loop back onto themselves (Flip Flops)
         protected bool ScrubOutput = false;
+        [IgnoreDataMember]
+        public bool KeepDirty = false;
 
         /// <summary>
         /// Create a new chip object
@@ -176,7 +178,14 @@ namespace Chips
 
             GetOutput(forceUpdate);
 
-            Dirty = (BitArray)(oldOutput.Xor(Output)).Clone();
+            if (KeepDirty)
+            {
+                Dirty.Or(oldOutput.Xor(Output));
+            }
+            else
+            {
+                Dirty = (BitArray)oldOutput.Xor(Output).Clone();
+            }
             OldInput = (BitArray)Input.Clone();
             FirstRun = false;
 
@@ -269,7 +278,7 @@ namespace Chips
                 foreach (Wire wire in WireDict[guid])
                 {
                     if (wire.IsChip)
-                    {
+                    {                        
                         if (wire.CircuitIndex == -1)
                         {
                             if (!outputQueue.Contains(guid))
@@ -283,10 +292,10 @@ namespace Chips
                         {
                             Chip chip = Chips[wire.CircuitIndex];
 							chip.SetInputBit(wire.ToIndex, FromValues[wire.FromIndex] ^ wire.invertValue);
-							chip.Update(forceUpdate);
-                            //Debug.Log("Updated chip: " + (char)(wire.CircuitIndex + 65));
+							chip.Update(false);
+                            //Debug.Log("Updated chip: " + (char)(Chips.FindIndex(x => x.ID == guid) + 65) + "->" + (char)(wire.CircuitIndex + 65));
 
-							if (forceUpdate || FirstRun || GetCardinality(chip.Dirty) > 0)
+							if (GetCardinality(chip.Dirty) > 0)
 							{
 								if (!queue.Contains(chip.ID))
 								{

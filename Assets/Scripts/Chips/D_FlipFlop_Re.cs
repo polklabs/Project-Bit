@@ -16,6 +16,7 @@ namespace Chips
         public D_FlipFlop_Re() : base(4, 2)
         {
             ScrubOutput = true;
+            KeepDirty = true;
 
             Gate gateA = new NANDGate(3);
             int indexA = AddGate(gateA);
@@ -29,29 +30,30 @@ namespace Chips
             Gate gateD = new NANDGate(3);
             int indexD = AddGate(gateD);
 
-            Gate gateE = new NANDGate();
+            Gate gateE = new NANDGate(3);
             int indexE = AddGate(gateE);
 
-            Gate gateF = new NANDGate();
-            int indexF = AddGate(gateF);
-
-            //Clock
-            AddWire(ID, new Wire(0, 1, indexB, false));
-            AddWire(ID, new Wire(0, 1, indexC, false));
+            Gate gateF = new NANDGate(3);
+            int indexF = AddGate(gateF);            
 
             //Data
-            AddWire(ID, new Wire(1, 1, indexD, false));
+            AddWire(ID, new Wire(1, 1, indexD));
 
             //Clr
             AddWire(ID, new Wire(2, 2, indexB, false, true));
             AddWire(ID, new Wire(2, 2, indexD, false, true));
+            AddWire(ID, new Wire(2, 2, indexF, false, true));
 
             //Pr
             AddWire(ID, new Wire(3, 2, indexA, false, true));
-            AddWire(ID, new Wire(3, 2, indexC, false, true));
+            AddWire(ID, new Wire(3, 2, indexE, false, true));
+
+            //Clock
+            AddWire(ID, new Wire(0, 1, indexB));
+            AddWire(ID, new Wire(0, 1, indexC));
 
             //Gate A
-            AddWire(gateA.ID, new Wire(0, 0, indexB, false));
+            AddWire(gateA.ID, new Wire(0, 0, indexB));
 
             //Gate B
             AddWire(gateB.ID, new Wire(0, 1, indexA, false));

@@ -13,6 +13,8 @@ namespace Chips
         /// </summary>
         public Shift_Register_8Bit() : base(6, 9)
         {
+            KeepDirty = true;
+
             // Shift Latches
             D_FlipFlop_Re S1 = new D_FlipFlop_Re();
             int indexS1 = AddChip(S1);
@@ -92,28 +94,21 @@ namespace Chips
             NotGate OE = new NotGate();
             int indexOE = AddGate(OE);
 
-            BufferGate SRCLR = new BufferGate();
-            int indexSRCLR = AddGate(SRCLR);
-
-            BufferGate SRCLK = new BufferGate();
-            int indexSRCLK = AddGate(SRCLK);
-
             BufferGate RCLK = new BufferGate();
             int indexRCLK = AddGate(RCLK);
 
             // SER
             AddWire(ID, new Wire(4, 1, indexS1, true));
 
-            // SRCLR
-            AddWire(ID, new Wire(2, 0, indexSRCLR));
-            AddWire(SRCLR, new Wire(0, 2, indexS1, true));
-            AddWire(SRCLR, new Wire(0, 2, indexS2, true));
-            AddWire(SRCLR, new Wire(0, 2, indexS3, true));
-            AddWire(SRCLR, new Wire(0, 2, indexS4, true));
-            AddWire(SRCLR, new Wire(0, 2, indexS5, true));
-            AddWire(SRCLR, new Wire(0, 2, indexS6, true));
-            AddWire(SRCLR, new Wire(0, 2, indexS7, true));
-            AddWire(SRCLR, new Wire(0, 2, indexS8, true));
+            // SRCLR            
+            AddWire(ID, new Wire(2, 2, indexS1, true, true));
+            AddWire(ID, new Wire(2, 2, indexS2, true, true));
+            AddWire(ID, new Wire(2, 2, indexS3, true, true));
+            AddWire(ID, new Wire(2, 2, indexS4, true, true));
+            AddWire(ID, new Wire(2, 2, indexS5, true, true));
+            AddWire(ID, new Wire(2, 2, indexS6, true, true));
+            AddWire(ID, new Wire(2, 2, indexS7, true, true));
+            AddWire(ID, new Wire(2, 2, indexS8, true, true));
 
             AddWire(ID, new Wire(5, 3, indexS1, true));
             AddWire(ID, new Wire(5, 3, indexS2, true));
@@ -132,16 +127,15 @@ namespace Chips
             AddWire(ID, new Wire(5, 3, indexR7, true));
             AddWire(ID, new Wire(5, 3, indexR8, true));
 
-            // SRCLK
-            AddWire(ID, new Wire(3, 0, indexSRCLK));
-            AddWire(SRCLK, new Wire(0, 0, indexS1, true));
-            AddWire(SRCLK, new Wire(0, 0, indexS2, true));
-            AddWire(SRCLK, new Wire(0, 0, indexS3, true));
-            AddWire(SRCLK, new Wire(0, 0, indexS4, true));
-            AddWire(SRCLK, new Wire(0, 0, indexS5, true));
-            AddWire(SRCLK, new Wire(0, 0, indexS6, true));
-            AddWire(SRCLK, new Wire(0, 0, indexS7, true));
-            AddWire(SRCLK, new Wire(0, 0, indexS8, true));
+            // SRCLK            
+            AddWire(ID, new Wire(3, 0, indexS1, true));
+            AddWire(ID, new Wire(3, 0, indexS2, true));
+            AddWire(ID, new Wire(3, 0, indexS3, true));
+            AddWire(ID, new Wire(3, 0, indexS4, true));
+            AddWire(ID, new Wire(3, 0, indexS5, true));
+            AddWire(ID, new Wire(3, 0, indexS6, true));
+            AddWire(ID, new Wire(3, 0, indexS7, true));
+            AddWire(ID, new Wire(3, 0, indexS8, true));
 
             // RCLK
             AddWire(ID, new Wire(1, 0, indexRCLK));
@@ -166,14 +160,22 @@ namespace Chips
             AddWire(OE, new Wire(0, 1, indexO8));
 
             // OEs            
-            AddWire(R1, new Wire(0, 0, -1, true));
-            AddWire(R2, new Wire(0, 1, -1, true));
-            AddWire(R3, new Wire(0, 2, -1, true));
-            AddWire(R4, new Wire(0, 3, -1, true));
-            AddWire(R5, new Wire(0, 4, -1, true));
-            AddWire(R6, new Wire(0, 5, -1, true));
-            AddWire(R7, new Wire(0, 6, -1, true));
-            AddWire(R8, new Wire(0, 7, -1, true));
+            AddWire(O1, new Wire(0, 0, -1, true));
+            AddWire(O2, new Wire(0, 1, -1, true));
+            AddWire(O3, new Wire(0, 2, -1, true));
+            AddWire(O4, new Wire(0, 3, -1, true));
+            AddWire(O5, new Wire(0, 4, -1, true));
+            AddWire(O6, new Wire(0, 5, -1, true));
+            AddWire(O7, new Wire(0, 6, -1, true));
+            AddWire(O8, new Wire(0, 7, -1, true));
+            //AddWire(S1, new Wire(0, 0, -1, true));
+            //AddWire(S2, new Wire(0, 1, -1, true));
+            //AddWire(S3, new Wire(0, 2, -1, true));
+            //AddWire(S4, new Wire(0, 3, -1, true));
+            //AddWire(S5, new Wire(0, 4, -1, true));
+            //AddWire(S6, new Wire(0, 5, -1, true));
+            //AddWire(S7, new Wire(0, 6, -1, true));
+            //AddWire(S8, new Wire(0, 7, -1, true));
 
             //SR->R
             AddWire(S1, new Wire(0, 1, indexR1, true));

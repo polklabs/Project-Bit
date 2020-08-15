@@ -22,12 +22,12 @@ namespace Chips
             int index2 = AddChip(chip2);
 
             // Clr
-            AddWire(ID, new Wire(4, 2, index1, true));
-            AddWire(ID, new Wire(5, 2, index2, true));
+            AddWire(ID, new Wire(4, 2, index1, true, true));
+            AddWire(ID, new Wire(5, 2, index2, true, true));
 
             // Pr
-            AddWire(ID, new Wire(6, 3, index1, true));
-            AddWire(ID, new Wire(7, 3, index2, true));
+            AddWire(ID, new Wire(6, 3, index1, true, true));
+            AddWire(ID, new Wire(7, 3, index2, true, true));
 
             // Clk
             AddWire(ID, new Wire(2, 0, index1, true));

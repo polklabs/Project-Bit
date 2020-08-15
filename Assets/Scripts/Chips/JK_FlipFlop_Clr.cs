@@ -4,7 +4,15 @@ namespace Chips
 {
     public class JK_FlipFlop_Clr : Chip
     {
-
+        /// <summary>
+        /// J = 0,
+        /// K = 1,
+        /// CLK = 2,
+        /// CLR = 3
+        /// 
+        /// Q = 0,
+        /// Q' = 1
+        /// </summary>
         public JK_FlipFlop_Clr() : base(4, 2)
         {
             ScrubOutput = true;
