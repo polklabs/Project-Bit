@@ -34,7 +34,7 @@ namespace IntegratedCircuits
             Chip.Input[2] = PinState[12] == State.HIGH;
             Chip.Input[3] = PinState[11] == State.HIGH;
 
-            Chip.Update();
+            Chip.Update(reset);
 
             PinState[0] = Chip.Output[0] ? State.HIGH : State.LOW;
             PinState[1] = Chip.Output[1] ? State.HIGH : State.LOW;

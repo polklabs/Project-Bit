@@ -29,6 +29,8 @@ public class DataSheet
     public static DataSheet OCTAL_D_FF          = new DataSheet("Octal D Flip Flop (PQ122)", "PQ122_DFf").SetLayers("IC20_PQ122", "IC20_outline", "IC20_VG", "IC20_dip_2");
     public static DataSheet ADDER_4_BIT         = new DataSheet("4-Bit Binary Adder (PQ130)", "PQ130_Adder4Bit").SetLayers("IC16_PQ130", "IC16_outline", "IC16_VG", "IC16_dip_2").SetText("This 4-bit full adder is made up of 4 independent full adders. It takes in two 4-bit numbers A(1-4) and B(1-4) along with a carry in (C0). It outputs a 4-bit number Σ(1-4) along with a carry out (C4)");
     public static DataSheet ADDER_4_BIT_GATE    = new DataSheet("PQ130G_Adder4Bit", ADDER_4_BIT);
+    public static DataSheet DECODE_3_8          = new DataSheet("3-To-8 Line Decoder (PQ140)", "PQ140_Decode3To8").SetLayers("IC14_PQ140", "IC14_outline", "IC14_VG", "IC14_dip_2");
+    public static DataSheet DUAL_DECODE_2_4     = new DataSheet("Dual 2-To-4 Line Decoder (PQ141)", "PQ141_Decode2To4").SetLayers("IC16_PQ141", "IC16_outline", "IC16_VG", "IC16_dip_2");
     public static DataSheet BIN_COUNT_4         = new DataSheet("4-Bit Binary Counter (PQ150G)", "PQ150G").SetLayers("IC8_PQ150", "IC8_outline", "IC8_VG", "IC8_dip_2").SetText("This 4-bit binary counter is made up of 4 rising edge D flip-flops. The output changes when the clock (CK) changes from LOW to HIGH. The reset pin (RS) will return the counter to a zero count on the next rising edge.");
 
     // Memory -----------------------------------------------------------------------------------
