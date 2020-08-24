@@ -7,6 +7,7 @@ public class Mono_Switch : MonoBehaviour
 {
     public GeneralManager gm;
     public BreadBoard breadBoard;
+    public AudioManager audioManager;
     public float momentaryLength = 0.3f;
     public float switchLength = 0.3f;
 
@@ -17,12 +18,14 @@ public class Mono_Switch : MonoBehaviour
         switch (ic.SwitchType)
         {
             case SwitchTypes.Pulse:
+                audioManager.PlayAudio("Click2");
                 MoveButton(switchObject);
                 PulseSwitch(ic, index);
                 break;
             case SwitchTypes.Momentary:
                 if (OnSwitch(ic, index))
                 {
+                    audioManager.PlayAudio("Click1");
                     MoveButton(switchObject);
                     StartCoroutine(MomentarySwitch(ic, index, momentaryLength));                                        
                 }
@@ -36,6 +39,14 @@ public class Mono_Switch : MonoBehaviour
 
     private void ToggleSwitch(Switch ic, int index)
     {
+        if (ic.SwitchState[index])
+        {
+            audioManager.PlayAudio("ClickOff");
+        } else
+        {
+            audioManager.PlayAudio("ClickOn");
+        }
+
         ic.SwitchState[index] = !ic.SwitchState[index];
         ic.Update();        
         ic.CustomMethod();

@@ -5,7 +5,8 @@ namespace IntegratedCircuits
 {   
     [DataContract]
     public class Switch : IntegratedCircuit
-    {
+    {        
+
         [DataMember]
         public bool[] SwitchState;
 
