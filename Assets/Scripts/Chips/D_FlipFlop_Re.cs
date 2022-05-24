@@ -53,7 +53,7 @@ namespace Chips
             AddWire(ID, new Wire(0, 1, indexC));
 
             //Gate A
-            AddWire(gateA.ID, new Wire(0, 0, indexB));
+            AddWire(gateA, new Wire(0, 0, indexB));
 
             //Gate B
             AddWire(gateB.ID, new Wire(0, 1, indexA, false));

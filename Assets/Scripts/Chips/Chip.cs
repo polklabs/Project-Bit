@@ -36,6 +36,24 @@ namespace Chips
             ToIndex = toIndex;
             invertValue = invert;
         }
+
+        /// <summary>
+        /// Creates a "wire" connecting two inputs/outputs and or gates/chips
+        /// </summary>
+        /// <param name="fromIndex">Index of output to grab value from (Input for .this)</param>
+        /// <param name="toIndex">Index of input to send value to (Output for .this)</param>
+        /// <param name="gateWithIndex">Gate of circuit created by AddGateIndexed</param>
+        /// <param name="isChip">If the circuit is of type Chip</param>
+        public Wire(int fromIndex, int toIndex, Gate gateWithIndex, bool isChip = false, bool invert = false) : this(fromIndex, toIndex, gateWithIndex.index, isChip, invert) {}
+
+        /// <summary>
+        /// Creates a "wire" connecting two inputs/outputs and or gates/chips
+        /// </summary>
+        /// <param name="fromIndex">Index of output to grab value from (Input for .this)</param>
+        /// <param name="toIndex">Index of input to send value to (Output for .this)</param>
+        /// <param name="chipWithIndex">Chip of circuit created by AddGateIndexed</param>
+        /// <param name="isChip">If the circuit is of type Chip</param>
+        public Wire(int fromIndex, int toIndex, Chip chipWithIndex, bool isChip = false, bool invert = false) : this(fromIndex, toIndex, chipWithIndex.index, isChip, invert) {}
     }
 
     [DataContract]
@@ -71,6 +89,10 @@ namespace Chips
         [IgnoreDataMember]
         public bool KeepDirty = false;
 
+        // Chip index on a chip when part of other chips
+        [IgnoreDataMember]
+        public int index;
+
         /// <summary>
         /// Create a new chip object
         /// </summary>
@@ -100,6 +122,17 @@ namespace Chips
             return Gates.Count - 1;
         }
 
+        protected Gate AddGateIndexed(Gate gate)
+        {
+            Gates.Add(gate);
+            if (!WireDict.ContainsKey(gate.ID))
+            {
+                WireDict.Add(gate.ID, new List<Wire>());
+            }
+            gate.index = Gates.Count - 1;
+            return gate;
+        }
+
         protected int AddChip(Chip chip)
         {
             Chips.Add(chip);
@@ -108,6 +141,17 @@ namespace Chips
                 WireDict.Add(chip.ID, new List<Wire>());
             }
             return Chips.Count - 1;
+        }
+
+        protected Chip AddChipIndexed(Chip chip)
+        {
+            Chips.Add(chip);
+            if (!WireDict.ContainsKey(chip.ID))
+            {
+                WireDict.Add(chip.ID, new List<Wire>());
+            }
+            chip.index = Chips.Count - 1;
+            return chip;
         }
 
         protected void AddWire(Chip chip, Wire wire)
@@ -131,6 +175,18 @@ namespace Chips
                 WireDict.Add(id, new List<Wire>());
             }
             WireDict[id].Add(wire);
+        }
+
+        /// <summary>
+        /// Adds a new connecting input wire to the chip
+        /// </summary>
+        protected void AddInputWire(Wire wire)
+        {
+            if (!WireDict.ContainsKey(ID))
+            {
+                WireDict.Add(ID, new List<Wire>());
+            }
+            WireDict[ID].Add(wire);
         }
 
         public void Reset()

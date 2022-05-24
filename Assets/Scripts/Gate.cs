@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Runtime.Serialization;
-using System.Collections.Generic;
 
 namespace Gates
 {
@@ -20,6 +19,9 @@ namespace Gates
         [DataMember]
         protected bool Dirty;
         private bool oldOutput;
+
+        // Gate index on a chip
+        public int index;
 
         public Gate(int inputs)
         {
