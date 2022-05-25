@@ -227,7 +227,7 @@ namespace IntegratedCircuits
         protected virtual void InternalReset(bool disable)
         {
             //Override this
-            Debug.Log("Internal Reset");
+            //Debug.Log("Internal Reset");
 
             for (int i = 0; i < Pins; i++)
             {

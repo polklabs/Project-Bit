@@ -40,7 +40,7 @@ public class MainMenu : MonoBehaviour
 
         for(int i = 1; i < TemplateButton.transform.parent.childCount; i++)
         {
-            Destroy(TemplateButton.transform.parent.GetChild(i));
+            Destroy(TemplateButton.transform.parent.GetChild(i).gameObject);
         }
 
         string[] dirs = Directory.GetFiles(baseFilePath, "*.bit", SearchOption.TopDirectoryOnly);

@@ -9,133 +9,95 @@ namespace Chips
 {
     public class Octal_Bus_Gates : Chip
     {
+        /// <summary>
+        /// DIR = 0,
+        /// E' = 1,
+        /// A1-9 = 2-9
+        /// B1-9 = 10-17
+        /// </summary>
         public Octal_Bus_Gates() : base(18, 16)
         {
-            Gate gateA = new ANDGate();
-            int indexA = AddGate(gateA);
+            // Control Gates
+            Gate gateA = AddGateIndexed(new ANDGate());
+            Gate gateB = AddGateIndexed(new ANDGate());
 
-            Gate gateB = new ANDGate();
-            int indexB = AddGate(gateB);
-
-            Gate gateC = new NotGate();
-            int indexC = AddGate(gateC);
-
-            Gate gateD = new NotGate();
-            int indexD = AddGate(gateD);
-
-            Gate gateE = new ANDGate();
-            int indexE = AddGate(gateE);
-
-            Gate gateF = new ANDGate();
-            int indexF = AddGate(gateF);
-
-            Gate gateG = new ANDGate();
-            int indexG = AddGate(gateG);
-
-            Gate gateH = new ANDGate();
-            int indexH = AddGate(gateH);
-
-            Gate gateI = new ANDGate();
-            int indexI = AddGate(gateI);
-
-            Gate gateJ = new ANDGate();
-            int indexJ = AddGate(gateJ);
-
-            Gate gateK = new ANDGate();
-            int indexK = AddGate(gateK);
-
-            Gate gateL = new ANDGate();
-            int indexL = AddGate(gateL);
-
-            Gate gateM = new ANDGate();
-            int indexM = AddGate(gateM);
-
-            Gate gateN = new ANDGate();
-            int indexN = AddGate(gateN);
-
-            Gate gateO = new ANDGate();
-            int indexO = AddGate(gateO);
-
-            Gate gateP = new ANDGate();
-            int indexP = AddGate(gateP);
-
-            Gate gateQ = new ANDGate();
-            int indexQ = AddGate(gateQ);
-
-            Gate gateR = new ANDGate();
-            int indexR = AddGate(gateR);
-
-            Gate gateS = new ANDGate();
-            int indexS = AddGate(gateS);
-
-            Gate gateT = new ANDGate();
-            int indexT = AddGate(gateT);
+            // Buffers
+            Gate gateE = AddGateIndexed(new TriBufferGate());
+            Gate gateF = AddGateIndexed(new TriBufferGate());
+            Gate gateG = AddGateIndexed(new TriBufferGate());
+            Gate gateH = AddGateIndexed(new TriBufferGate());
+            Gate gateI = AddGateIndexed(new TriBufferGate());
+            Gate gateJ = AddGateIndexed(new TriBufferGate());
+            Gate gateK = AddGateIndexed(new TriBufferGate());
+            Gate gateL = AddGateIndexed(new TriBufferGate());
+            Gate gateM = AddGateIndexed(new TriBufferGate());
+            Gate gateN = AddGateIndexed(new TriBufferGate());
+            Gate gateO = AddGateIndexed(new TriBufferGate());
+            Gate gateP = AddGateIndexed(new TriBufferGate());
+            Gate gateQ = AddGateIndexed(new TriBufferGate());
+            Gate gateR = AddGateIndexed(new TriBufferGate());
+            Gate gateS = AddGateIndexed(new TriBufferGate());
+            Gate gateT = AddGateIndexed(new TriBufferGate());
 
             //Inputs
-            AddWire(ID, new Wire(0, 0, indexA, false));
-            AddWire(ID, new Wire(0, 0, indexC, false));
-            AddWire(ID, new Wire(1, 0, indexD, false));
-            AddWire(ID, new Wire(2, 1, indexE, false));
-            AddWire(ID, new Wire(3, 1, indexF, false));
-            AddWire(ID, new Wire(4, 1, indexG, false));
-            AddWire(ID, new Wire(5, 1, indexH, false));
-            AddWire(ID, new Wire(6, 1, indexI, false));
-            AddWire(ID, new Wire(7, 1, indexJ, false));
-            AddWire(ID, new Wire(8, 1, indexK, false));
-            AddWire(ID, new Wire(9, 1, indexL, false));
-            AddWire(ID, new Wire(10, 1, indexM, false));
-            AddWire(ID, new Wire(11, 1, indexN, false));
-            AddWire(ID, new Wire(12, 1, indexO, false));
-            AddWire(ID, new Wire(13, 1, indexP, false));
-            AddWire(ID, new Wire(14, 1, indexQ, false));
-            AddWire(ID, new Wire(15, 1, indexR, false));
-            AddWire(ID, new Wire(16, 1, indexS, false));
-            AddWire(ID, new Wire(17, 1, indexT, false));
+            AddInputWire(new Wire(0, 0, gateA));
+            AddInputWire(new Wire(0, 0, gateB, true));
+            AddInputWire(new Wire(1, 1, gateA, true));
+            AddInputWire(new Wire(1, 1, gateB, true));
+            AddInputWire(new Wire(2, 0, gateE));
+            AddInputWire(new Wire(3, 0, gateF));
+            AddInputWire(new Wire(4, 0, gateG));
+            AddInputWire(new Wire(5, 0, gateH));
+            AddInputWire(new Wire(6, 0, gateI));
+            AddInputWire(new Wire(7, 0, gateJ));
+            AddInputWire(new Wire(8, 0, gateK));
+            AddInputWire(new Wire(9, 0, gateL));
+            AddInputWire(new Wire(10, 0, gateM));
+            AddInputWire(new Wire(11, 0, gateN));
+            AddInputWire(new Wire(12, 0, gateO));
+            AddInputWire(new Wire(13, 0, gateP));
+            AddInputWire(new Wire(14, 0, gateQ));
+            AddInputWire(new Wire(15, 0, gateR));
+            AddInputWire(new Wire(16, 0, gateS));
+            AddInputWire(new Wire(17, 0, gateT));
 
             //Gate A
-            AddWire(gateA.ID, new Wire(0, 0, indexE, false));
-            AddWire(gateA.ID, new Wire(0, 0, indexF, false));
-            AddWire(gateA.ID, new Wire(0, 0, indexG, false));
-            AddWire(gateA.ID, new Wire(0, 0, indexH, false));
-            AddWire(gateA.ID, new Wire(0, 0, indexI, false));
-            AddWire(gateA.ID, new Wire(0, 0, indexJ, false));
-            AddWire(gateA.ID, new Wire(0, 0, indexK, false));
-            AddWire(gateA.ID, new Wire(0, 0, indexL, false));
+            AddWire(gateA, new Wire(0, 1, gateE));
+            AddWire(gateA, new Wire(0, 1, gateF));
+            AddWire(gateA, new Wire(0, 1, gateG));
+            AddWire(gateA, new Wire(0, 1, gateH));
+            AddWire(gateA, new Wire(0, 1, gateI));
+            AddWire(gateA, new Wire(0, 1, gateJ));
+            AddWire(gateA, new Wire(0, 1, gateK));
+            AddWire(gateA, new Wire(0, 1, gateL));
 
             //Gate B
-            AddWire(gateB.ID, new Wire(0, 0, indexM, false));
-            AddWire(gateB.ID, new Wire(0, 0, indexN, false));
-            AddWire(gateB.ID, new Wire(0, 0, indexO, false));
-            AddWire(gateB.ID, new Wire(0, 0, indexP, false));
-            AddWire(gateB.ID, new Wire(0, 0, indexQ, false));
-            AddWire(gateB.ID, new Wire(0, 0, indexR, false));
-            AddWire(gateB.ID, new Wire(0, 0, indexS, false));
-            AddWire(gateB.ID, new Wire(0, 0, indexT, false));
-
-            //Gate C
-            AddWire(gateC.ID, new Wire(0, 0, indexB, false));
-
-            //Gate D
-            AddWire(gateD.ID, new Wire(0, 1, indexB, false));
-            AddWire(gateD.ID, new Wire(0, 1, indexA, false));
+            AddWire(gateB, new Wire(0, 1, gateM));
+            AddWire(gateB, new Wire(0, 1, gateN));
+            AddWire(gateB, new Wire(0, 1, gateO));
+            AddWire(gateB, new Wire(0, 1, gateP));
+            AddWire(gateB, new Wire(0, 1, gateQ));
+            AddWire(gateB, new Wire(0, 1, gateR));
+            AddWire(gateB, new Wire(0, 1, gateS));
+            AddWire(gateB, new Wire(0, 1, gateT));
 
             //Outputs
-            AddWire(gateE.ID, new Wire(0, 8, -1, true));
-            AddWire(gateF.ID, new Wire(0, 9, -1, true));
-            AddWire(gateG.ID, new Wire(0, 10, -1, true));
-            AddWire(gateH.ID, new Wire(0, 11, -1, true));
-            AddWire(gateI.ID, new Wire(0, 12, -1, true));
-            AddWire(gateJ.ID, new Wire(0, 13, -1, true));
-            AddWire(gateK.ID, new Wire(0, 14, -1, true));
-            AddWire(gateL.ID, new Wire(0, 15, -1, true));
-            AddWire(gateM.ID, new Wire(0, 0, -1, true));
-            AddWire(gateN.ID, new Wire(0, 1, -1, true));
-            AddWire(gateO.ID, new Wire(0, 2, -1, true));
-            AddWire(gateP.ID, new Wire(0, 3, -1, true));
-            AddWire(gateQ.ID, new Wire(0, 4, -1, true));
-            AddWire(gateR.ID, new Wire(0, 5, -1, true));
-            AddWire(gateS.ID, new Wire(0, 6, -1, true));
-            AddWire(gateT.ID, new Wire(0, 7, -1, true));
+            AddWire(gateE, new Wire(0, 8, -1, true));
+            AddWire(gateF, new Wire(0, 9, -1, true));
+            AddWire(gateG, new Wire(0, 10, -1, true));
+            AddWire(gateH, new Wire(0, 11, -1, true));
+            AddWire(gateI, new Wire(0, 12, -1, true));
+            AddWire(gateJ, new Wire(0, 13, -1, true));
+            AddWire(gateK, new Wire(0, 14, -1, true));
+            AddWire(gateL, new Wire(0, 15, -1, true));
+            AddWire(gateM, new Wire(0, 0, -1, true));
+            AddWire(gateN, new Wire(0, 1, -1, true));
+            AddWire(gateO, new Wire(0, 2, -1, true));
+            AddWire(gateP, new Wire(0, 3, -1, true));
+            AddWire(gateQ, new Wire(0, 4, -1, true));
+            AddWire(gateR, new Wire(0, 5, -1, true));
+            AddWire(gateS, new Wire(0, 6, -1, true));
+            AddWire(gateT, new Wire(0, 7, -1, true));
 
         }
     }
