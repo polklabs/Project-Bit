@@ -20,7 +20,10 @@ namespace Gates
         protected bool Dirty;
         private bool oldOutput;
 
-        // Gate index on a chip
+        /// <summary>
+        /// Gate index on a chip 
+        /// </summary>
+        [IgnoreDataMember]
         public int index;
 
         public Gate(int inputs)
@@ -88,8 +91,7 @@ namespace Gates
 
     public class ANDGate : Gate
     {
-        public ANDGate(int inputs) : base(inputs) { }
-        public ANDGate() : base(2) { }
+        public ANDGate(int inputs = 2) : base(inputs) { }
 
         protected override bool GetOutput()
         {
@@ -104,8 +106,7 @@ namespace Gates
 
     public class NANDGate : Gate
     {
-        public NANDGate(int inputs) : base(inputs) { }
-        public NANDGate() : base(2) { }
+        public NANDGate(int inputs = 2) : base(inputs) { }
 
         protected override bool GetOutput()
         {
@@ -120,8 +121,7 @@ namespace Gates
 
     public class ORGate : Gate
     {
-        public ORGate(int inputs) : base(inputs) { }
-        public ORGate() : base(2) { }
+        public ORGate(int inputs = 2) : base(inputs) { }
 
         protected override bool GetOutput()
         {
@@ -136,8 +136,7 @@ namespace Gates
 
     public class NORGate : Gate
     {
-        public NORGate(int inputs) : base(inputs) { }
-        public NORGate() : base(2) { }
+        public NORGate(int inputs = 2) : base(inputs) { }
 
         protected override bool GetOutput()
         {
@@ -152,8 +151,7 @@ namespace Gates
 
     public class XORGate : Gate
     {
-        public XORGate(int inputs) : base(inputs) { }
-        public XORGate() : base(2) { }
+        public XORGate(int inputs = 2) : base(inputs) { }
 
         protected override bool GetOutput()
         {
@@ -168,8 +166,7 @@ namespace Gates
 
     public class XNORGate : Gate
     {
-        public XNORGate(int inputs) : base(inputs) { }
-        public XNORGate() : base(2) { }
+        public XNORGate(int inputs = 2) : base(inputs) { }
 
         protected override bool GetOutput()
         {
@@ -189,6 +186,16 @@ namespace Gates
         protected override bool GetOutput()
         {
             return Input[0];
+        }
+    }
+
+    public class TriBufferGate : Gate
+    {
+        public TriBufferGate() : base(2) { }
+
+        protected override bool GetOutput()
+        {
+            return Input[0] & Input[1];
         }
     }
 

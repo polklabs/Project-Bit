@@ -19,7 +19,7 @@ namespace Chips
         [DataMember]
         public int ToIndex { get; set; }
         [DataMember]
-        public bool invertValue { get; set; }
+        public bool InvertValue { get; set; }
         
         /// <summary>
         /// Creates a "wire" connecting two inputs/outputs and or gates/chips
@@ -34,7 +34,7 @@ namespace Chips
             CircuitIndex = circuitIndex;
             FromIndex = fromIndex;
             ToIndex = toIndex;
-            invertValue = invert;
+            InvertValue = invert;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Chips
         /// <param name="toIndex">Index of input to send value to (Output for .this)</param>
         /// <param name="gateWithIndex">Gate of circuit created by AddGateIndexed</param>
         /// <param name="isChip">If the circuit is of type Chip</param>
-        public Wire(int fromIndex, int toIndex, Gate gateWithIndex, bool isChip = false, bool invert = false) : this(fromIndex, toIndex, gateWithIndex.index, isChip, invert) {}
+        public Wire(int fromIndex, int toIndex, Gate gateWithIndex, bool invert = false) : this(fromIndex, toIndex, gateWithIndex.index, false, invert) {}
 
         /// <summary>
         /// Creates a "wire" connecting two inputs/outputs and or gates/chips
@@ -53,7 +53,7 @@ namespace Chips
         /// <param name="toIndex">Index of input to send value to (Output for .this)</param>
         /// <param name="chipWithIndex">Chip of circuit created by AddGateIndexed</param>
         /// <param name="isChip">If the circuit is of type Chip</param>
-        public Wire(int fromIndex, int toIndex, Chip chipWithIndex, bool isChip = false, bool invert = false) : this(fromIndex, toIndex, chipWithIndex.index, isChip, invert) {}
+        public Wire(int fromIndex, int toIndex, Chip chipWithIndex, bool invert = false) : this(fromIndex, toIndex, chipWithIndex.index, true, invert) {}
     }
 
     [DataContract]
@@ -70,8 +70,10 @@ namespace Chips
 
         [DataMember]
         public List<Gate> Gates { get; set; }
+        
         [DataMember]
         public List<Chip> Chips { get; set; }
+
         [DataMember]
         public Dictionary<Guid, List<Wire>> WireDict { get; set; }
 
@@ -80,16 +82,23 @@ namespace Chips
 
         [DataMember]
         protected BitArray OldInput { get; set; }
+
         [DataMember]
-        protected bool FirstRun = true;        
+        protected bool FirstRun = true;
+
+        /// <summary>
+        /// When updating gates should the gate be updated everytime output changes or only based on the original output
+        /// Helps when dealing with gates that loop back onto themselves (Flip Flops) 
+        /// </summary>
         [IgnoreDataMember]
-        // When updating gates should the gate be updated everytime output changes or only based on the original output
-        // Helps when dealing with gates that loop back onto themselves (Flip Flops)
         protected bool ScrubOutput = false;
+
         [IgnoreDataMember]
         public bool KeepDirty = false;
 
-        // Chip index on a chip when part of other chips
+        /// <summary>
+        /// Chip index on a chip when part of other chips
+        /// </summary>
         [IgnoreDataMember]
         public int index;
 
@@ -271,7 +280,7 @@ namespace Chips
                     if (wire.IsChip)
                     {
                         Chip chip = Chips[wire.CircuitIndex];
-                        chip.SetInputBit(wire.ToIndex, Input[wire.FromIndex] ^ wire.invertValue);
+                        chip.SetInputBit(wire.ToIndex, Input[wire.FromIndex] ^ wire.InvertValue);
                         chip.Update(forceUpdate);
                         //Debug.Log("Updated chip: " + (char)(wire.CircuitIndex + 65));
 
@@ -286,7 +295,7 @@ namespace Chips
                     else
                     {
                         Gate gate = Gates[wire.CircuitIndex];
-                        gate.SetInputBit(wire.ToIndex, Input[wire.FromIndex] ^ wire.invertValue);
+                        gate.SetInputBit(wire.ToIndex, Input[wire.FromIndex] ^ wire.InvertValue);
                         gate.Update(ScrubOutput);
                         //Debug.Log("Updated gate: " + (char)(wire.CircuitIndex + 65));
 
@@ -341,13 +350,13 @@ namespace Chips
                             {
                                 outputQueue.Enqueue(guid);
                             }
-                            Output[wire.ToIndex] = FromValues[wire.FromIndex] ^ wire.invertValue;
+                            Output[wire.ToIndex] = FromValues[wire.FromIndex] ^ wire.InvertValue;
                             //Debug.Log("Updated output: " + wire.ToIndex);
                         }
                         else if (FromDirty[wire.FromIndex])
                         {
                             Chip chip = Chips[wire.CircuitIndex];
-							chip.SetInputBit(wire.ToIndex, FromValues[wire.FromIndex] ^ wire.invertValue);
+							chip.SetInputBit(wire.ToIndex, FromValues[wire.FromIndex] ^ wire.InvertValue);
 							chip.Update(false);
                             //Debug.Log("Updated chip: " + (char)(Chips.FindIndex(x => x.ID == guid) + 65) + "->" + (char)(wire.CircuitIndex + 65));
 
@@ -364,7 +373,7 @@ namespace Chips
                     else if(FromDirty[wire.FromIndex])
                     {
                         Gate gate = Gates[wire.CircuitIndex];
-                        gate.SetInputBit(wire.ToIndex, FromValues[wire.FromIndex] ^ wire.invertValue);
+                        gate.SetInputBit(wire.ToIndex, FromValues[wire.FromIndex] ^ wire.InvertValue);
                         gate.Update(ScrubOutput);
                         //Debug.Log("Updated gate: " + (char)(wire.CircuitIndex + 65));
 
@@ -403,7 +412,7 @@ namespace Chips
                 {
                     if (wire.IsChip && wire.CircuitIndex == -1)
                     {
-                        Output[wire.ToIndex] = FromValues[wire.FromIndex] ^ wire.invertValue;
+                        Output[wire.ToIndex] = FromValues[wire.FromIndex] ^ wire.InvertValue;
                     }                   
                 }
             }
