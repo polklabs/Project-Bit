@@ -7,6 +7,7 @@ public struct GeneralManagerStruct
     public int step;
     public int singleStep;
     public Vector3 position;
+    public bool showLabels;
 }
 
 public class GeneralManager : MonoBehaviour
@@ -16,6 +17,7 @@ public class GeneralManager : MonoBehaviour
     public bool paused = false;
     public int step = 0;
     public int singleStep = 0;
+    public bool showLabels = false;
 
     public Transform gameCamera;
 
@@ -34,6 +36,7 @@ public class GeneralManager : MonoBehaviour
         gms.step = step;
         gms.singleStep = singleStep;
         gms.position = gameCamera.position;
+        gms.showLabels = showLabels;
         return gms;
     }
 
@@ -43,6 +46,7 @@ public class GeneralManager : MonoBehaviour
         step = gms.step;
         singleStep = gms.singleStep;
         gameCamera.position = gms.position;
+        showLabels = gms.showLabels;
     }
 
     public void PlayPause(bool value = false, bool useValue = false)
@@ -96,6 +100,18 @@ public class GeneralManager : MonoBehaviour
         if (singleStep > 0)
         {
             singleStep--;
+        }
+    }
+
+    public void ToggleLabels()
+    {
+        showLabels = !showLabels;
+        if (showLabels)
+        {
+            breadBoard.SetLabelDisplay();
+        } else
+        {
+            breadBoard.ClearLabelDisplay();
         }
     }
 }

@@ -387,6 +387,60 @@ public class BreadBoard : MonoBehaviour
         }
     }
 
+    public void SetLabelDisplay()
+    {
+        foreach (Guid id in components.Keys)
+        {
+            UpdateLabelDisplay(id);
+        }
+    }
+
+    public void UpdateLabelDisplay(Guid id)
+    {
+        var comp = components[id];
+        if (comp.IcType == ICType.ic4 || comp.IcType == ICType.ic6)
+        {
+            var count = comp.PinNames.Length;
+            for(int i = 0; i < count; i++)
+            {
+                GameObject g = comp.GetObjRef();
+                var canvas = g.GetComponentInChildren<Canvas>().gameObject;
+                var template = canvas.transform.GetChild(0).gameObject;
+                GameObject pinLabel = Instantiate(template);
+                pinLabel.name = "PIN_LABEL";
+                pinLabel.transform.SetParent(canvas.transform);
+                var pinText = pinLabel.GetComponent<Text>();
+                pinText.text = comp.PinNames[i];
+                pinText.fontSize = 18;
+                var pinRect = pinLabel.GetComponent<RectTransform>();
+                pinRect.sizeDelta = new Vector2(64, 32);
+                pinRect.localScale = new Vector3(1, 1, 1);
+                pinRect.localRotation = Quaternion.identity;
+
+                // TODO: Make it fit the ICs better
+                var iMod = i % (count / 2);
+                iMod -= Mathf.FloorToInt(count / 4);
+                var inverter = (i < count / 2) ? -1 : 1;
+                pinRect.localPosition = new Vector3(-90 * iMod * inverter, 100 * inverter, 0);
+            }
+        }
+        
+    }
+
+    public void ClearLabelDisplay()
+    {
+        foreach (Guid id in components.Keys)
+        {
+            var comp = components[id];
+            GameObject g = comp.GetObjRef();
+            var textObjects = g.GetComponentsInChildren<Text>().Where(x => x.gameObject.name == "PIN_LABEL");
+            foreach(Text text in textObjects)
+            {
+                Destroy(text.gameObject);
+            }
+        }
+    }
+
     public void UnlinkNodes(string nodeIdA, int indexA, string nodeIdB, int indexB)
     {
 

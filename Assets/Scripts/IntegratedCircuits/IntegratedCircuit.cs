@@ -48,6 +48,8 @@ namespace IntegratedCircuits
         protected int Vdd;
         protected int Gnd;
 
+        public string[] PinNames;
+
         public IntegratedCircuit(int numPins)
         {
             Id = Guid.NewGuid();
@@ -55,6 +57,7 @@ namespace IntegratedCircuits
             ModelName = "Unknown";
             OverwriteObjText = true;
             WriteToNodes = true;
+            PinNames = new string[] { };
 
             Pins = numPins;
             Vdd  = numPins - 1;

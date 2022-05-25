@@ -12,13 +12,14 @@ public enum WorkspaceAction { Place, Remove, Demolish, Probe, None };
 
 public class WorkspaceEditor : MonoBehaviour
 {
-    //Referances
+    //References
     public GeneralManager gm;
     public BreadBoard breadBoard;
     public CircuitPool circuitPool;
     public Fabricator fabricator;
     public Mono_Switch mono_Switch;
     public Oscilloscope oscilloscope;
+    public GameObject wirePinPrefab;
 
     public Material outlineMat;
 
@@ -705,7 +706,10 @@ public class WorkspaceEditor : MonoBehaviour
                     finalPos.y = 0.25f;
                     wireNodes.Add(finalPos);
 
-                    for(int i = wireNodes.Count - 2; i >= 0; i--)
+                    GameObject wirePin = Instantiate(wirePinPrefab);
+                    wirePin.transform.position = new Vector3(finalPos.x, -0.168f, finalPos.z);
+
+                    for (int i = wireNodes.Count - 2; i >= 0; i--)
                     {
                         Vector3[] vectors = WireHelper.CurvedPoints(wireNodes[i], wireNodes[i + 1]);
                         foreach(Vector3 v in vectors.Reverse())
@@ -747,6 +751,8 @@ public class WorkspaceEditor : MonoBehaviour
                     startPos.y = 0.25f;
                     wireNodes.Add(startPos);
                     icModel.transform.position = new Vector3(0, 0, 0);
+                    GameObject wirePin = Instantiate(wirePinPrefab);
+                    wirePin.transform.position = new Vector3(startPos.x, -0.168f, startPos.z);
                 }
                 break;
             default:

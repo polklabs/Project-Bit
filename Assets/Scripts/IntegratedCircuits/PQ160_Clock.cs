@@ -23,6 +23,7 @@ namespace IntegratedCircuits
             ModelName = "IC_Clock";
             On = false;
             PinModes[4] = PinMode.Ouput;
+            PinNames = new string[] { "A", "B", "GND", "C", "Y", "VCC" };
         }
 
         public override void CustomMethod()
