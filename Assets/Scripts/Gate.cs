@@ -72,7 +72,7 @@ namespace Gates
             return this;
         }
 
-        public bool Update(bool ScrubOutput)
+        public void Update(bool ScrubOutput)
         {
             if (ScrubOutput)
             {
@@ -82,8 +82,6 @@ namespace Gates
             Output = GetOutput();
 
             Dirty = oldOutput != Output;
-
-            return Output;
         }
 
         protected virtual bool GetOutput() { return false; }

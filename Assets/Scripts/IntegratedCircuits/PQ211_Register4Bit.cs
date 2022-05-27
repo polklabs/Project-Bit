@@ -15,10 +15,7 @@ namespace IntegratedCircuits
 
             Chip = new Chips.D_Register_4Bit();
 
-            PinModes[2] = PinMode.Ouput;
-            PinModes[3] = PinMode.Ouput;
-            PinModes[4] = PinMode.Ouput;
-            PinModes[5] = PinMode.Ouput;
+            SetPinModes(2, 5, PinMode.Ouput);
         }
 
         protected override void InternalUpdate(bool reset)

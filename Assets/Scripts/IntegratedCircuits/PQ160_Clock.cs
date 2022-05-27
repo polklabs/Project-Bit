@@ -22,7 +22,7 @@ namespace IntegratedCircuits
             IcType = ICType.ic4;
             ModelName = "IC_Clock";
             On = false;
-            PinModes[4] = PinMode.Ouput;
+            SetPinModes(4, PinMode.Ouput);
             PinNames = new string[] { "A", "B", "GND", "C", "Y", "VCC" };
         }
 

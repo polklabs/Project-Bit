@@ -30,7 +30,7 @@ namespace IntegratedCircuits
         protected State[] oldState;
 
         //Whether the pin is input or output
-        protected readonly PinMode[] PinModes;
+        private readonly PinMode[] PinModes;
 
         //State for input if input is unknown
         protected readonly State[] DefaultState;
@@ -122,17 +122,54 @@ namespace IntegratedCircuits
             return 0;
         }
 
+        /// <summary>
+        /// Gets the PinMode for a specific node on the breadborad
+        /// </summary>
+        /// <param name="node">Breadboard node id</param>
+        /// <returns>PinMode of chip for specific node</returns>
         public PinMode GetPinMode(string node)
         {
             return PinModes[NodeToPin[node]];
         }
 
-        public void Update()
+        /// <summary>
+        /// Gets the PinMode for a specific index
+        /// </summary>
+        /// <param name="index">Index of Pin to lookup</param>
+        /// <returns>PinMode of chip for a specific index</returns>
+        public PinMode GetPinMode(int index)
         {
-            Update(false);
+            return PinModes[index];
         }
 
-        public void Update(bool disable)
+        /// <summary>
+        /// Allow setting the pin mode directly with PinMode enum
+        /// </summary>
+        /// <param name="index">Pin index to set</param>
+        /// <param name="mode">PinMode enum to use</param>
+        public void SetPinModes(int index, PinMode mode)
+        {
+            if (index < PinModes.Length)
+            {
+                PinModes[index] = mode;
+            }
+        }
+
+        /// <summary>
+        /// Allow setting a range of pin modes to the same values
+        /// </summary>
+        /// <param name="indexStart">Pin index to start (inclusive)</param>
+        /// <param name="indexEnd">Pin index to end (inclusive)</param>
+        /// <param name="mode">PinMode enum to use</param>
+        public void SetPinModes(int indexStart, int indexEnd, PinMode mode)
+        {
+            for (int i = indexStart; i <= indexEnd; i++)
+            {
+                SetPinModes(i, mode);
+            }
+        }
+
+        public void Update(bool disable = false)
         {
             //Debug.Log("Update: " + Id.ToString());            
 

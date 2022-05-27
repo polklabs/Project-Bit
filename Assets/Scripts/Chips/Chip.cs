@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Assets.Scripts.Utils;
 using Gates;
 using UnityEngine;
 
@@ -103,6 +104,17 @@ namespace Chips
         public int index;
 
         /// <summary>
+        /// Stores mappings of Gate IDs to objects
+        /// </summary>
+        [IgnoreDataMember]
+        private readonly Dictionary<Guid, Gate> GateDict = new Dictionary<Guid, Gate>();
+        /// <summary>
+        /// Stores mappings of Chip IDs to objects
+        /// </summary>
+        [IgnoreDataMember]
+        private readonly Dictionary<Guid, Chip> ChipDict = new Dictionary<Guid, Chip>();
+
+        /// <summary>
         /// Create a new chip object
         /// </summary>
         /// <param name="inputs">Size of input array</param>
@@ -123,12 +135,7 @@ namespace Chips
 
         protected int AddGate(Gate gate)
         {
-            Gates.Add(gate);
-            if (!WireDict.ContainsKey(gate.ID))
-            {
-                WireDict.Add(gate.ID, new List<Wire>());
-            }
-            return Gates.Count - 1;
+            return AddGateIndexed(gate).index;
         }
 
         protected Gate AddGateIndexed(Gate gate)
@@ -144,12 +151,7 @@ namespace Chips
 
         protected int AddChip(Chip chip)
         {
-            Chips.Add(chip);
-            if (!WireDict.ContainsKey(chip.ID))
-            {
-                WireDict.Add(chip.ID, new List<Wire>());
-            }
-            return Chips.Count - 1;
+            return AddChipIndexed(chip).index;
         }
 
         protected Chip AddChipIndexed(Chip chip)
@@ -191,11 +193,7 @@ namespace Chips
         /// </summary>
         protected void AddInputWire(Wire wire)
         {
-            if (!WireDict.ContainsKey(ID))
-            {
-                WireDict.Add(ID, new List<Wire>());
-            }
-            WireDict[ID].Add(wire);
+            AddWire(ID, wire);
         }
 
         public void Reset()
@@ -225,19 +223,11 @@ namespace Chips
         }
         public Chip SetInputBits(BitArray input)
         {
-            if (input.Length == Input.Length)
-            {
-                for (int i = 0; i < input.Length; i++)
-                {
-                    SetInputBit(i, input[i]);
-                }
-            }
-
+            Input = input;
             return this;
         }
 
-        public BitArray Update() { return Update(false); }
-        public BitArray Update(bool forceUpdate)
+        public void Update(bool forceUpdate = false)
         {
             BitArray oldOutput = (BitArray)Output.Clone();
 
@@ -253,16 +243,32 @@ namespace Chips
             }
             OldInput = (BitArray)Input.Clone();
             FirstRun = false;
+        }
 
-            return Output;
+        private Gate FindGate(Guid id)
+        {
+            if (!GateDict.ContainsKey(id))
+            {
+                GateDict[id] = Gates.Find(x => x.ID == id);
+            }
+            return GateDict[id];
+        }
+        private Chip FindChip(Guid id)
+        {
+            if (!ChipDict.ContainsKey(id))
+            {
+                ChipDict[id] = Chips.Find(x => x.ID == id);
+            }
+            return ChipDict[id];
         }
 
         protected virtual void GetOutput(bool forceUpdate)
         {
             int loops = 0;
-            Queue<Guid> queue = new Queue<Guid>();
-            Queue<Guid> outputQueue = new Queue<Guid>();
+            UniqueQueue<Guid> queue = new UniqueQueue<Guid>();
+            UniqueQueue<Guid> outputQueue = new UniqueQueue<Guid>();
 
+            // This is a new update loops so make sure gates and chips are not dirty
             foreach (Chip chip in Chips)
             {
                 chip.Dirty.SetAll(false);
@@ -282,14 +288,10 @@ namespace Chips
                         Chip chip = Chips[wire.CircuitIndex];
                         chip.SetInputBit(wire.ToIndex, Input[wire.FromIndex] ^ wire.InvertValue);
                         chip.Update(forceUpdate);
-                        //Debug.Log("Updated chip: " + (char)(wire.CircuitIndex + 65));
 
                         if (forceUpdate || FirstRun || GetCardinality(chip.Dirty) > 0)
                         {
-                            if (!queue.Contains(chip.ID))
-                            {
-                                queue.Enqueue(chip.ID);
-                            }
+                            queue.Enqueue(chip.ID);
                         }
                     }
                     else
@@ -297,14 +299,10 @@ namespace Chips
                         Gate gate = Gates[wire.CircuitIndex];
                         gate.SetInputBit(wire.ToIndex, Input[wire.FromIndex] ^ wire.InvertValue);
                         gate.Update(ScrubOutput);
-                        //Debug.Log("Updated gate: " + (char)(wire.CircuitIndex + 65));
 
                         if (forceUpdate || FirstRun || gate.IsDirty())
                         {
-                            if (!queue.Contains(gate.ID))
-                            {
-                                queue.Enqueue(gate.ID);
-                            }
+                            queue.Enqueue(gate.ID);
                         }
                     }
                 }
@@ -326,16 +324,16 @@ namespace Chips
                 BitArray FromValues;
 				BitArray FromDirty;
 
-                // Find a better way to get values
-                int findIndex = Gates.FindIndex(x => x.ID == guid);
-                if (findIndex != -1)
+                // The output of the previous gate
+                Gate previousGate = FindGate(guid);                
+                if (previousGate != null)
                 {					
-                    FromValues = new BitArray(1, Gates[findIndex].Output);
-					FromDirty = new BitArray(1, Gates[findIndex].IsDirty());
+                    FromValues = new BitArray(1, previousGate.Output);
+					FromDirty = new BitArray(1, previousGate.IsDirty());
                 }
                 else
                 {
-					Chip c = Chips.Find(x => x.ID == guid);
+                    Chip c = FindChip(guid);
                     FromValues = c.Output;
 					FromDirty = c.Dirty;
                 }
@@ -346,10 +344,7 @@ namespace Chips
                     {                        
                         if (wire.CircuitIndex == -1)
                         {
-                            if (!outputQueue.Contains(guid))
-                            {
-                                outputQueue.Enqueue(guid);
-                            }
+                            outputQueue.Enqueue(guid);
                             Output[wire.ToIndex] = FromValues[wire.FromIndex] ^ wire.InvertValue;
                             //Debug.Log("Updated output: " + wire.ToIndex);
                         }
@@ -362,10 +357,7 @@ namespace Chips
 
 							if (GetCardinality(chip.Dirty) > 0)
 							{
-								if (!queue.Contains(chip.ID))
-								{
-									queue.Enqueue(chip.ID);
-								}
+						        queue.Enqueue(chip.ID);
 							}
 						
                         }
@@ -379,10 +371,7 @@ namespace Chips
 
                         if (forceUpdate || FirstRun || gate.IsDirty())
                         {
-                            if (!queue.Contains(gate.ID))
-                            {
-                                queue.Enqueue(gate.ID);
-                            }
+                            queue.Enqueue(gate.ID);
                         }
 
                     }
@@ -397,15 +386,14 @@ namespace Chips
 
                 BitArray FromValues;
 
-                int findIndex = Gates.FindIndex(x => x.ID == guid);
-                if (findIndex != -1)
+                Gate gate = FindGate(guid);
+                if (gate != null)
                 {
-                    FromValues = new BitArray(1, Gates[findIndex].Output);
+                    FromValues = new BitArray(1, gate.Output);
                 }
                 else
                 {
-                    Chip c = Chips.Find(x => x.ID == guid);
-                    FromValues = c.Output;
+                    FromValues = FindChip(guid).Output;
                 }
 
                 foreach (Wire wire in WireDict[guid])

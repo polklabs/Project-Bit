@@ -15,10 +15,10 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Quad_Xnor_Gates();
 
-            PinModes[2] = PinMode.Ouput;
-            PinModes[5] = PinMode.Ouput;
-            PinModes[7] = PinMode.Ouput;
-            PinModes[10] = PinMode.Ouput;
+            SetPinModes(2, PinMode.Ouput);
+            SetPinModes(5, PinMode.Ouput);
+            SetPinModes(7, PinMode.Ouput);
+            SetPinModes(10, PinMode.Ouput);
         }
 
         protected override void InternalUpdate(bool reset)

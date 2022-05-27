@@ -15,13 +15,7 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Bcd_To_Seg();
 
-            PinModes[14] = PinMode.Ouput;
-            PinModes[13] = PinMode.Ouput;
-            PinModes[12] = PinMode.Ouput;
-            PinModes[11] = PinMode.Ouput;
-            PinModes[10] = PinMode.Ouput;
-            PinModes[9] = PinMode.Ouput;
-            PinModes[8] = PinMode.Ouput;
+            SetPinModes(8, 14, PinMode.Ouput);
         }
 
         protected override void InternalUpdate(bool reset)

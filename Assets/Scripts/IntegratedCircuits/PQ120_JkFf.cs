@@ -15,10 +15,8 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Dual_JK_FlipFlop();
 
-            PinModes[1] = PinMode.Ouput;
-            PinModes[2] = PinMode.Ouput;
-            PinModes[4] = PinMode.Ouput;
-            PinModes[5] = PinMode.Ouput;
+            SetPinModes(1, 2, PinMode.Ouput);
+            SetPinModes(4, 5, PinMode.Ouput);
         }
 
         protected override void InternalUpdate(bool reset)

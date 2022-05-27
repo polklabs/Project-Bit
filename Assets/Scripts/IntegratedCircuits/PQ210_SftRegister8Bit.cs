@@ -21,15 +21,9 @@ namespace IntegratedCircuits
             ShiftRegister = new BitArray(Enumerable.Repeat(false, 8).ToArray());
             Register = new BitArray(Enumerable.Repeat(false, 8).ToArray());
 
-            PinModes[0] = PinMode.Ouput;
-            PinModes[1] = PinMode.Ouput;
-            PinModes[2] = PinMode.Ouput;
-            PinModes[3] = PinMode.Ouput;
-            PinModes[4] = PinMode.Ouput;
-            PinModes[5] = PinMode.Ouput;
-            PinModes[6] = PinMode.Ouput;
-            PinModes[8] = PinMode.Ouput;
-            PinModes[14] = PinMode.Ouput;            
+            SetPinModes(0, 6, PinMode.Ouput);
+            SetPinModes(8, PinMode.Ouput);
+            SetPinModes(14, PinMode.Ouput);
         }
 
         protected override void InternalUpdate(bool reset)

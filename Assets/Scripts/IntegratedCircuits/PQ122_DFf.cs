@@ -20,14 +20,12 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Octal_D_FlipFlop();
 
-            PinModes[1]  = PinMode.Ouput;
-            PinModes[4]  = PinMode.Ouput;
-            PinModes[5]  = PinMode.Ouput;
-            PinModes[8]  = PinMode.Ouput;
-            PinModes[11] = PinMode.Ouput;
-            PinModes[14] = PinMode.Ouput;
-            PinModes[15] = PinMode.Ouput;
-            PinModes[18] = PinMode.Ouput;
+            SetPinModes(1, PinMode.Ouput);
+            SetPinModes(4, 5, PinMode.Ouput);
+            SetPinModes(8, PinMode.Ouput);
+            SetPinModes(11, PinMode.Ouput);
+            SetPinModes(14, 15, PinMode.Ouput);
+            SetPinModes(18, PinMode.Ouput);
         }
 
         protected override void InternalUpdate(bool reset)

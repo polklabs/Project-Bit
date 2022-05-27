@@ -15,12 +15,12 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Hex_Not_Gates();
 
-            PinModes[1]  = PinMode.Ouput;
-            PinModes[3]  = PinMode.Ouput;
-            PinModes[5]  = PinMode.Ouput;
-            PinModes[7]  = PinMode.Ouput;
-            PinModes[9]  = PinMode.Ouput;
-            PinModes[11] = PinMode.Ouput;
+            SetPinModes(1, PinMode.Ouput);
+            SetPinModes(3, PinMode.Ouput);
+            SetPinModes(5, PinMode.Ouput);
+            SetPinModes(7, PinMode.Ouput);
+            SetPinModes(9, PinMode.Ouput);
+            SetPinModes(11, PinMode.Ouput);
         }
 
         protected override void InternalUpdate(bool reset)

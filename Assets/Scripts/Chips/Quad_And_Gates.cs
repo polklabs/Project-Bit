@@ -11,37 +11,30 @@ namespace Chips
     {
         public Quad_And_Gates() : base(8, 4)
         {
-            Gate gateA = new ANDGate();
-            int indexA = AddGate(gateA);
-
-            Gate gateB = new ANDGate();
-            int indexB = AddGate(gateB);
-
-            Gate gateC = new ANDGate();
-            int indexC = AddGate(gateC);
-
-            Gate gateD = new ANDGate();
-            int indexD = AddGate(gateD);
+            Gate gateA = AddGateIndexed(new ANDGate());
+            Gate gateB = AddGateIndexed(new ANDGate());
+            Gate gateC = AddGateIndexed(new ANDGate());
+            Gate gateD = AddGateIndexed(new ANDGate());
 
             // Gate A
-            AddWire(ID, new Wire(0, 0, indexA, false));
-            AddWire(ID, new Wire(1, 1, indexA, false));
-            AddWire(gateA.ID, new Wire(0, 0, -1, true));
+            AddInputWire(new Wire(0, 0, gateA));
+            AddInputWire(new Wire(1, 1, gateA));
+            AddWire(gateA, new Wire(0, 0, -1, true));
 
             // Gate B
-            AddWire(ID, new Wire(2, 0, indexB, false));
-            AddWire(ID, new Wire(3, 1, indexB, false));
-            AddWire(gateB.ID, new Wire(0, 1, -1, true));
+            AddInputWire(new Wire(2, 0, gateB));
+            AddInputWire(new Wire(3, 1, gateB));
+            AddWire(gateB, new Wire(0, 1, -1, true));
 
             // Gate C
-            AddWire(ID, new Wire(4, 0, indexC, false));
-            AddWire(ID, new Wire(5, 1, indexC, false));
-            AddWire(gateC.ID, new Wire(0, 2, -1, true));
+            AddInputWire(new Wire(4, 0, gateC));
+            AddInputWire(new Wire(5, 1, gateC));
+            AddWire(gateC, new Wire(0, 2, -1, true));
 
             // Gate D
-            AddWire(ID, new Wire(6, 0, indexD, false));
-            AddWire(ID, new Wire(7, 1, indexD, false));
-            AddWire(gateD.ID, new Wire(0, 3, -1, true));
+            AddInputWire(new Wire(6, 0, gateD));
+            AddInputWire(new Wire(7, 1, gateD));
+            AddWire(gateD, new Wire(0, 3, -1, true));
         }
     }
 }

@@ -23,30 +23,15 @@ namespace IntegratedCircuits
 
         private void SetInOut(bool dir)
         {
-            PinModes[1] = dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[2] = dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[3] = dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[4] = dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[5] = dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[6] = dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[7] = dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[8] = dir ? PinMode.Input : PinMode.Ouput;
-
-            PinModes[10] = !dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[11] = !dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[12] = !dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[13] = !dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[14] = !dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[15] = !dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[16] = !dir ? PinMode.Input : PinMode.Ouput;
-            PinModes[17] = !dir ? PinMode.Input : PinMode.Ouput;
+            SetPinModes(1, 8, dir ? PinMode.Input : PinMode.Ouput);
+            SetPinModes(10, 17, !dir ? PinMode.Input : PinMode.Ouput);
         }
 
         private void SetOutputOff()
         {
             for(int i = 0; i < Pins; i++)
             {
-                if(PinModes[i] == PinMode.Ouput)
+                if(GetPinMode(i) == PinMode.Ouput)
                 {
                     PinState[i] = State.OFF;
                 }

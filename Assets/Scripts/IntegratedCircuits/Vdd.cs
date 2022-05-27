@@ -8,7 +8,7 @@
             ModelName = "Vdd";
             Vdd = 0;
             Gnd = 0;
-            PinModes[0] = PinMode.Ouput;
+            SetPinModes(0, PinMode.Ouput);
         }
 
         protected override void InternalReset(bool disable)

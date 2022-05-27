@@ -3716,6 +3716,8 @@ MonoBehaviour:
   fabricator: {fileID: 774481795}
   mono_Switch: {fileID: 2039763903}
   oscilloscope: {fileID: 137900732}
+  wirePinPrefab: {fileID: 5052631907814141402, guid: d32482427f0351346a6036b5293656b1,
+    type: 3}
   outlineMat: {fileID: 2100000, guid: 0be52a9d79227f74bba759623ba9f7f1, type: 2}
   Action: 4
   ProbeText: {fileID: 440715480}
