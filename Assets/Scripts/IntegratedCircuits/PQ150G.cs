@@ -16,6 +16,8 @@ namespace IntegratedCircuits
             IcType = ICType.ic4;
             ModelName = "IC8";
 
+            PinNames = new string[] { "CLK", "RS", "Q1", "GND", "Q2", "Q3", "Q4", "VCC" };
+
             Chip = new Chips.Binary_Counter_4Bit();
 
             SetPinModes(2, PinMode.Ouput);

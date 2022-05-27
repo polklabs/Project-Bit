@@ -58,6 +58,7 @@ public class CircuitPool : MonoBehaviour
                 ic.SetPinNode(1, nodeIdB);
                 ic.SetPinIndex(1, indexB);
                 break;
+            case ICType.ic6:
             case ICType.ic4:
 
                 string[] id = nodeIdA.Split('x');
@@ -73,13 +74,19 @@ public class CircuitPool : MonoBehaviour
                         string nodeId;
                         if (rotated)
                         {
-                            nodeId = (a + i).ToString() + "x" + (b + (i * 7)).ToString() + "x" + c.ToString() + "x" + (d + j).ToString() + "x" + id[4];
+                            nodeId = $"{a + i}x{b + (i * 7)}x{c}x{d + j}x{id[4]}";
                         }
                         else
                         {
-                            nodeId = (a + i).ToString() + "x" + b.ToString() + "x" + (c + (i * 7)).ToString() + "x" + (d + j).ToString() + "x" + id[4];
+                            nodeId = $"{a + i}x{b}x{c + (i * 7)}x{d + j}x{id[4]}";
                         }
                         int index = i == 0 ? 4 : 0;
+
+                        if (ic.IcType == ICType.ic6)
+                        {
+                            index = i == 0 ? indexA : indexA - 1;
+                        }
+
                         int pinIndex = i == 0 ? j : (ic.Pins - 1) - j;
 
                         if (ic.WriteToNodes)
@@ -90,40 +97,6 @@ public class CircuitPool : MonoBehaviour
                         ic.SetPinNode(pinIndex, nodeId);
                     }
                 }               
-
-                break;
-            case ICType.ic6:
-
-                id = nodeIdA.Split('x');
-                a = int.Parse(id[0]);
-                b = int.Parse(id[1]);
-                c = int.Parse(id[2]);
-                d = int.Parse(id[3]);
-
-                for (int i = 0; i < 2; i++)
-                {
-                    for (int j = 0; j < ic.Pins / 2; j++)
-                    {
-                        string nodeId;
-                        if (rotated)
-                        {
-                            nodeId = (a + i).ToString() + "x" + (b + (i * 7)).ToString() + "x" + c.ToString() + "x" + (d + j).ToString() + "x" + id[4];
-                        }
-                        else
-                        {
-                            nodeId = (a + i).ToString() + "x" + b.ToString() + "x" + (c + (i * 7)).ToString() + "x" + (d + j).ToString() + "x" + id[4];
-                        }
-                        int index = i == 0 ? indexA : indexA - 1;
-                        int pinIndex = i == 0 ? j : (ic.Pins - 1) - j;
-
-                        if (ic.WriteToNodes)
-                        {
-                            breadBoard.SetNodeConnection(false, nodeId, index, pinIndex, ic.GetId().ToString());
-                        }
-                        ic.SetPinIndex(pinIndex, index);
-                        ic.SetPinNode(pinIndex, nodeId);
-                    }
-                }
 
                 break;
             default:
@@ -231,11 +204,11 @@ public class CircuitPool : MonoBehaviour
                         string nodeIdT;
                         if (rotated)
                         {
-                            nodeIdT = (a + i).ToString() + "x" + (b + (i * 7)).ToString() + "x" + c.ToString() + "x" + (d + j).ToString() + "x" + id[4];
+                            nodeIdT = $"{a + i}x{b + (i * 7)}x{c}x{d + j}x{id[4]}";
                         }
                         else
                         {
-                            nodeIdT = (a + i).ToString() + "x" + b.ToString() + "x" + (c + (i * 7)).ToString() + "x" + (d + j).ToString() + "x" + id[4];
+                            nodeIdT = $"{a + i}x{b}x{c + (i * 7)}x{d + j}x{id[4]}";
                         }
                         
                         if(!CanPlaceSinglePin(nodeIdT, indexT))
@@ -275,10 +248,10 @@ public class CircuitPool : MonoBehaviour
                     return false;
                 }
 
-                
-                for(int k = 0; k < pins / 2; k++)
+
+                for (int k = 0; k < pins / 2; k++)
                 {
-                    string nodeIdT = "1x" + id[1] + "x" + id[2] + "x" + (d + k).ToString() + "x" + id[4];
+                    string nodeIdT = $"1x{id[1]}x{id[2]}x{d + k}x{id[4]}";
                     for (int i = index; i < 5; i++)
                     {
                         if (!CanPlaceSinglePin(nodeIdT, i))
@@ -287,10 +260,10 @@ public class CircuitPool : MonoBehaviour
                         }
                     }
                 }
-              
+
                 for (int k = 0; k < pins / 2; k++)
                 {
-                    string nodeIdT = "2x" + (rotated ? (b + 7).ToString() : id[1]) + "x" + (rotated ? id[2] : (c + 7).ToString()) + "x" + (d + k).ToString() + "x" + id[4];
+                    string nodeIdT = $"2x{(rotated ? (b + 7).ToString() : id[1])}x{(rotated ? id[2] : (c + 7).ToString())}x{d + k}x{id[4]}";
                     for (int i = 0; i < index; i++)
                     {
                         if (!CanPlaceSinglePin(nodeIdT, i))

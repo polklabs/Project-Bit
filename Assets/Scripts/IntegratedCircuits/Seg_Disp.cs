@@ -18,6 +18,8 @@ namespace IntegratedCircuits
             ModelName = "7SegmentDisplay";
             Ons = Enumerable.Repeat(false, 8).ToArray();
 
+            PinNames = new string[] { "E", "D", "GND", "C", "DP", "B", "A", "GND", "F", "G" };
+
             DefaultState[Vdd] = State.LOW;
             DefaultState[Gnd] = State.LOW;
             Vdd = 7;

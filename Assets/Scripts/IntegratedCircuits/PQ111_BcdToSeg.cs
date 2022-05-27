@@ -13,6 +13,8 @@ namespace IntegratedCircuits
             IcType = ICType.ic4;
             ModelName = "IC16";
 
+            PinNames = new string[] { "B", "C", "", "", "", "D", "A", "GND", "e", "d", "c", "b", "a", "G", "f", "VCC" };
+
             Chip = new Chips.Bcd_To_Seg();
 
             SetPinModes(8, 14, PinMode.Ouput);

@@ -13,6 +13,8 @@ namespace IntegratedCircuits
             IcType = ICType.ic4;
             ModelName = "IC14";
 
+            PinNames = new string[] { "A", "B", "Y", "A", "B", "Y", "GND", "Y", "A", "B", "Y", "A", "B", "VCC" };
+
             Chip = new Chips.Quad_And_Gates();
 
             SetPinModes(2, PinMode.Ouput);

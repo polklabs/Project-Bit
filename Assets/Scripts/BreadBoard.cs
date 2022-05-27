@@ -397,34 +397,51 @@ public class BreadBoard : MonoBehaviour
 
     public void UpdateLabelDisplay(Guid id)
     {
-        var comp = components[id];
-        if (comp.IcType == ICType.ic4 || comp.IcType == ICType.ic6)
+        try
         {
-            var count = comp.PinNames.Length;
-            for(int i = 0; i < count; i++)
+            var comp = components[id];
+            if ((comp.IcType == ICType.ic4 || comp.IcType == ICType.ic6) && comp.PinNames.Length > 0)
             {
+                var count = comp.PinNames.Length;
                 GameObject g = comp.GetObjRef();
-                var canvas = g.GetComponentInChildren<Canvas>().gameObject;
+                var canvas = g.GetComponentInChildren<Canvas>();
                 var template = canvas.transform.GetChild(0).gameObject;
-                GameObject pinLabel = Instantiate(template);
-                pinLabel.name = "PIN_LABEL";
-                pinLabel.transform.SetParent(canvas.transform);
-                var pinText = pinLabel.GetComponent<Text>();
-                pinText.text = comp.PinNames[i];
-                pinText.fontSize = 18;
-                var pinRect = pinLabel.GetComponent<RectTransform>();
-                pinRect.sizeDelta = new Vector2(64, 32);
-                pinRect.localScale = new Vector3(1, 1, 1);
-                pinRect.localRotation = Quaternion.identity;
-
-                // TODO: Make it fit the ICs better
-                var iMod = i % (count / 2);
-                iMod -= Mathf.FloorToInt(count / 4);
-                var inverter = (i < count / 2) ? -1 : 1;
-                pinRect.localPosition = new Vector3(-90 * iMod * inverter, 100 * inverter, 0);
+                var canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
+                var canvasHeight = canvas.GetComponent<RectTransform>().rect.height;
+                var labelWidth = canvasWidth / (count / 2);
+                var labelHeight = canvasHeight / 2;
+                var widthLeft = (-1 * (canvasWidth / 2)) + (labelWidth/2);
+                var heightBottom = (-1 * (canvasHeight / 2)) + (labelHeight/2);
+                for (int i = 0; i < count/2; i++)
+                {
+                    CreatePinLabel(template, canvas.transform, comp.PinNames[i], TextAnchor.LowerCenter, labelWidth, labelHeight, widthLeft, heightBottom);
+                    widthLeft += labelWidth;
+                }
+                heightBottom *= -1;
+                for (int i = count / 2; i < count; i++)
+                {
+                    widthLeft -= labelWidth;
+                    CreatePinLabel(template, canvas.transform, comp.PinNames[i], TextAnchor.UpperCenter, labelWidth, labelHeight, widthLeft, heightBottom);
+                }
             }
-        }
-        
+        } catch (Exception) { }
+    }
+
+    private void CreatePinLabel(GameObject template, Transform canvas, string text, TextAnchor alignment, float width, float height, float x, float y)
+    {
+        GameObject pinLabel = Instantiate(template);
+        pinLabel.SetActive(true);
+        pinLabel.name = "PIN_LABEL";
+        pinLabel.transform.SetParent(canvas);
+        var pinText = pinLabel.GetComponent<Text>();
+        pinText.text = text;
+        pinText.fontSize = 32;
+        pinText.alignment = alignment;
+        var pinRect = pinLabel.GetComponent<RectTransform>();
+        pinRect.sizeDelta = new Vector2(width, height);
+        pinRect.localScale = new Vector3(1, 1, 1);
+        pinRect.localRotation = Quaternion.identity;
+        pinRect.localPosition = new Vector3(x, y, 0);
     }
 
     public void ClearLabelDisplay()

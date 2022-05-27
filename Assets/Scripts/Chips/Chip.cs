@@ -289,7 +289,7 @@ namespace Chips
                         chip.SetInputBit(wire.ToIndex, Input[wire.FromIndex] ^ wire.InvertValue);
                         chip.Update(forceUpdate);
 
-                        if (forceUpdate || FirstRun || GetCardinality(chip.Dirty) > 0)
+                        if (forceUpdate || FirstRun || chip.IsDirty())
                         {
                             queue.Enqueue(chip.ID);
                         }
@@ -355,7 +355,7 @@ namespace Chips
 							chip.Update(false);
                             //Debug.Log("Updated chip: " + (char)(Chips.FindIndex(x => x.ID == guid) + 65) + "->" + (char)(wire.CircuitIndex + 65));
 
-							if (GetCardinality(chip.Dirty) > 0)
+							if (chip.IsDirty())
 							{
 						        queue.Enqueue(chip.ID);
 							}
@@ -401,43 +401,19 @@ namespace Chips
                     if (wire.IsChip && wire.CircuitIndex == -1)
                     {
                         Output[wire.ToIndex] = FromValues[wire.FromIndex] ^ wire.InvertValue;
-                    }                   
+                    }
                 }
             }
 
         }
 
-        public static int GetCardinality(BitArray bitArray)
+        private bool IsDirty()
         {
-
-            int[] ints = new int[(bitArray.Count >> 5) + 1];
-
-            bitArray.CopyTo(ints, 0);
-
-            int count = 0;
-
-            // fix for not truncated bits in last integer that may have been set to true with SetAll()
-            ints[ints.Length - 1] &= ~(-1 << (bitArray.Count % 32));
-
-            for (int i = 0; i < ints.Length; i++)
+            for(int i = 0; i < Dirty.Length; i++)
             {
-
-                int c = ints[i];
-
-                // magic (http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel)
-                unchecked
-                {
-                    c = c - ((c >> 1) & 0x55555555);
-                    c = (c & 0x33333333) + ((c >> 2) & 0x33333333);
-                    c = ((c + (c >> 4) & 0xF0F0F0F) * 0x1010101) >> 24;
-                }
-
-                count += c;
-
+                if (Dirty[i] == true) return true;
             }
-
-            return count;
-
+            return false;
         }
 
     }
