@@ -1,4 +1,5 @@
 ﻿using Gates;
+using Wires;
 
 /**
  * Octal Bus Gates based on the 74LS245

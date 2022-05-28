@@ -1,4 +1,5 @@
 ﻿using Gates;
+using Wires;
 
 /**
  * Quad Or Gates based on the 74LS32

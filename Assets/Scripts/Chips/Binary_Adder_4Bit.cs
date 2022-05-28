@@ -1,4 +1,5 @@
-﻿ using Gates;
+﻿using Gates;
+using Wires;
 
 /**
  * 4-Bit Binary Adder output based on the 74LS283

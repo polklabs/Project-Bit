@@ -1,4 +1,5 @@
 ﻿using Gates;
+using Wires;
 
 /**
  * Binary Counter based on the 74LS161

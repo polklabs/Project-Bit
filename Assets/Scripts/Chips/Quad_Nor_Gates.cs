@@ -1,4 +1,5 @@
 ﻿using Gates;
+using Wires;
 
 /**
  * Quad Nor Gates based on the 74LS02

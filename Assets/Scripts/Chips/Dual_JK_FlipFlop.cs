@@ -1,4 +1,5 @@
 ﻿using Gates;
+using Wires;
 
 namespace Chips
 {

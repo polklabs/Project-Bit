@@ -5,58 +5,10 @@ using System.Runtime.Serialization;
 using Assets.Scripts.Utils;
 using Gates;
 using UnityEngine;
+using Wires;
 
 namespace Chips
 {
-    [DataContract]
-    public class Wire
-    {
-        [DataMember]
-        public bool IsChip { get; set; }
-        [DataMember]
-        public int CircuitIndex { get; set; }
-        [DataMember]
-        public int FromIndex { get; set; }
-        [DataMember]
-        public int ToIndex { get; set; }
-        [DataMember]
-        public bool InvertValue { get; set; }
-        
-        /// <summary>
-        /// Creates a "wire" connecting two inputs/outputs and or gates/chips
-        /// </summary>
-        /// <param name="fromIndex">Index of output to grab value from (Input for .this)</param>
-        /// <param name="toIndex">Index of input to send value to (Output for .this)</param>
-        /// <param name="circuitIndex">Index of circuit to connect to (-1 for .this)</param>
-        /// <param name="isChip">If the circuit is of type Chip</param>
-        public Wire(int fromIndex, int toIndex, int circuitIndex, bool isChip = false, bool invert = false)
-        {
-            IsChip = isChip;
-            CircuitIndex = circuitIndex;
-            FromIndex = fromIndex;
-            ToIndex = toIndex;
-            InvertValue = invert;
-        }
-
-        /// <summary>
-        /// Creates a "wire" connecting two inputs/outputs and or gates/chips
-        /// </summary>
-        /// <param name="fromIndex">Index of output to grab value from (Input for .this)</param>
-        /// <param name="toIndex">Index of input to send value to (Output for .this)</param>
-        /// <param name="gateWithIndex">Gate of circuit created by AddGateIndexed</param>
-        /// <param name="isChip">If the circuit is of type Chip</param>
-        public Wire(int fromIndex, int toIndex, Gate gateWithIndex, bool invert = false) : this(fromIndex, toIndex, gateWithIndex.index, false, invert) {}
-
-        /// <summary>
-        /// Creates a "wire" connecting two inputs/outputs and or gates/chips
-        /// </summary>
-        /// <param name="fromIndex">Index of output to grab value from (Input for .this)</param>
-        /// <param name="toIndex">Index of input to send value to (Output for .this)</param>
-        /// <param name="chipWithIndex">Chip of circuit created by AddGateIndexed</param>
-        /// <param name="isChip">If the circuit is of type Chip</param>
-        public Wire(int fromIndex, int toIndex, Chip chipWithIndex, bool invert = false) : this(fromIndex, toIndex, chipWithIndex.index, true, invert) {}
-    }
-
     [DataContract]
     public abstract class Chip
     {
@@ -189,11 +141,52 @@ namespace Chips
         }
 
         /// <summary>
+        /// Adds new connecting wires to the chip
+        /// </summary>
+        /// <param name="id">Id of circuit to use as start of wire</param>
+        /// <param name="wires">List of wires to add</param>
+        protected void AddWires(Guid id, Wire[] wires)
+        {
+            foreach(Wire w in wires)
+            {
+                AddWire(id, w);
+            }
+        }
+        protected void AddWires(Gate gate, Wire[] wires)
+        {
+            foreach (Wire w in wires)
+            {
+                AddWire(gate, w);
+            }
+        }
+        protected void AddWires(Chip chip, Wire[] wires)
+        {
+            foreach (Wire w in wires)
+            {
+                AddWire(chip, w);
+            }
+        }
+
+        /// <summary>
         /// Adds a new connecting input wire to the chip
         /// </summary>
+        /// <param name="wire">Wire to add to input</param>
         protected void AddInputWire(Wire wire)
         {
             AddWire(ID, wire);
+        }
+
+        /// <summary>
+        /// Adds a new connecting input wires to the chip
+        /// </summary>
+        /// <param name="wires">List of wires to add to input</param>
+        protected void AddInputWires(Wire[] wires)
+        {
+            foreach(Wire w in wires)
+            {
+                AddInputWire(w);
+            }
+            
         }
 
         public void Reset()

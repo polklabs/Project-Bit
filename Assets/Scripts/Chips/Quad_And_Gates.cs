@@ -1,4 +1,5 @@
 ﻿using Gates;
+using Wires;
 
 /**
  * Quad And Gates based on the 74LS08

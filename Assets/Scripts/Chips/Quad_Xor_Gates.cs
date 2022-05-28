@@ -1,4 +1,5 @@
 ﻿using Gates;
+using Wires;
 
 /**
  * Quad Xor Gates based on the 74LS86

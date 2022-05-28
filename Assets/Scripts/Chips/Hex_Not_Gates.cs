@@ -1,4 +1,5 @@
 ﻿using Gates;
+using Wires;
 
 /**
  * Hex Not Gates based on the 74LS04

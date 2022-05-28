@@ -1,4 +1,5 @@
 ﻿using Gates;
+using Wires;
 
 /**
  * Quad Nand Gates based on the 74LS00
