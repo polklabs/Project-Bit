@@ -63,24 +63,10 @@ namespace Chips
             AddInputWire(new Wire(17, 0, gateT));
 
             //Gate A
-            AddWire(gateA, new Wire(0, 1, gateE));
-            AddWire(gateA, new Wire(0, 1, gateF));
-            AddWire(gateA, new Wire(0, 1, gateG));
-            AddWire(gateA, new Wire(0, 1, gateH));
-            AddWire(gateA, new Wire(0, 1, gateI));
-            AddWire(gateA, new Wire(0, 1, gateJ));
-            AddWire(gateA, new Wire(0, 1, gateK));
-            AddWire(gateA, new Wire(0, 1, gateL));
+            AddWires(gateA, Wire.Create(0, 1, false, gateE, gateF, gateG, gateH, gateI, gateJ, gateK, gateL));
 
             //Gate B
-            AddWire(gateB, new Wire(0, 1, gateM));
-            AddWire(gateB, new Wire(0, 1, gateN));
-            AddWire(gateB, new Wire(0, 1, gateO));
-            AddWire(gateB, new Wire(0, 1, gateP));
-            AddWire(gateB, new Wire(0, 1, gateQ));
-            AddWire(gateB, new Wire(0, 1, gateR));
-            AddWire(gateB, new Wire(0, 1, gateS));
-            AddWire(gateB, new Wire(0, 1, gateT));
+            AddWires(gateB, Wire.Create(0, 1, false, gateM, gateN, gateO, gateP, gateQ, gateR, gateS, gateT));
 
             //Outputs
             AddWire(gateE, new Wire(0, 8, -1, true));

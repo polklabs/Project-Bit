@@ -706,8 +706,8 @@ public class WorkspaceEditor : MonoBehaviour
                     finalPos.y = 0.25f;
                     wireNodes.Add(finalPos);
 
-                    GameObject wirePin = Instantiate(wirePinPrefab);
-                    wirePin.transform.position = new Vector3(finalPos.x, -0.168f, finalPos.z);
+                    //GameObject wirePin = Instantiate(wirePinPrefab);
+                    //wirePin.transform.position = new Vector3(finalPos.x, -0.168f, finalPos.z);
 
                     for (int i = wireNodes.Count - 2; i >= 0; i--)
                     {
@@ -751,8 +751,8 @@ public class WorkspaceEditor : MonoBehaviour
                     startPos.y = 0.25f;
                     wireNodes.Add(startPos);
                     icModel.transform.position = new Vector3(0, 0, 0);
-                    GameObject wirePin = Instantiate(wirePinPrefab);
-                    wirePin.transform.position = new Vector3(startPos.x, -0.168f, startPos.z);
+                    //GameObject wirePin = Instantiate(wirePinPrefab);
+                    //wirePin.transform.position = new Vector3(startPos.x, -0.168f, startPos.z);
                 }
                 break;
             default:

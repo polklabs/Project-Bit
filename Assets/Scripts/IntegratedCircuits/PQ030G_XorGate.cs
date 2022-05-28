@@ -2,6 +2,7 @@
 
 namespace IntegratedCircuits
 {
+    // 74LS86 OR 74HCT86
     [DataContract]
     public class PQ030G_XorGate : IntegratedCircuit
     {
@@ -12,6 +13,8 @@ namespace IntegratedCircuits
         {
             IcType = ICType.ic4;
             ModelName = "IC14";
+
+            PinNames = new string[] { "A1", "B1", "Y1", "A2", "B2", "Y2", "GND", "Y3", "A3", "B3", "Y4", "A4", "B4", "VCC" };
 
             Chip = new Chips.Quad_Xor_Gates();
 

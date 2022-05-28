@@ -10,6 +10,8 @@ namespace IntegratedCircuits
         [DataMember]
         public bool[] SwitchState;
 
+        public bool OnState = true;
+
         protected readonly int SwitchPins;       
         public SwitchTypes SwitchType;
 

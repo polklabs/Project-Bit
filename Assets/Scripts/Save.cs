@@ -59,7 +59,7 @@ public class Save : MonoBehaviour
             {
                 TypeNameHandling = TypeNameHandling.Auto,
                 Formatting = Formatting.None,
-                Converters = { new BitArrayConverter(), new Vector3Converter(), new WireConverter() }
+                Converters = { new BitArrayConverter(), new BitArrayArrayConverter(), new Vector3Converter(), new WireConverter() }
             };            
 
             serializer.Serialize(file, bb.components);

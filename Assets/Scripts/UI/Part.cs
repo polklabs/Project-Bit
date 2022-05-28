@@ -42,10 +42,7 @@ namespace userInterface
         public static Part CLOCK            = new Part("Clock (PQ160)", "PQ160_Clock", PartGroups.SpecialCircuit);
         public static Part BCD_DEC_DECODE   = new Part("Bcd to decimal decoder (PQ110)", "PQ110_BcdToDec", PartGroups.SpecialCircuit);
         public static Part BCD_7SEG_DECODE  = new Part("Bcd to 7 segment decoder (PQ111)", "PQ111_BcdToSeg", PartGroups.SpecialCircuit);
-        public static Part DUAL_JK_FF       = new Part("Dual JK Flip Flop (PQ120)", "PQ120_JkFf", PartGroups.SpecialCircuit); // 74LS107
-        public static Part DUAL_D_FF        = new Part("Dual D Flip Flop (PQ121)", "PQ121_DFf", PartGroups.SpecialCircuit);
-        public static Part OCTAL_D_FF       = new Part("Octal D Flip Flop (PQ122)", "PQ122_DFf", PartGroups.SpecialCircuit); // 74LS273
-        public static Part ADDER_4_BIT      = new Part("4-Bit Binary Adder (PQ130)", "PQ130_Adder4Bit", PartGroups.SpecialCircuit); // 74LS283
+        // public static Part ADDER_4_BIT   = new Part("4-Bit Binary Adder (PQ130)", "PQ130_Adder4Bit", PartGroups.SpecialCircuit); // 74LS283
         public static Part ADDER_4_BIT_GATE = new Part("4-Bit Binary Adder (PQ130G)", "PQ130G_Adder4Bit", PartGroups.SpecialCircuit); // 74LS283
         public static Part DECODE_3_8       = new Part("3-To-8 Line Decoder (PQ140)", "PQ140_Decode3To8", PartGroups.SpecialCircuit); // 74LS138
         public static Part DUAL_DECODE_2_4  = new Part("Dual 2-To-4 Line Decoder (PQ141)", "PQ141_Decode2To4", PartGroups.SpecialCircuit); // 74LS139
@@ -53,14 +50,18 @@ namespace userInterface
         public static Part BIN_COUNT_4      = new Part("4-Bit Binary Counter (PQ150G)", "PQ150G", PartGroups.SpecialCircuit); // 74LS161
 
         // Memory -----------------------------------------------------------------------------------
+        public static Part DUAL_JK_FF   = new Part("Dual JK Flip Flop (PQ120)", "PQ120_JkFf", PartGroups.Memory); // 74LS107
+        public static Part DUAL_D_FF    = new Part("Dual D Flip Flop (PQ121)", "PQ121_DFf", PartGroups.Memory);
+        public static Part OCTAL_D_FF   = new Part("Octal D Flip Flop (PQ122)", "PQ122_DFf", PartGroups.Memory); // 74LS273
         public static Part SHIFT_REG_8  = new Part("8-Bit Shift Register (PQ210)", "PQ210G_SftRegister8Bit", PartGroups.Memory); // 74HC595
         public static Part REGISTER_4   = new Part("4-Bit D-type Register (PQ211)", "PQ211_Register4Bit", PartGroups.Memory); // 74LS173
-        //public static Part EEPROM_16K   = new Part("EEPROM 16K (2K x 8) (PQ220)",         "PQ220_EEPROM16K",          PartGroups.Memory); // 28C16
+        public static Part EEPROM_16K = new Part("EEPROM 16K (2K x 8) (PQ220)", "PQ220_EEPROM16K", PartGroups.Memory); // 28C16
         public static Part RAM_64       = new Part("64-Bit Random Access Memory (PQ230)", "PQ230_Ram64Bit", PartGroups.Memory); // 74189
 
         // Inputs -----------------------------------------------------------------------------------        
         public static Part SWITCH_TOGGLE    = new Part("Switch, Toggle", "Switch_Toggle", PartGroups.Inputs);
         public static Part SWITCH_MOMENT    = new Part("Switch, Momentary", "Switch_Momentary", PartGroups.Inputs);
+        public static Part SWITCH_MOMENT_I  = new Part("Switch, Momentary, Inverted", "Switch_Momentary_Inverted", PartGroups.Inputs);
         public static Part SWITCH_PULSE     = new Part("Switch, Pulse", "Switch_Pulse", PartGroups.Inputs);
         public static Part SWITCH_DIP3      = new Part("Switch, Dip 3", "Switch_Dip_3", PartGroups.Inputs);
         public static Part SWITCH_DIP4      = new Part("Switch, Dip 4", "Switch_Dip_4", PartGroups.Inputs);

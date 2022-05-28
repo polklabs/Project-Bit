@@ -2,6 +2,7 @@
 
 namespace IntegratedCircuits
 {
+    // 74LS32
     [DataContract]
     public class PQ020G_OrGate : IntegratedCircuit
     {
@@ -12,6 +13,8 @@ namespace IntegratedCircuits
         {
             IcType = ICType.ic4;
             ModelName = "IC14";
+
+            PinNames = new string[] { "A1", "B1", "Y1", "A2", "B2", "Y2", "GND", "Q3", "A3", "B3", "Q4", "A4", "B4", "VCC" };
 
             Chip = new Chips.Quad_Or_Gates();
 

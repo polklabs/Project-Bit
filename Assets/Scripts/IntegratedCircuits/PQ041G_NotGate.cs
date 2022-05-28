@@ -2,6 +2,7 @@
 
 namespace IntegratedCircuits
 {
+    // 74LS04
     [DataContract]
     public class PQ041G_NotGate : IntegratedCircuit
     {
@@ -12,6 +13,8 @@ namespace IntegratedCircuits
         {
             IcType = ICType.ic4;
             ModelName = "IC14";
+
+            PinNames = new string[] { "A1", "Y1", "A2", "Y2", "A3", "Y3", "GND", "Y4", "A4", "Y5", "A5", "Y6", "A6", "VCC" };
 
             Chip = new Chips.Hex_Not_Gates();
 

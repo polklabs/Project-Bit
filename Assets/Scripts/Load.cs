@@ -76,7 +76,7 @@ public class Load : MonoBehaviour
             {
                 TypeNameHandling = TypeNameHandling.Auto,
                 ObjectCreationHandling = ObjectCreationHandling.Replace,
-                Converters = { new BitArrayConverter(), new Vector3Converter(), new WireConverter() }
+                Converters = { new BitArrayConverter(), new BitArrayArrayConverter(), new Vector3Converter(), new WireConverter() }
             };
             Dictionary<Guid, IntegratedCircuit> components = (Dictionary<Guid, IntegratedCircuit>)serializer.Deserialize(file, typeof(Dictionary<Guid, IntegratedCircuit>));
 

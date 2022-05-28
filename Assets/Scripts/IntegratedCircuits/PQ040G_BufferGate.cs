@@ -2,6 +2,7 @@
 
 namespace IntegratedCircuits
 {
+    // 74LS245 OR  74HC244
     [DataContract]
     public class PQ040G_BufferGate : IntegratedCircuit
     {
@@ -14,6 +15,8 @@ namespace IntegratedCircuits
         {
             IcType = ICType.ic4;
             ModelName = "IC20";
+
+            PinNames = new string[] { "OE'", "1A0", "2Y0", "1A1", "2Y1", "1A2", "2Y2", "1A3", "2Y3", "GND", "2A3", "1Y3", "2A2", "1Y2", "2A1", "1Y1", "2A0", "1Y0", "VCC" };
 
             Chip = new Chips.Octal_Bus_Gates();
             ChangeDir = false;
