@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
 
-public enum WorkspaceAction { Place, Remove, Demolish, Probe, None };
+public enum WorkspaceAction { Place, Remove, Demolish, Probe, Edit, None };
 
 public class WorkspaceEditor : MonoBehaviour
 {
@@ -22,6 +22,7 @@ public class WorkspaceEditor : MonoBehaviour
     public GameObject wirePinPrefab;
 
     public Material outlineMat;
+    public Material outlineMatGreen;
 
     public WorkspaceAction Action;
 
@@ -87,6 +88,9 @@ public class WorkspaceEditor : MonoBehaviour
             case WorkspaceAction.Demolish:
                 DemolishAction_Hover();
                 break;
+            case WorkspaceAction.Edit:
+                EditAction_Hover();
+                break;
             default:
                 break;
         }
@@ -106,6 +110,9 @@ public class WorkspaceEditor : MonoBehaviour
                     break;
                 case WorkspaceAction.Demolish:
                     DemolishAction();
+                    break;
+                case WorkspaceAction.Edit:
+                    EditAction();
                     break;
                 default:
                     NoneAction();
@@ -169,6 +176,17 @@ public class WorkspaceEditor : MonoBehaviour
         }
         ProbeObj.gameObject.SetActive(true);
         Action = WorkspaceAction.Probe;
+    }
+
+    public void SetActionEdit()
+    {
+        ClearIC();
+        if (Action == WorkspaceAction.Edit)
+        {
+            Action = WorkspaceAction.None;
+            return;
+        }
+        Action = WorkspaceAction.Edit;
     }
 
     public void SetActionNone()
@@ -310,7 +328,7 @@ public class WorkspaceEditor : MonoBehaviour
                     if (!showsError)
                     {
                         showsError = true;
-                        AddOutline(icModel.GetComponentsInChildren<Renderer>());
+                        AddOutline(icModel.GetComponentsInChildren<Renderer>(), outlineMat);
                     }
                 }
             }
@@ -373,7 +391,7 @@ public class WorkspaceEditor : MonoBehaviour
                 if (!showsError)
                 {
                     showsError = true;
-                    AddOutline(icModel.GetComponentsInChildren<Renderer>());
+                    AddOutline(icModel.GetComponentsInChildren<Renderer>(), outlineMat);
                 }
             }
 
@@ -439,7 +457,7 @@ public class WorkspaceEditor : MonoBehaviour
                     if (!showsError)
                     {
                         showsError = true;
-                        AddOutline(icModel.GetComponentsInChildren<Renderer>());
+                        AddOutline(icModel.GetComponentsInChildren<Renderer>(), outlineMat);
                     }
                 }
             }
@@ -557,6 +575,11 @@ public class WorkspaceEditor : MonoBehaviour
         }
     }
 
+    private void EditAction()
+    {
+        Debug.Log("EDIT");
+    }
+
     private void RemoveAction_Hover()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -571,7 +594,7 @@ public class WorkspaceEditor : MonoBehaviour
                     RemoveOutline(hoverObject.GetComponentsInChildren<Renderer>());
                 }
 
-                AddOutline(hit.transform.parent.gameObject.GetComponentsInChildren<Renderer>());
+                AddOutline(hit.transform.parent.gameObject.GetComponentsInChildren<Renderer>(), outlineMat);
                 hoverObject = hit.transform.parent.gameObject;
             }
         }
@@ -596,7 +619,7 @@ public class WorkspaceEditor : MonoBehaviour
                     RemoveOutline(hoverObject.GetComponentsInChildren<Renderer>());
                 }
 
-                AddOutline(hit.transform.gameObject.GetComponentsInChildren<Renderer>());
+                AddOutline(hit.transform.gameObject.GetComponentsInChildren<Renderer>(), outlineMat);
                 hoverObject = hit.transform.gameObject;
             }
         }
@@ -606,6 +629,41 @@ public class WorkspaceEditor : MonoBehaviour
             hoverObject = null;
         }
     }
+
+    private void EditAction_Hover()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        int layer_mask = LayerMask.GetMask("Component");
+        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            if (hoverObject != hit.transform.gameObject)
+            {
+                if (hoverObject != null)
+                {
+                    RemoveOutline(hoverObject.GetComponentsInChildren<Renderer>());
+                }
+
+                Guid guid;
+                if (Guid.TryParse(hit.transform.parent.gameObject.name, out guid)) { 
+                    var ic = breadBoard.components[guid];
+
+                    if (ic.isEditable)
+                    {
+                        AddOutline(hit.transform.parent.gameObject.GetComponentsInChildren<Renderer>(), outlineMatGreen);
+                        hoverObject = hit.transform.parent.gameObject;
+                    }
+                }
+            }
+        }
+        else if (hoverObject != null)
+        {
+            RemoveOutline(hoverObject.GetComponentsInChildren<Renderer>());
+            hoverObject = null;
+        }
+    }
+
+
 
     private void ProbeAction_Hover()
     {
@@ -804,13 +862,13 @@ public class WorkspaceEditor : MonoBehaviour
         icModel.GetComponentInChildren<LineRenderer>().SetPositions(new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 1, 0) });
     }
 
-    private void AddOutline(Renderer[] renderers)
+    private void AddOutline(Renderer[] renderers, Material mat)
     {
         hoverMaterials.Clear();
         foreach(Renderer r in renderers)
         {
             hoverMaterials.Add(r.materials);
-            r.materials = Enumerable.Repeat(outlineMat, r.materials.Length).ToArray();
+            r.materials = Enumerable.Repeat(mat, r.materials.Length).ToArray();
         }        
     }
 

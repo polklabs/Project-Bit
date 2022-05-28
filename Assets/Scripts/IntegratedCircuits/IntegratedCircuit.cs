@@ -51,6 +51,11 @@ namespace IntegratedCircuits
 
         public string[] PinNames;
 
+        /// <summary>
+        /// Can UI edit mode open up an edit form for this IC
+        /// </summary>
+        public bool isEditable;
+
         public IntegratedCircuit(int numPins)
         {
             Id = Guid.NewGuid();
@@ -59,6 +64,7 @@ namespace IntegratedCircuits
             OverwriteObjText = true;
             WriteToNodes = true;
             PinNames = new string[] { };
+            isEditable = false;
 
             Pins = numPins;
             Vdd  = numPins - 1;

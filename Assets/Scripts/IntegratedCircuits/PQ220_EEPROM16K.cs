@@ -37,6 +37,7 @@ namespace IntegratedCircuits
             ModelName = "IC24_Wide";
 
             PinNames = new string[] { "A7", "A6", "A5", "A4", "A3", "A2", "A1", "A0", "DQ0", "DQ1", "DQ2", "GND", "DQ3", "DQ4", "DQ5", "DQ6", "DQ7", "E'", "A10", "G'", "W'", "A9", "A8", "VCC" };
+            isEditable = true;
 
             clearMemory();
 
