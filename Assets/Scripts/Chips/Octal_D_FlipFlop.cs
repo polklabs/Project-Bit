@@ -62,21 +62,13 @@ namespace Chips
             ANDGate gate8 = new ANDGate();
             int i8 = AddGate(gate8);
 
-            NotGate gateA = new NotGate();
-            int indexA = AddGate(gateA);
+            Gate gateA = AddGateIndexed(new NotGate());
 
             // OE
-            AddWire(ID, new Wire(9, 0, indexA));
+            AddInputWire(new Wire(9, 0, gateA));
 
             // Clk
-            AddWire(ID, new Wire(8, 0, index1, true));
-            AddWire(ID, new Wire(8, 0, index2, true));
-            AddWire(ID, new Wire(8, 0, index3, true));
-            AddWire(ID, new Wire(8, 0, index4, true));
-            AddWire(ID, new Wire(8, 0, index5, true));
-            AddWire(ID, new Wire(8, 0, index6, true));
-            AddWire(ID, new Wire(8, 0, index7, true));
-            AddWire(ID, new Wire(8, 0, index8, true));
+            AddInputWires(Wire.Create(8, 0, false, chip1, chip2, chip3, chip4, chip5, chip6, chip7, chip8));
 
             // Data
             AddWire(ID, new Wire(0, 1, index1, true));
@@ -89,14 +81,7 @@ namespace Chips
             AddWire(ID, new Wire(7, 1, index8, true));
 
             // Gate A
-            AddWire(gateA, new Wire(0, 1, i1));
-            AddWire(gateA, new Wire(0, 1, i2));
-            AddWire(gateA, new Wire(0, 1, i3));
-            AddWire(gateA, new Wire(0, 1, i4));
-            AddWire(gateA, new Wire(0, 1, i5));
-            AddWire(gateA, new Wire(0, 1, i6));
-            AddWire(gateA, new Wire(0, 1, i7));
-            AddWire(gateA, new Wire(0, 1, i8));
+            AddWires(gateA, Wire.Create(0, 1, false, gate1, gate2, gate3, gate4, gate5, gate6, gate7, gate8));
 
             // D FF
             AddWire(chip1, new Wire(0, 0, i1));

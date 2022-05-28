@@ -117,16 +117,6 @@ namespace Chips
             return chip;
         }
 
-        protected void AddWire(Chip chip, Wire wire)
-        {
-            AddWire(chip.ID, wire);
-        }
-
-        protected void AddWire(Gate gate, Wire wire)
-        {
-            AddWire(gate.ID, wire);
-        }
-
         /// <summary>
         /// Adds a new connecting wire to the chip
         /// </summary>
@@ -138,6 +128,14 @@ namespace Chips
                 WireDict.Add(id, new List<Wire>());
             }
             WireDict[id].Add(wire);
+        }
+        protected void AddWire(Chip chip, Wire wire)
+        {
+            AddWire(chip.ID, wire);
+        }
+        protected void AddWire(Gate gate, Wire wire)
+        {
+            AddWire(gate.ID, wire);
         }
 
         /// <summary>
@@ -154,17 +152,11 @@ namespace Chips
         }
         protected void AddWires(Gate gate, Wire[] wires)
         {
-            foreach (Wire w in wires)
-            {
-                AddWire(gate, w);
-            }
+            AddWires(gate.ID, wires);
         }
         protected void AddWires(Chip chip, Wire[] wires)
         {
-            foreach (Wire w in wires)
-            {
-                AddWire(chip, w);
-            }
+            AddWires(chip.ID, wires);
         }
 
         /// <summary>

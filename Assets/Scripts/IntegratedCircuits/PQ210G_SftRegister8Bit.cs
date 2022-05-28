@@ -13,11 +13,13 @@ namespace IntegratedCircuits
             IcType = ICType.ic4;
             ModelName = "IC16";
 
+            PinNames = new string[] { "QB", "QC", "QD", "QE", "QF", "QG", "QH", "GND", "QH'", "SRCLR", "SRCLK", "RCLK", "OE", "SER", "QA", "VCC" };
+
             Chip = new Chips.Shift_Register_8Bit();
 
             SetPinModes(0, 6, PinMode.Ouput);
             SetPinModes(8, PinMode.Ouput);
-            SetPinModes(4, PinMode.Ouput);
+            SetPinModes(14, PinMode.Ouput);
 
             Chip.Input[5] = false;
         }
