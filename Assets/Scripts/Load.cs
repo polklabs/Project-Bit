@@ -111,10 +111,12 @@ public class Load : MonoBehaviour
                     case ICType.ic4:
                         obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), true);
                         obj.transform.position = CircuitHelper.GetPositionFromNode(ic.GetPinNode(0), ic.GetPinNodeIndex(0));
+                        obj.transform.rotation = Quaternion.Euler(0, CircuitHelper.IsNodeRotated(ic.GetPinNode(0)) ? 90 : 0, 0);
                         break;
                     case ICType.ic6:
                         obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), true);
                         obj.transform.position = CircuitHelper.GetPositionFromNode(ic.GetPinNode(0), ic.GetPinNodeIndex(0));
+                        obj.transform.rotation = Quaternion.Euler(0, CircuitHelper.IsNodeRotated(ic.GetPinNode(0)) ? 90 : 0, 0);
                         break;
                     case ICType.wire:
 
