@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_DataSheet : MonoBehaviour
+public class UI_DataSheet : Singleton<UI_DataSheet>
 {
     public GameObject root;
 
@@ -18,6 +18,7 @@ public class UI_DataSheet : MonoBehaviour
         if (className == currentClassName)
         {
             EnableGameObject(root, false);
+            currentClassName = null;
             return;
         }
 

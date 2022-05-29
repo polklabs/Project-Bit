@@ -76,7 +76,7 @@ namespace userInterface {
             workspaceEditor.SetActionPlace(true);
             Inventory.SetActive(true);
 
-            string groupString = Part.IntToGroupString(selectedButton);
+            //string groupString = Part.IntToGroupString(selectedButton);
 
             //Delete children in scroll
             for (int i = 1; i < ScrollViewContent.transform.childCount; i++)
@@ -85,18 +85,18 @@ namespace userInterface {
             }
 
             //Repopulate the scroll
-            if (Part.PartList.ContainsKey(groupString))
-            {
-                foreach (Part part in Part.PartList[groupString])
-                {
-                    GameObject go = Instantiate(ButtonTemplate) as GameObject;
-                    go.SetActive(true);
-                    go.transform.SetParent(ScrollViewContent.transform, false);
-                    go.GetComponentInChildren<Text>().text = part.PartName;
-                    go.name = part.ClassName;
-                    go.GetComponent<Component_Button>().isMultiPoint = part.IsMultiPoint;
-                }
-            }            
+            //if (Part.PartList.ContainsKey(groupString))
+            //{
+            //    foreach (Part part in Part.PartList[groupString])
+            //    {
+            //        GameObject go = Instantiate(ButtonTemplate) as GameObject;
+            //        go.SetActive(true);
+            //        go.transform.SetParent(ScrollViewContent.transform, false);
+            //        go.GetComponentInChildren<Text>().text = part.PartName;
+            //        go.name = part.ClassName;
+            //        go.GetComponent<Component_Button>().isMultiPoint = part.IsMultiPoint;
+            //    }
+            //}            
         }
 
         public void PlayPause()

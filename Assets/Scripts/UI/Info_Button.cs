@@ -3,25 +3,31 @@ using UnityEngine.UI;
 
 public class Info_Button : MonoBehaviour
 {
-    public UI_DataSheet ui_DataSheet;
+    private UI_DataSheet ui_DataSheet;
     private Button button;
 
-    // Start is called before the first frame update
+    private string dataSheetName;
     void Start()
     {
-        if (DataSheet.HasDataSheet(gameObject.transform.parent.name))
-        {
-            button = gameObject.GetComponent<Button>();
-            button.onClick.AddListener(ShowDataSheet);
-        }
-        else
+        ui_DataSheet = UI_DataSheet.GetInstance();
+        button = gameObject.GetComponent<Button>();
+        button.onClick.AddListener(ShowDataSheet);
+    }
+
+    public void SetDataSheet(string className)
+    {
+        dataSheetName = className;
+        if (!DataSheet.HasDataSheet(className))
         {
             gameObject.SetActive(false);
-        }        
+        }
     }
     
     void ShowDataSheet()
     {
-        ui_DataSheet.ShowDataSheet(gameObject.transform.parent.name);        
+        if (dataSheetName != null)
+        {
+            ui_DataSheet.ShowDataSheet(dataSheetName);
+        }
     }
 }

@@ -7,10 +7,11 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
+using userInterface;
 
 public enum WorkspaceAction { Place, Remove, Demolish, Probe, Edit, None };
 
-public class WorkspaceEditor : MonoBehaviour
+public class WorkspaceEditor : Singleton<WorkspaceEditor>
 {
     //References
     public GeneralManager gm;
@@ -141,6 +142,12 @@ public class WorkspaceEditor : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void SetDesiredAction(WorkspaceAction action)
+    {
+        ClearIC();
+        Action = action;
     }
 
     public void SetActionRemove()
@@ -832,6 +839,16 @@ public class WorkspaceEditor : MonoBehaviour
         ClearIC();
 
         icName = name;
+        ic = circuitPool.GetIntegratedCircuit(icName);
+        icModel = circuitPool.GetIntegratedCircuitObj(ic);
+        icModel = Instantiate(icModel, GameObjectPool, Quaternion.identity) as GameObject;
+    }
+
+    public void AttachIC(Part part)
+    {
+        ClearIC();
+
+        icName = part.ClassName;
         ic = circuitPool.GetIntegratedCircuit(icName);
         icModel = circuitPool.GetIntegratedCircuitObj(ic);
         icModel = Instantiate(icModel, GameObjectPool, Quaternion.identity) as GameObject;

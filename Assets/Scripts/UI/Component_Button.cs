@@ -1,26 +1,31 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using userInterface;
 
 public class Component_Button : MonoBehaviour
 {
-    public WorkspaceEditor sm;
+    private WorkspaceEditor workspaceEditor;
     private Button button;
-
-    public bool isMultiPoint = false;
+    
+    public Part part;
 
     // Start is called before the first frame update
     void Start()
     {
+        workspaceEditor = WorkspaceEditor.GetInstance();
         button = gameObject.GetComponent<Button>();
         button.onClick.AddListener(AttachIC);
+    }
+
+    public void SetPart(Part p)
+    {
+        part = p;
     }
 
     // Update is called once per frame
     void AttachIC()
     {
-        sm.AttachIC(gameObject.name);
-        //if (isMultiPoint) {
-        //    sm.SetMultipoint();
-        //}
+        workspaceEditor.SetActionPlace(true);
+        workspaceEditor.AttachIC(part);
     }
 }

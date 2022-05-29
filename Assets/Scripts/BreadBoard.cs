@@ -41,7 +41,7 @@ public class BreadBoard : MonoBehaviour
 
                 UpdateFromQueue(updates.Dequeue());
 
-                if (stopwatch.ElapsedMilliseconds > 45)
+                if (stopwatch.ElapsedMilliseconds > 25)
                 {
                     UnityEngine.Debug.Log("Break from stopwatch: " + stopwatch.ElapsedMilliseconds);
                     break;
