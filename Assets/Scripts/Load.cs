@@ -8,30 +8,32 @@ using Helper;
 using UnityEngine.UI;
 using System.IO.Compression;
 
-public class Load : MonoBehaviour
+public class Load : Singleton<Load>
 {
     private GeneralManager gm;
     private BreadBoard bb;
-    public CircuitPool cp;
-    public Fabricator fabricator;
+    private CircuitPool cp;
+    private Fabricator fabricator;
 
     public Text Title;
 
-    private void Awake()
+    new void Awake()
     {
         gm = GeneralManager.GetInstance();
         bb = BreadBoard.GetInstance();
+        cp = CircuitPool.GetInstance();
+        fabricator = Fabricator.GetInstance();
     }
 
     private void Start()
     {
-        string title = PlayerPrefs.GetString("Workspace");
-        LoadWorkspace(title);
-        Title.text = title;
+        LoadWorkspace("");
     }
 
     public void LoadWorkspace(string workSpaceName)
     {
+        Title.text = workSpaceName;
+
         string filePath = GameHelper.GetSaveDirectory();
         filePath += workSpaceName + ".bit";
         

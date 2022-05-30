@@ -35,6 +35,7 @@ public class LoadMenuManager : Singleton<LoadMenuManager>
             GameObject obj = Instantiate(LoadButtonTemplate, LoadContent) as GameObject;
             obj.GetComponentInChildren<Text>().text = name;
             obj.GetComponent<Button>().onClick.AddListener(delegate { LoadWorkspace(name); });
+            ((CanvasSwitcher)obj.AddComponent(typeof(CanvasSwitcher))).desiredCanvasType = CanvasType.GameUI;
             obj.name = name;
         }
     }
@@ -42,6 +43,7 @@ public class LoadMenuManager : Singleton<LoadMenuManager>
     public void LoadWorkspace(string name)
     {
         PlayerPrefs.SetString("Workspace", name);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Fabricator.GetInstance().RemoveWorkspace();
+        Load.GetInstance().LoadWorkspace(name);
     }
 }

@@ -3,12 +3,12 @@ using IntegratedCircuits;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CircuitPool : MonoBehaviour
+public class CircuitPool : Singleton<CircuitPool>
 {
     private BreadBoard breadBoard;
     public Transform parent;
 
-    private void Awake()
+    new void Awake()
     {
         breadBoard = BreadBoard.GetInstance();
     }

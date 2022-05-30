@@ -1,28 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
+using IntegratedCircuits;
+using System.Linq;
 
-public class BreadBoardData
-{
-    public BreadBoardData(string _t, int _x, int _y, bool _r)
-    {
-        t = _t;
-        x = _x;
-        y = _y;
-        r = _r;
-    }
-
-    public string t;
-    public int x;
-    public int y;
-    public bool r;
-
-    public override string ToString()
-    {
-        return string.Format("{0}x{1}x{2}x{3}", t, x.ToString(), y.ToString(), r ? "1" : "0");
-    }
-}
-
-public class Fabricator : MonoBehaviour
+/// <summary>
+/// Handles the placing of different types of breadboards
+/// </summary>
+public class Fabricator : Singleton<Fabricator>
 {
     public List<BreadBoardData> breadBoardData = new List<BreadBoardData>();
 
@@ -34,24 +19,106 @@ public class Fabricator : MonoBehaviour
     public GameObject powerRailPrefab;
 
     private BreadBoard breadBoard;
+    private CircuitPool circuitPool;
 
-    private void Awake()
+    new void Awake()
     {
         breadBoard = BreadBoard.GetInstance();
+        circuitPool = CircuitPool.GetInstance();
     }
 
     public void loadFromBreadBoardData()
     {
         foreach (BreadBoardData bbd in breadBoardData)
         {
-            createBoard(bbd.t, bbd.x, bbd.y, bbd.r);
+            bbd.objRef = createBoard(bbd.t, bbd.x, bbd.y, bbd.r);
         }
+    }
+
+    public void RemoveWorkspace()
+    {
+        foreach (var bb in breadBoardData.ToArray())
+        {
+            RemoveBreadBoard(bb.objRef);
+        }
+    }
+
+    public void RemoveBreadBoard(GameObject boardObj)
+    {
+        HashSet<string> nodesToDelete = new HashSet<string>();
+        HashSet<Guid> componentsToDelete = new HashSet<Guid>();
+        HashSet<Guid> wiresToDelete = new HashSet<Guid>();
+
+        for (int i = 0; i < boardObj.transform.childCount; i++)
+        {
+            string id = boardObj.transform.GetChild(i).name;
+            if (id == "none")
+            {
+                continue;
+            }
+
+            foreach (string s in breadBoard.nodes.Keys.Where(x => x.StartsWith(id)))
+            {
+                nodesToDelete.Add(s);
+                foreach (Connection c in breadBoard.nodes[s].connections.Values)
+                {
+                    if (!c.IsNode)
+                    {
+                        componentsToDelete.Add(Guid.Parse(c.ID));
+                    }
+                }
+            }
+
+            foreach (Guid g in breadBoard.components.Keys)
+            {
+                IntegratedCircuit ic = breadBoard.components[g];
+                if (ic.IcType == ICType.wire)
+                {
+                    if (ic.GetPinNode(0).StartsWith(id) || ic.GetPinNode(1).StartsWith(id))
+                    {
+                        wiresToDelete.Add(g);
+                    }
+                }
+                else if (!ic.WriteToNodes)
+                {
+                    if (ic.GetPinNode(0).StartsWith(id))
+                    {
+                        componentsToDelete.Add(g);
+                    }
+                }
+            }
+        }
+
+        for (int i = breadBoardData.Count - 1; i >= 0; i--)
+        {
+            if (boardObj.transform.name == breadBoardData[i].ToString())
+            {
+                breadBoardData.RemoveAt(i);
+            }
+        }
+
+        foreach (Guid g in componentsToDelete)
+        {
+            Destroy(breadBoard.components[g].GetObjRef());
+            circuitPool.RemoveIntegratedCircuit(g.ToString());
+        }
+        foreach (Guid g in wiresToDelete)
+        {
+            Destroy(breadBoard.components[g].GetObjRef());
+            circuitPool.RemoveWire(g.ToString());
+        }
+        foreach (string s in nodesToDelete)
+        {
+            breadBoard.nodes.Remove(s);
+        }
+        Destroy(boardObj.transform.gameObject);
     }
 
     public void addBoard(string t, int x, int y, bool rotation)
     {
-        breadBoardData.Add(new BreadBoardData(t, x, y, rotation));
-        createBoard(t, x, y, rotation);
+        var bbd = new BreadBoardData(t, x, y, rotation);
+        breadBoardData.Add(bbd);
+        bbd.objRef = createBoard(t, x, y, rotation);
     }
 
     public bool canPlaceBreadBoard(string t, int x, int z, bool rotation)
@@ -66,29 +133,31 @@ public class Fabricator : MonoBehaviour
         return true;
     }
 
-    void createBoard(string t, int x, int y, bool rotation)
+    GameObject createBoard(string t, int x, int y, bool rotation)
     {
+        GameObject obj;
         if (t == "0")
         {
             if (rotation)
             {
-                GameObject obj = placeBreadBoard(3, x, y, rotation, null);
+                obj = placeBreadBoard(3, x, y, rotation, null);
                 placeBreadBoard(0, x, y, rotation, obj);
                 placeBreadBoard(0, x + 18, y, rotation, obj);
                 placeBreadBoard(1, x + 4, y, rotation, obj);
             }
             else
             {
-                GameObject obj = placeBreadBoard(3, x, y, rotation, null);
+                obj = placeBreadBoard(3, x, y, rotation, null);
                 placeBreadBoard(0, x, y, rotation, obj);
                 placeBreadBoard(0, x, y + 18, rotation, obj);
                 placeBreadBoard(1, x, y + 4, rotation, obj);
             }
         } else
         {
-            GameObject obj = placeBreadBoard(4, x, y, rotation, null);
+            obj = placeBreadBoard(4, x, y, rotation, null);
             placeBreadBoard(0, x, y, rotation, obj);
         }
+        return obj;
     }
 
     GameObject placeBreadBoard(int type, int x, int y, bool rotation, GameObject parent)

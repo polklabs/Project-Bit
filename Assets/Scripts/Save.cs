@@ -8,13 +8,13 @@ public class Save : Singleton<Save>
 {
     private GeneralManager gm;
     private BreadBoard bb;
-
-    public Fabricator fabricator;
+    private Fabricator fabricator;
 
     new void Awake()
     {
         gm = GeneralManager.GetInstance();
         bb = BreadBoard.GetInstance();
+        fabricator = Fabricator.GetInstance();
     }
 
     public void SaveWorkspaceGUI()

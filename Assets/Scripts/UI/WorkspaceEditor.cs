@@ -18,9 +18,9 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
     //References
     private BreadBoard breadBoard;
     private RaycastManager raycastManager;
-
-    public CircuitPool circuitPool;
-    public Fabricator fabricator;
+    private Fabricator fabricator;
+    private CircuitPool circuitPool;
+    
     public Mono_Switch mono_Switch;
     public Oscilloscope oscilloscope;
     public GameObject wirePinPrefab;
@@ -55,6 +55,8 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
     {
         breadBoard = BreadBoard.GetInstance();
         raycastManager = RaycastManager.GetInstance();
+        fabricator = Fabricator.GetInstance();
+        circuitPool = CircuitPool.GetInstance();
     }
 
     public void HoverAction()
@@ -467,77 +469,7 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
         }
         else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Breadboard"))
         {
-            HashSet<string> nodesToDelete = new HashSet<string>();
-            HashSet<Guid> componentsToDelete = new HashSet<Guid>();
-            HashSet<Guid> wiresToDelete = new HashSet<Guid>();
-
-            for (int i = 0; i < hit.transform.childCount; i++)
-            {
-                string id = hit.transform.GetChild(i).name;
-                if (id == "none")
-                {
-                    continue;
-                }                
-
-                foreach(string s in breadBoard.nodes.Keys)
-                {
-                    if (s.StartsWith(id))
-                    {
-                        nodesToDelete.Add(s);
-                        foreach (Connection c in breadBoard.nodes[s].connections.Values)
-                        {
-                            if (!c.IsNode)
-                            {
-                                componentsToDelete.Add(Guid.Parse(c.ID));
-                            }
-                        }
-                    }
-                }
-
-                foreach(Guid g in breadBoard.components.Keys)
-                {
-                    IntegratedCircuit ic = breadBoard.components[g];
-                    if (ic.IcType == ICType.wire)
-                    {                        
-                        if (ic.GetPinNode(0).StartsWith(id) || ic.GetPinNode(1).StartsWith(id))
-                        {
-                            wiresToDelete.Add(g);
-                        }
-                    }
-                    else if (!ic.WriteToNodes)
-                    {
-                        if (ic.GetPinNode(0).StartsWith(id))
-                        {
-                            componentsToDelete.Add(g);
-                        }
-                    }
-                }                
-            }
-
-            for (int i = fabricator.breadBoardData.Count - 1; i >= 0; i--)
-            {
-                if (hit.transform.name == fabricator.breadBoardData[i].ToString())
-                {
-                    fabricator.breadBoardData.RemoveAt(i);
-                }
-            }
-
-            foreach(Guid g in componentsToDelete)
-            {
-                Destroy(breadBoard.components[g].GetObjRef());
-                circuitPool.RemoveIntegratedCircuit(g.ToString());                          
-            }
-            foreach(Guid g in wiresToDelete)
-            {
-                Destroy(breadBoard.components[g].GetObjRef());
-                circuitPool.RemoveWire(g.ToString());                
-            }
-            foreach(string s in nodesToDelete)
-            {
-                breadBoard.nodes.Remove(s);
-            }
-            Destroy(hit.transform.gameObject);
-
+            fabricator.RemoveBreadBoard(hit.transform.gameObject);
         }
     }
 

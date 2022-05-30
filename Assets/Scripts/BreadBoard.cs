@@ -647,3 +647,28 @@ public class Connection
         Index = index;
     }
 }
+
+/// <summary>
+/// Holds information about breadboard placement
+/// </summary>
+public class BreadBoardData
+{
+    public BreadBoardData(string _t, int _x, int _y, bool _r)
+    {
+        t = _t;
+        x = _x;
+        y = _y;
+        r = _r;
+    }
+
+    public string t;
+    public int x;
+    public int y;
+    public bool r;
+    public GameObject objRef;
+
+    public override string ToString()
+    {
+        return string.Format("{0}x{1}x{2}x{3}", t, x.ToString(), y.ToString(), r ? "1" : "0");
+    }
+}
