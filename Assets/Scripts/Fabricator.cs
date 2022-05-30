@@ -33,7 +33,12 @@ public class Fabricator : MonoBehaviour
     public GameObject breadBoardPrefab;
     public GameObject powerRailPrefab;
 
-    public BreadBoard breadBoard;
+    private BreadBoard breadBoard;
+
+    private void Awake()
+    {
+        breadBoard = BreadBoard.GetInstance();
+    }
 
     public void loadFromBreadBoardData()
     {

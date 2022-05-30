@@ -10,13 +10,18 @@ using System.IO.Compression;
 
 public class Load : MonoBehaviour
 {
-    public GeneralManager gm;
-
-    public BreadBoard bb;
+    private GeneralManager gm;
+    private BreadBoard bb;
     public CircuitPool cp;
     public Fabricator fabricator;
 
     public Text Title;
+
+    private void Awake()
+    {
+        gm = GeneralManager.GetInstance();
+        bb = BreadBoard.GetInstance();
+    }
 
     private void Start()
     {
@@ -109,10 +114,6 @@ public class Load : MonoBehaviour
 
                         break;
                     case ICType.ic4:
-                        obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), true);
-                        obj.transform.position = CircuitHelper.GetPositionFromNode(ic.GetPinNode(0), ic.GetPinNodeIndex(0));
-                        obj.transform.rotation = Quaternion.Euler(0, CircuitHelper.IsNodeRotated(ic.GetPinNode(0)) ? 90 : 0, 0);
-                        break;
                     case ICType.ic6:
                         obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), true);
                         obj.transform.position = CircuitHelper.GetPositionFromNode(ic.GetPinNode(0), ic.GetPinNodeIndex(0));

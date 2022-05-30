@@ -3,7 +3,6 @@ using UnityEngine;
 using IntegratedCircuits;
 using System.Linq;
 using Helper;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
@@ -11,11 +10,15 @@ using userInterface;
 
 public enum WorkspaceAction { Place, Remove, Demolish, Probe, Edit, None };
 
+/// <summary>
+/// This editor controls updating elements in workspace and breadboards
+/// </summary>
 public class WorkspaceEditor : Singleton<WorkspaceEditor>
 {
     //References
-    public GeneralManager gm;
-    public BreadBoard breadBoard;
+    private BreadBoard breadBoard;
+    private RaycastManager raycastManager;
+
     public CircuitPool circuitPool;
     public Fabricator fabricator;
     public Mono_Switch mono_Switch;
@@ -36,7 +39,7 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
     private GameObject icModel = null;
     private string icName = "";
     private IntegratedCircuit ic = null;
-    private bool locationASelected = false;
+    public bool locationASelected = false;
     private string nodeIdA = "";
     private int indexA = 0;
     private List<Vector3> wireNodes = new List<Vector3>();
@@ -48,33 +51,14 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
     public GameObject ProbeObj;
     public GameObject HighLight;
 
-    void Update()
+    new void Awake()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            gm.PlayPause();
-        }
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            gm.SingleStep();
-        }
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            gm.Step();
-        }
+        breadBoard = BreadBoard.GetInstance();
+        raycastManager = RaycastManager.GetInstance();
+    }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (locationASelected)
-            {
-                ResetWire();
-            }
-            else
-            {
-                SceneManager.LoadScene(0);
-            }
-        }
-
+    public void HoverAction()
+    {
         switch (Action)
         {
             case WorkspaceAction.Place:
@@ -95,52 +79,53 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
             default:
                 break;
         }
+    }
 
-        if (Input.GetMouseButtonDown(0))
+    public void ClickAction()
+    {
+        switch (Action)
         {
-            switch (Action)
-            {
-                case WorkspaceAction.Place:
-                    PlaceAction();
-                    break;
-                case WorkspaceAction.Probe:
-                    ProbeAction();
-                    break;
-                case WorkspaceAction.Remove:
-                    RemoveAction();
-                    break;
-                case WorkspaceAction.Demolish:
-                    DemolishAction();
-                    break;
-                case WorkspaceAction.Edit:
-                    EditAction();
-                    break;
-                default:
-                    NoneAction();
-                    break;
-            }
+            case WorkspaceAction.Place:
+                PlaceAction();
+                break;
+            case WorkspaceAction.Probe:
+                ProbeAction();
+                break;
+            case WorkspaceAction.Remove:
+                RemoveAction();
+                break;
+            //case WorkspaceAction.Demolish:
+            //    DemolishAction();
+            //    break;
+            case WorkspaceAction.Edit:
+                EditAction();
+                break;
+            default:
+                NoneAction();
+                break;
         }
+    }
 
-        if (Input.GetMouseButtonDown(1))
+    public void SecondaryClickAction()
+    {
+        switch (Action)
         {
-            switch (Action)
-            {
-                case WorkspaceAction.Place:
-                    if (ic.IcType == ICType.wire)
-                    {
-                        PlaceActionWireNode();
-                    } else if (
-                        ic.IcType == ICType.ic4 ||
-                        ic.IcType == ICType.ic6 ||
-                        ic.IcType == ICType.breadboard ||
-                        ic.IcType == ICType.powerrail)
-                    {
-                        placeRotated = !placeRotated;
-                    }
-                    break;                
-                default:
-                    break;
-            }
+            case WorkspaceAction.Place:
+                if (ic.IcType == ICType.wire)
+                {
+                    PlaceActionWireNode();
+                }
+                else if (
+                  ic.IcType == ICType.ic4 ||
+                  ic.IcType == ICType.ic6 ||
+                  ic.IcType == ICType.breadboard ||
+                  ic.IcType == ICType.powerrail)
+                {
+                    placeRotated = !placeRotated;
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -215,77 +200,59 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
 
     private void PlaceAction()
     {
-        if (ic != null && (ic.IcType == ICType.breadboard || ic.IcType == ICType.powerrail))
+
+        if (ic != null && icModel != null)
         {
-            PlaceActionBreadBoard();
-            return;
-        }
-
-        int layer_mask = LayerMask.GetMask("Pin");
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
-        {           
-            if (ic != null && icModel != null)
+            switch(ic.IcType)
             {
+                case ICType.breadboard:
+                case ICType.powerrail:
+                    if (raycastManager.GetNodeId(out RaycastHit hit1, out string _, "Ground"))
+                    {
+                        int x = Mathf.RoundToInt(hit1.point.x);
+                        int z = Mathf.RoundToInt(hit1.point.z);
+                        icModel.transform.position = new Vector3(x, 0, z);
 
-                string nodeId = hit.transform.gameObject.name;
-                int index = CircuitHelper.GetIndexFromNode(nodeId, hit.point);
+                        string type = (ic.IcType == ICType.breadboard ? "0" : "1");
 
-                int x = Mathf.RoundToInt(hit.point.x);
-                int z = Mathf.RoundToInt(hit.point.z);
-                icModel.transform.position = new Vector3(x, 0, z);
+                        if (fabricator.canPlaceBreadBoard(type, x, z, placeRotated))
+                        {
+                            fabricator.addBoard(type, x, z, placeRotated);
+                        }
+                        else
+                        {
+                            Debug.Log("Cannot place item here");
+                        }
+                    }
+                    else
+                    {
+                        icModel.transform.position = GameObjectPool;
+                    }
+                    break;
+                default:
+                    if (raycastManager.GetNodeId(out RaycastHit hit2, out string nodeId, "Pin"))
+                    {
+                        int index = CircuitHelper.GetIndexFromNode(nodeId, hit2.point);
 
-                if (circuitPool.CanPlace(ic.IcType, ic.Pins, nodeId, index))
-                {
-                    PlaceComponent(nodeId, index, new Vector3(x, 0, z));
-                }
-                else
-                {
-                    Debug.Log("Cannot place item here");
-                }
+                        int x = Mathf.RoundToInt(hit2.point.x);
+                        int z = Mathf.RoundToInt(hit2.point.z);
+                        icModel.transform.position = new Vector3(x, 0, z);
+
+                        if (circuitPool.CanPlace(ic.IcType, ic.Pins, nodeId, index))
+                        {
+                            PlaceComponent(nodeId, index, new Vector3(x, 0, z));
+                        }
+                        else
+                        {
+                            Debug.Log("Cannot place item here");
+                        }
+                    }
+                    else
+                    {
+                        icModel.transform.position = GameObjectPool;
+                    }
+                    break;
             }
-
-        }
-        else if (icModel != null && ic.IcType != ICType.wire)
-        {
-            icModel.transform.position = GameObjectPool;
-        }
-    }
-
-    private void PlaceActionBreadBoard()
-    {
-        int layer_mask = LayerMask.GetMask("Ground");
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
-        {
-            if (ic != null && icModel != null)
-            {
-
-                string nodeId = hit.transform.gameObject.name;
-                int index = CircuitHelper.GetIndexFromNode(nodeId, hit.point);
-
-                int x = Mathf.RoundToInt(hit.point.x);
-                int z = Mathf.RoundToInt(hit.point.z);
-                icModel.transform.position = new Vector3(x, 0, z);
-
-                string type = (ic.IcType == ICType.breadboard ? "0" : "1");
-
-                if (fabricator.canPlaceBreadBoard(type, x, z, placeRotated))
-                {
-                    fabricator.addBoard(type, x, z, placeRotated);
-                }
-                else
-                {
-                    Debug.Log("Cannot place item here");
-                }
-            }
-
-        }
-        else
-        {
-            icModel.transform.position = GameObjectPool;
         }
     }
 
@@ -305,20 +272,15 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
 
     private void PlaceActionBreadboard_Hover()
     {
-        int layer_mask = LayerMask.GetMask("Ground");
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
+        if (ic != null && icModel != null)
         {
-            int x = Mathf.RoundToInt(hit.point.x);
-            int z = Mathf.RoundToInt(hit.point.z);
-
-            if (ic != null && icModel != null)
+            if (raycastManager.GetNodeId(out RaycastHit hit, out string nodeId, "Ground"))
             {
+                int x = Mathf.RoundToInt(hit.point.x);
+                int z = Mathf.RoundToInt(hit.point.z);
 
                 Vector3 location = new Vector3(x, 0, z);
-                icModel.transform.position = location;
-                icModel.transform.rotation = Quaternion.Euler(0, placeRotated ? 90 : 0, 0);
+                icModel.transform.SetPositionAndRotation(location, Quaternion.Euler(0, placeRotated ? 90 : 0, 0));
 
                 string type = (ic.IcType == ICType.breadboard ? "0" : "1");
 
@@ -339,7 +301,6 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
                     }
                 }
             }
-
         }
     }
 
@@ -486,27 +447,25 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
 
         if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
         {
-            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Component"))
-            {
-                if (hit.transform.tag == "Wire")
-                {
-                    circuitPool.RemoveWire(hit.transform.parent.name);
-                }
-                else
-                {
-                    circuitPool.RemoveIntegratedCircuit(hit.transform.parent.name);
-                }
-                Destroy(hit.transform.parent.gameObject);
-            }
+            RemoveAction(hit);
         }
     }
 
-    private void DemolishAction()
+    public void RemoveAction(RaycastHit hit)
     {
-        int layer_mask = LayerMask.GetMask("Breadboard");
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, 500, layer_mask) && !EventSystem.current.IsPointerOverGameObject())
+        if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Component"))
+        {
+            if (hit.transform.tag == "Wire")
+            {
+                circuitPool.RemoveWire(hit.transform.parent.name);
+            }
+            else
+            {
+                circuitPool.RemoveIntegratedCircuit(hit.transform.parent.name);
+            }
+            Destroy(hit.transform.parent.gameObject);
+        }
+        else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Breadboard"))
         {
             HashSet<string> nodesToDelete = new HashSet<string>();
             HashSet<Guid> componentsToDelete = new HashSet<Guid>();

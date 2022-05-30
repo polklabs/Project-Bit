@@ -9,7 +9,7 @@ public class Oscilloscope : MonoBehaviour
 {
     public RawImage Image;
 
-    public BreadBoard breadboard;
+    private BreadBoard breadboard;
   
     public string NodeA;
     public string NodeB;
@@ -23,6 +23,11 @@ public class Oscilloscope : MonoBehaviour
     private Color[] arrBlack;
     private Color[] arrBlue;
     private Color[] arrYellow;
+
+    private void Awake()
+    {
+        breadboard = BreadBoard.GetInstance();
+    }
 
     void Start() 
     {

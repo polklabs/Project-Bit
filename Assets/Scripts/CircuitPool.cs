@@ -5,8 +5,13 @@ using UnityEngine.UI;
 
 public class CircuitPool : MonoBehaviour
 {
-    public BreadBoard breadBoard;
+    private BreadBoard breadBoard;
     public Transform parent;
+
+    private void Awake()
+    {
+        breadBoard = BreadBoard.GetInstance();
+    }
 
     public GameObject PlaceIntegratedCircuit(string IcName, string nodeIdA, int indexA, bool skipUpdate)
     {

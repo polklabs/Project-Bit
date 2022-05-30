@@ -7,9 +7,9 @@ using System.Runtime.Serialization;
 using UnityEngine.UI;
 using System.Linq;
 
-public class BreadBoard : MonoBehaviour
+public class BreadBoard : Singleton<BreadBoard>
 {
-    public GeneralManager generalManager;
+    private GeneralManager generalManager;
 
     public readonly Dictionary<Guid, IntegratedCircuit> components = new Dictionary<Guid, IntegratedCircuit>();
     public readonly Dictionary<string, Node> nodes = new Dictionary<string, Node>();
@@ -22,6 +22,11 @@ public class BreadBoard : MonoBehaviour
 
     public GameObject overlayPrefab;
     public Transform overlayParent;
+
+    new void Awake()
+    {
+        generalManager = GeneralManager.GetInstance();
+    }
 
     public void UpdateComponent(Guid id)
     {

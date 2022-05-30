@@ -4,12 +4,18 @@ using System.IO;
 using System.Collections.Generic;
 using System.IO.Compression;
 
-public class Save : MonoBehaviour
+public class Save : Singleton<Save>
 {
-    public GeneralManager gm;
+    private GeneralManager gm;
+    private BreadBoard bb;
 
-    public BreadBoard bb;
     public Fabricator fabricator;
+
+    new void Awake()
+    {
+        gm = GeneralManager.GetInstance();
+        bb = BreadBoard.GetInstance();
+    }
 
     public void SaveWorkspaceGUI()
     {

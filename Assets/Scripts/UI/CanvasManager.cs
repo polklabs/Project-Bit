@@ -7,7 +7,9 @@ public enum CanvasType
 {
     MainMenu,
     GameUI,
-    PauseMenu
+    PauseMenu,
+    LoadMenu,
+    SaveMenu
 }
 
 public class CanvasManager : Singleton<CanvasManager>

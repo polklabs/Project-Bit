@@ -5,11 +5,17 @@ using IntegratedCircuits;
 
 public class Mono_Switch : MonoBehaviour
 {
-    public GeneralManager gm;
-    public BreadBoard breadBoard;
+    private GeneralManager gm;
+    private BreadBoard breadBoard;
     public AudioManager audioManager;
     public float momentaryLength = 0.3f;
     public float switchLength = 0.3f;
+
+    private void Awake()
+    {
+        breadBoard = BreadBoard.GetInstance();
+        gm = GeneralManager.GetInstance();
+    }
 
     public void TriggerSwitch(string id, int index, GameObject switchObject)
     {

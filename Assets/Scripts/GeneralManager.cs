@@ -10,7 +10,7 @@ public struct GeneralManagerStruct
     public bool showLabels;
 }
 
-public class GeneralManager : MonoBehaviour
+public class GeneralManager : Singleton<GeneralManager>
 {
     public string workSpaceName;
 
@@ -21,7 +21,12 @@ public class GeneralManager : MonoBehaviour
 
     public Transform gameCamera;
 
-    public BreadBoard breadBoard;
+    private BreadBoard breadBoard;
+
+    new void Awake()
+    {
+        breadBoard = BreadBoard.GetInstance();
+    }
    
     void Start()
     {
