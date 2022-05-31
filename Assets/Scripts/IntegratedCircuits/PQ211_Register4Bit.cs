@@ -13,9 +13,15 @@ namespace IntegratedCircuits
             IcType = ICType.ic4;
             ModelName = "IC16";
 
+            PinNames = new string[] { "M", "N", "Q1", "Q2", "Q3", "Q4", "CLK", "GND", "G1'", "G2'", "D4", "D3", "D2", "D1", "CLR", "VCC" };
+
             Chip = new Chips.D_Register_4Bit();
 
             SetPinModes(2, 5, PinMode.Ouput);
+            DefaultState[10] = State.HIGH;
+            DefaultState[11] = State.HIGH;
+            DefaultState[12] = State.HIGH;
+            DefaultState[13] = State.HIGH;
         }
 
         protected override void InternalUpdate(bool reset)

@@ -110,13 +110,6 @@ public class GeneralManager : Singleton<GeneralManager>
 
     public void ToggleLabels()
     {
-        showLabels = !showLabels;
-        if (showLabels)
-        {
-            breadBoard.SetLabelDisplay();
-        } else
-        {
-            breadBoard.ClearLabelDisplay();
-        }
+        breadBoard.SetLabelDisplays();
     }
 }

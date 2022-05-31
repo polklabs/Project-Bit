@@ -20,14 +20,20 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Octal_Bus_Gates();
             ChangeDir = false;
-
-            SetInOut(false);
+            SetInOut(ChangeDir);
         }
 
-        private void SetInOut(bool dir)
+        public override void PostDeserialize()
         {
+            SetInOut(ChangeDir);
+        }
+
+        private bool SetInOut(bool dir)
+        {
+            if (dir && GetPinMode(1) == PinMode.Input) { return false; }
             SetPinModes(1, 8, dir ? PinMode.Input : PinMode.Ouput);
             SetPinModes(10, 17, !dir ? PinMode.Input : PinMode.Ouput);
+            return true;
         }
 
         private void SetOutputOff()
@@ -43,19 +49,21 @@ namespace IntegratedCircuits
 
         protected override void InternalUpdate(State[] oldState)
         {
-            if(PinState[0] != oldState[0])
+            var newDir = PinState[0] == State.HIGH ? true : false;
+            if (newDir != ChangeDir)
             {
                 SetOutputOff();
-                ChangeDir = true;
+                ChangeDir = newDir;
                 BreadBoardRef.UpdateComponent(Id);
                 return;
             }
-            else if(ChangeDir)
+            else
             {
-                ChangeDir = false;
-                SetInOut(PinState[0] == State.HIGH ? true : false);
-                UpdateState(false, true);
-                this.oldState = (State[])PinState.Clone();
+                if(SetInOut(newDir))
+                {
+                    UpdateState(false, true);
+                    CopyOutputsToOldState();
+                }
             }
 
             InternalUpdate(false);
@@ -86,34 +94,28 @@ namespace IntegratedCircuits
 
             Chip.Update();
 
-            if(PinState[0] == State.HIGH ? true : false)
+            if (ChangeDir)
             {
-                PinState[17] = Chip.Output[8]  ? State.HIGH : State.OFF;
-                PinState[16] = Chip.Output[9]  ? State.HIGH : State.OFF;
-                PinState[15] = Chip.Output[10] ? State.HIGH : State.OFF;
-                PinState[14] = Chip.Output[11] ? State.HIGH : State.OFF;
-                PinState[13] = Chip.Output[12] ? State.HIGH : State.OFF;
-                PinState[12] = Chip.Output[13] ? State.HIGH : State.OFF;
-                PinState[11] = Chip.Output[14] ? State.HIGH : State.OFF;
-                PinState[10] = Chip.Output[15] ? State.HIGH : State.OFF;
+                PinState[17] = Chip.Output[8] ? State.HIGH : State.LOW;
+                PinState[16] = Chip.Output[9] ? State.HIGH : State.LOW;
+                PinState[15] = Chip.Output[10] ? State.HIGH : State.LOW;
+                PinState[14] = Chip.Output[11] ? State.HIGH : State.LOW;
+                PinState[13] = Chip.Output[12] ? State.HIGH : State.LOW;
+                PinState[12] = Chip.Output[13] ? State.HIGH : State.LOW;
+                PinState[11] = Chip.Output[14] ? State.HIGH : State.LOW;
+                PinState[10] = Chip.Output[15] ? State.HIGH : State.LOW;
             }
             else
             {
-                PinState[1] = Chip.Output[0] ? State.HIGH : State.OFF;
-                PinState[2] = Chip.Output[1] ? State.HIGH : State.OFF;
-                PinState[3] = Chip.Output[2] ? State.HIGH : State.OFF;
-                PinState[4] = Chip.Output[3] ? State.HIGH : State.OFF;
-                PinState[5] = Chip.Output[4] ? State.HIGH : State.OFF;
-                PinState[6] = Chip.Output[5] ? State.HIGH : State.OFF;
-                PinState[7] = Chip.Output[6] ? State.HIGH : State.OFF;
-                PinState[8] = Chip.Output[7] ? State.HIGH : State.OFF;
+                PinState[1] = Chip.Output[0] ? State.HIGH : State.LOW;
+                PinState[2] = Chip.Output[1] ? State.HIGH : State.LOW;
+                PinState[3] = Chip.Output[2] ? State.HIGH : State.LOW;
+                PinState[4] = Chip.Output[3] ? State.HIGH : State.LOW;
+                PinState[5] = Chip.Output[4] ? State.HIGH : State.LOW;
+                PinState[6] = Chip.Output[5] ? State.HIGH : State.LOW;
+                PinState[7] = Chip.Output[6] ? State.HIGH : State.LOW;
+                PinState[8] = Chip.Output[7] ? State.HIGH : State.LOW;
             }
-        }
-
-        protected override void InternalReset(bool disable)
-        {
-            InternalUpdate(true);
-            base.InternalReset(disable);
         }
 
     }

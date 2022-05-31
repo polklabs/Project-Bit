@@ -50,6 +50,7 @@ namespace IntegratedCircuits
         protected int Gnd;
 
         public string[] PinNames;
+        public bool PinNamesDisplayed;
 
         /// <summary>
         /// Can UI edit mode open up an edit form for this IC
@@ -64,6 +65,7 @@ namespace IntegratedCircuits
             OverwriteObjText = true;
             WriteToNodes = true;
             PinNames = new string[] { };
+            PinNamesDisplayed = false;
             isEditable = false;
 
             Pins = numPins;
@@ -81,6 +83,12 @@ namespace IntegratedCircuits
                 DefaultState[Vdd] = 0;
                 DefaultState[Gnd] = 0;
             }
+        }
+
+        public virtual void PostDeserialize()
+        {
+            // This gets called after object is deserialized on load.
+            // Allows calling methods after constructer when poperties are set
         }
 
         public void AssignObjRef(GameObject obj)
@@ -252,6 +260,17 @@ namespace IntegratedCircuits
                     {
                         PinState[i] = State.OFF;
                     }
+                }
+            }
+        }
+
+        protected void CopyOutputsToOldState()
+        {
+            for (int i = 0; i < Pins; i++)
+            {
+                if (PinModes[i] == PinMode.Ouput)
+                {
+                    oldState[i] = PinState[i];
                 }
             }
         }

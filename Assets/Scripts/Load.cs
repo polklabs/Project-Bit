@@ -91,6 +91,7 @@ public class Load : Singleton<Load>
             {
 
                 IntegratedCircuit ic = components[g];
+                ic.PostDeserialize();
                 GameObject obj;
 
                 switch (ic.IcType)

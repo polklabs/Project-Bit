@@ -8,11 +8,13 @@ namespace userInterface {
 
         WorkspaceEditor workspaceEditor;
         RaycastManager raycastManager;
+        BreadBoard breadBoard;
 
         public Transform ContextMenuPanel;
         public GameObject ContextMenuButtonTemplate;
 
         private RaycastHit raycastHit;
+        private IntegratedCircuit integratedCircuit;
         private bool menuOpen = false;
 
         new void Awake()
@@ -23,18 +25,19 @@ namespace userInterface {
 
             workspaceEditor = WorkspaceEditor.GetInstance();
             raycastManager = RaycastManager.GetInstance();
+            breadBoard = BreadBoard.GetInstance();
             gameObject.SetActive(false);
         }
 
         public void OpenContextMenu()
         {
             ClearContextMenu();
-            if (raycastManager.GetIntegratedCircuit(out raycastHit, out IntegratedCircuit ic))
+            if (raycastManager.GetIntegratedCircuit(out raycastHit, out integratedCircuit))
             {
                 gameObject.SetActive(true);
                 DrawButtons("Integrated Circuit", true, Context_None);
-                DrawButtons("Edit", !ic.isEditable, Context_Edit);
-                DrawButtons("Show Labels", ic.PinNames.Length <= 0, Context_Labels);
+                DrawButtons("Edit", !integratedCircuit.isEditable, Context_Edit);
+                DrawButtons("Toggle Label", integratedCircuit.PinNames.Length <= 0, Context_Labels);
                 DrawButtons("Remove", false, Context_Remove);
                 menuOpen = true;
             }
@@ -104,7 +107,10 @@ namespace userInterface {
 
         private void Context_Labels()
         {
-
+            if (integratedCircuit != null)
+            {
+                breadBoard.SetLabelDisplay(integratedCircuit.GetId());
+            }
         }
     }
 }

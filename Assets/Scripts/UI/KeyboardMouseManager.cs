@@ -40,6 +40,11 @@ namespace userInterface
                 generalManager.Step();
             }
 
+            if (Input.GetKeyDown(KeyCode.Period))
+            {
+                BreadBoard.GetInstance().ResetNodeValues();
+            }
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (workspaceEditor.Action != WorkspaceAction.None)
@@ -53,7 +58,7 @@ namespace userInterface
                     }
                 } else
                 {
-                    canvasManager.SwitchCanvas(CanvasType.PauseMenu);
+                    canvasManager.SwitchCanvas(CanvasType.MainMenu);
                 }
                 
             }

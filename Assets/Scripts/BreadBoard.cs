@@ -112,6 +112,20 @@ public class BreadBoard : Singleton<BreadBoard>
         return null;
     }
 
+    public void ResetNodeValues()
+    {
+        foreach(string nodeId in nodes.Keys)
+        {
+            Vector2Int node = NodeValues(nodeId);
+            nodes[nodeId].valuePos = node.x;
+            nodes[nodeId].valueNeg = node.y;
+        }
+        foreach(Guid g in components.Keys)
+        {
+            updates.Enqueue(g);
+        }
+    }
+
     public void SetNodeConnection(bool isWire, string nodeId, int fromIndex, int toIndex, string id)
     {
         if (nodes.ContainsKey(nodeId))
@@ -237,6 +251,15 @@ public class BreadBoard : Singleton<BreadBoard>
                     node.valueNeg = negValue;
                     node.valuePos = posValue;
                     break;
+            }
+
+            if (node.valueNeg > 0)
+            {
+                UnityEngine.Debug.LogWarning("Node negative value is above 0");
+            }
+            if (node.valuePos < 0)
+            {
+                UnityEngine.Debug.LogWarning("Node positive value is below 0");
             }
 
             State newState = (State)GetNodeState(nodeUpdateId);
@@ -392,41 +415,57 @@ public class BreadBoard : Singleton<BreadBoard>
         }
     }
 
-    public void SetLabelDisplay()
+    public void SetLabelDisplays(bool? show = null)
     {
         foreach (Guid id in components.Keys)
         {
-            UpdateLabelDisplay(id);
+            SetLabelDisplay(id, show);
         }
     }
 
-    public void UpdateLabelDisplay(Guid id)
+    public void SetLabelDisplay(Guid id, bool? show = null)
     {
         try
         {
             var comp = components[id];
             if ((comp.IcType == ICType.ic4 || comp.IcType == ICType.ic6) && comp.PinNames.Length > 0)
             {
-                var count = comp.PinNames.Length;
-                GameObject g = comp.GetObjRef();
-                var canvas = g.GetComponentInChildren<Canvas>();
-                var template = canvas.transform.GetChild(0).gameObject;
-                var canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
-                var canvasHeight = canvas.GetComponent<RectTransform>().rect.height;
-                var labelWidth = canvasWidth / (count / 2);
-                var labelHeight = canvasHeight / 2;
-                var widthLeft = (-1 * (canvasWidth / 2)) + (labelWidth/2);
-                var heightBottom = (-1 * (canvasHeight / 2)) + (labelHeight/2);
-                for (int i = 0; i < count/2; i++)
+                bool setting = show ?? !comp.PinNamesDisplayed;
+
+                if (setting)
                 {
-                    CreatePinLabel(template, canvas.transform, comp.PinNames[i], TextAnchor.LowerCenter, labelWidth, labelHeight, widthLeft, heightBottom);
-                    widthLeft += labelWidth;
-                }
-                heightBottom *= -1;
-                for (int i = count / 2; i < count; i++)
+                    var count = comp.PinNames.Length;
+                    GameObject g = comp.GetObjRef();
+                    var canvas = g.GetComponentInChildren<Canvas>();
+                    var template = canvas.transform.GetChild(0).gameObject;
+                    var canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
+                    var canvasHeight = canvas.GetComponent<RectTransform>().rect.height;
+                    var labelWidth = canvasWidth / (count / 2);
+                    var labelHeight = canvasHeight / 2;
+                    var widthLeft = (-1 * (canvasWidth / 2)) + (labelWidth / 2);
+                    var heightBottom = (-1 * (canvasHeight / 2)) + (labelHeight / 2);
+                    for (int i = 0; i < count / 2; i++)
+                    {
+                        CreatePinLabel(template, canvas.transform, comp.PinNames[i], TextAnchor.LowerCenter, labelWidth, labelHeight, widthLeft, heightBottom);
+                        widthLeft += labelWidth;
+                    }
+                    heightBottom *= -1;
+                    for (int i = count / 2; i < count; i++)
+                    {
+                        widthLeft -= labelWidth;
+                        CreatePinLabel(template, canvas.transform, comp.PinNames[i], TextAnchor.UpperCenter, labelWidth, labelHeight, widthLeft, heightBottom);
+                    }
+                    comp.PinNamesDisplayed = true;
+                } 
+                else
                 {
-                    widthLeft -= labelWidth;
-                    CreatePinLabel(template, canvas.transform, comp.PinNames[i], TextAnchor.UpperCenter, labelWidth, labelHeight, widthLeft, heightBottom);
+                    GameObject g = comp.GetObjRef();
+                    var textObjects = g.GetComponentsInChildren<Text>().Where(x => x.gameObject.name == "PIN_LABEL");
+                    foreach (Text text in textObjects)
+                    {
+                        Destroy(text.gameObject);
+                    }
+                    comp.PinNamesDisplayed = false;
                 }
             }
         } catch (Exception) { }
@@ -447,20 +486,6 @@ public class BreadBoard : Singleton<BreadBoard>
         pinRect.localScale = new Vector3(1, 1, 1);
         pinRect.localRotation = Quaternion.identity;
         pinRect.localPosition = new Vector3(x, y, 0);
-    }
-
-    public void ClearLabelDisplay()
-    {
-        foreach (Guid id in components.Keys)
-        {
-            var comp = components[id];
-            GameObject g = comp.GetObjRef();
-            var textObjects = g.GetComponentsInChildren<Text>().Where(x => x.gameObject.name == "PIN_LABEL");
-            foreach(Text text in textObjects)
-            {
-                Destroy(text.gameObject);
-            }
-        }
     }
 
     public void UnlinkNodes(string nodeIdA, int indexA, string nodeIdB, int indexB)
