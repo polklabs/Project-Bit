@@ -17,9 +17,9 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Shift_Register_8Bit();
 
-            SetPinModes(0, 6, PinMode.Ouput);
-            SetPinModes(8, PinMode.Ouput);
-            SetPinModes(14, PinMode.Ouput);
+            SetPinModes(0, 6, PinMode.Output);
+            SetPinModes(8, PinMode.Output);
+            SetPinModes(14, PinMode.Output);
 
             Chip.Input[5] = false;
         }

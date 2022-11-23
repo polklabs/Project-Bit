@@ -18,10 +18,10 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Quad_Nor_Gates();
 
-            SetPinModes(2, PinMode.Ouput);
-            SetPinModes(5, PinMode.Ouput);
-            SetPinModes(7, PinMode.Ouput);
-            SetPinModes(10, PinMode.Ouput);
+            SetPinModes(2, PinMode.Output);
+            SetPinModes(5, PinMode.Output);
+            SetPinModes(7, PinMode.Output);
+            SetPinModes(10, PinMode.Output);
         }
 
         protected override void InternalUpdate(bool reset)

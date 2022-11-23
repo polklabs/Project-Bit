@@ -21,10 +21,10 @@ namespace IntegratedCircuits
 
             memory = Enumerable.Repeat(new BitArray(Enumerable.Repeat(false, 4).ToArray()), 16).ToArray();
 
-            SetPinModes(4, PinMode.Ouput);
-            SetPinModes(6, PinMode.Ouput);
-            SetPinModes(8, PinMode.Ouput);
-            SetPinModes(10, PinMode.Ouput);
+            SetPinModes(4, PinMode.Output);
+            SetPinModes(6, PinMode.Output);
+            SetPinModes(8, PinMode.Output);
+            SetPinModes(10, PinMode.Output);
         }
 
         protected override void InternalUpdate(bool reset)

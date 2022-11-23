@@ -16,10 +16,10 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Binary_Adder_4Bit();
 
-            SetPinModes(0, PinMode.Ouput);
-            SetPinModes(3, PinMode.Ouput);
-            SetPinModes(8, 9, PinMode.Ouput);
-            SetPinModes(12, PinMode.Ouput);
+            SetPinModes(0, PinMode.Output);
+            SetPinModes(3, PinMode.Output);
+            SetPinModes(8, 9, PinMode.Output);
+            SetPinModes(12, PinMode.Output);
         }
 
         protected override void InternalUpdate(bool reset)

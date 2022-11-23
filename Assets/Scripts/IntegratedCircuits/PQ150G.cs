@@ -20,9 +20,9 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Binary_Counter_4Bit();
 
-            SetPinModes(2, PinMode.Ouput);
-            SetPinModes(4, 5, PinMode.Ouput);
-            SetPinModes(6, PinMode.Ouput);
+            SetPinModes(2, PinMode.Output);
+            SetPinModes(4, 5, PinMode.Output);
+            SetPinModes(6, PinMode.Output);
         }
 
         protected override void InternalUpdate(bool reset)

@@ -15,8 +15,8 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Dual_Decode_2_To_4();
 
-            SetPinModes(3, 6, PinMode.Ouput);
-            SetPinModes(8, 11, PinMode.Ouput);
+            SetPinModes(3, 6, PinMode.Output);
+            SetPinModes(8, 11, PinMode.Output);
         }
 
         protected override void InternalUpdate(bool reset)

@@ -42,8 +42,8 @@ namespace IntegratedCircuits
             clearMemory();
 
             // Will change based on write enable
-            SetPinModes(8, 10, PinMode.Ouput);
-            SetPinModes(12, 16, PinMode.Ouput);
+            SetPinModes(8, 10, PinMode.Output);
+            SetPinModes(12, 16, PinMode.Output);
         }
 
         private void clearMemory()
@@ -70,7 +70,7 @@ namespace IntegratedCircuits
             {
                 for(int i = 0; i < Pins; i++)
                 {
-                    if(GetPinMode(i) == PinMode.Ouput)
+                    if(GetPinMode(i) == PinMode.Output)
                     {
                         PinState[i] = State.OFF;
                     }
@@ -125,8 +125,8 @@ namespace IntegratedCircuits
             }
             else if(PinState[G_low] == State.LOW)
             {
-                SetPinModes(8, 10, PinMode.Ouput);
-                SetPinModes(12, 16, PinMode.Ouput);
+                SetPinModes(8, 10, PinMode.Output);
+                SetPinModes(12, 16, PinMode.Output);
 
                 PinState[8] = page[0] ? State.HIGH : State.LOW;
                 PinState[9] = page[1] ? State.HIGH : State.LOW;
@@ -143,7 +143,7 @@ namespace IntegratedCircuits
         {
             for (int i = 0; i < Pins; i++)
             {
-                if (GetPinMode(i) == PinMode.Ouput)
+                if (GetPinMode(i) == PinMode.Output)
                 {
                     PinState[i] = State.OFF;
                 }

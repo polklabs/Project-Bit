@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace IntegratedCircuits
 {
-    public enum PinMode { Input, Ouput };
+    public enum PinMode { Input, Output };
     public enum ICType { ic4, ic6, solo, dual, wire, breadboard, powerrail, unknown };
     public enum State { LOW = -1, OFF = 0, HIGH = 1 };
     public enum SwitchTypes { Toggle, Momentary, Pulse };
@@ -130,7 +130,7 @@ namespace IntegratedCircuits
 
         public int GetPinState(int index)
         {
-            if(PinModes[index] == PinMode.Ouput)
+            if(PinModes[index] == PinMode.Output)
             {
                 return (int)PinState[index];
             }
@@ -206,7 +206,7 @@ namespace IntegratedCircuits
             for (int i = 0; i < Pins; i++)
             {
                 //Debug.Log("Pin " + i.ToString() + ", old: " + oldState[i].ToString() + ", new: " + PinState[i].ToString());                
-                if (PinModes[i] == PinMode.Ouput)
+                if (PinModes[i] == PinMode.Output)
                 {
                     if(PinState[i] == State.HIGH && oldState[i] == State.OFF)
                     {
@@ -268,7 +268,7 @@ namespace IntegratedCircuits
         {
             for (int i = 0; i < Pins; i++)
             {
-                if (PinModes[i] == PinMode.Ouput)
+                if (PinModes[i] == PinMode.Output)
                 {
                     oldState[i] = PinState[i];
                 }
@@ -297,7 +297,7 @@ namespace IntegratedCircuits
 
             for (int i = 0; i < Pins; i++)
             {
-                if (PinModes[i] == PinMode.Ouput)
+                if (PinModes[i] == PinMode.Output)
                 {
                     PinState[i] = State.OFF;
                 }

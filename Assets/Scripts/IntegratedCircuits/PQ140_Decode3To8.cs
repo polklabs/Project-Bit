@@ -15,8 +15,8 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Decoder_3_To_8();
 
-            SetPinModes(4, 5, PinMode.Ouput);
-            SetPinModes(7, 12, PinMode.Ouput);
+            SetPinModes(4, 5, PinMode.Output);
+            SetPinModes(7, 12, PinMode.Output);
         }
 
         protected override void InternalUpdate(bool reset)

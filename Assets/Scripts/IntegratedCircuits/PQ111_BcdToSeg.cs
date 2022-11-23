@@ -17,7 +17,7 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Bcd_To_Seg();
 
-            SetPinModes(8, 14, PinMode.Ouput);
+            SetPinModes(8, 14, PinMode.Output);
         }
 
         protected override void InternalUpdate(bool reset)

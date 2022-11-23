@@ -17,7 +17,7 @@ namespace IntegratedCircuits
 
             Chip = new Chips.D_Register_4Bit();
 
-            SetPinModes(2, 5, PinMode.Ouput);
+            SetPinModes(2, 5, PinMode.Output);
             DefaultState[10] = State.HIGH;
             DefaultState[11] = State.HIGH;
             DefaultState[12] = State.HIGH;

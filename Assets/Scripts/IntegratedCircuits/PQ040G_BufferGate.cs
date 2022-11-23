@@ -31,8 +31,8 @@ namespace IntegratedCircuits
         private bool SetInOut(bool dir)
         {
             if (dir && GetPinMode(1) == PinMode.Input) { return false; }
-            SetPinModes(1, 8, dir ? PinMode.Input : PinMode.Ouput);
-            SetPinModes(10, 17, !dir ? PinMode.Input : PinMode.Ouput);
+            SetPinModes(1, 8, dir ? PinMode.Input : PinMode.Output);
+            SetPinModes(10, 17, !dir ? PinMode.Input : PinMode.Output);
             return true;
         }
 
@@ -40,7 +40,7 @@ namespace IntegratedCircuits
         {
             for(int i = 0; i < Pins; i++)
             {
-                if(GetPinMode(i) == PinMode.Ouput)
+                if(GetPinMode(i) == PinMode.Output)
                 {
                     PinState[i] = State.OFF;
                 }

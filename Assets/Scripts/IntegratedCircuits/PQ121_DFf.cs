@@ -21,8 +21,8 @@ namespace IntegratedCircuits
 
             Chip = new Chips.Dual_D_FlipFlop();
 
-            SetPinModes(4, 5, PinMode.Ouput);
-            SetPinModes(7, 8, PinMode.Ouput);
+            SetPinModes(4, 5, PinMode.Output);
+            SetPinModes(7, 8, PinMode.Output);
         }
 
         protected override void InternalUpdate(bool reset)
