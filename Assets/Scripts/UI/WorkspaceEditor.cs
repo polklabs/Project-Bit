@@ -96,9 +96,9 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
             case WorkspaceAction.Remove:
                 RemoveAction();
                 break;
-            //case WorkspaceAction.Demolish:
-            //    DemolishAction();
-            //    break;
+            case WorkspaceAction.Demolish:
+                DemolishAction();
+                break;
             case WorkspaceAction.Edit:
                 EditAction();
                 break;
@@ -467,7 +467,21 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
             }
             Destroy(hit.transform.parent.gameObject);
         }
-        else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Breadboard"))
+    }
+
+    private void DemolishAction()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            DemolishAction(hit);
+        }
+    }
+
+    public void DemolishAction(RaycastHit hit)
+    {
+        if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Breadboard"))
         {
             fabricator.RemoveBreadBoard(hit.transform.gameObject);
         }

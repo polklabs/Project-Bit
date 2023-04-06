@@ -77,7 +77,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: PQ230
+  m_Text: PQ111
 --- !u!65 &7184853594916247707
 BoxCollider:
   m_ObjectHideFlags: 0

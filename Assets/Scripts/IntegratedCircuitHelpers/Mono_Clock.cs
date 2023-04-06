@@ -34,7 +34,7 @@ public class Mono_Clock : MonoBehaviour
         while (true)
         {
             float timer = 0f;
-            while (timer < length)
+            while (timer <= length)
             {
                 while (gm && gm.paused && gm.step <= 0)
                 {

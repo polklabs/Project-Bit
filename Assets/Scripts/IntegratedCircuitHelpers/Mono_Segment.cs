@@ -20,10 +20,7 @@ public class Mono_Segment : MonoBehaviour
                 StopCoroutine(coroutines[index]);
                 coroutines[index] = null;
             }
-            else
-            {
-                setMaterial(index, onMaterial);
-            }
+            setMaterial(index, onMaterial);
         }
         else
         {
