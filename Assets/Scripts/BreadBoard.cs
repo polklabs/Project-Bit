@@ -255,11 +255,11 @@ public class BreadBoard : Singleton<BreadBoard>
 
             if (node.valueNeg > 0)
             {
-                UnityEngine.Debug.LogWarning("Node negative value is above 0");
+                UnityEngine.Debug.LogWarning($"Node {nodeId} negative value is above 0");
             }
             if (node.valuePos < 0)
             {
-                UnityEngine.Debug.LogWarning("Node positive value is below 0");
+                UnityEngine.Debug.LogWarning($"Node {nodeId} positive value is below 0");
             }
 
             State newState = (State)GetNodeState(nodeUpdateId);
@@ -469,6 +469,28 @@ public class BreadBoard : Singleton<BreadBoard>
                 }
             }
         } catch (Exception) { }
+    }
+
+    /// <summary>
+    /// Toggle on and off the lable on Switch integrated circuits
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="show"></param>
+    public void SetSwitchLabelDisplay(Guid id, bool? show = null)
+    {
+        try
+        {
+            var comp = (IntegratedCircuits.Switch)components[id];
+            bool setting = show ?? !comp.PinNamesDisplayed;
+
+            GameObject g = comp.GetObjRef();
+            var canvas = g.GetComponentInChildren<Canvas>();
+            var text = canvas.GetComponentsInChildren<Text>().Where(x => x.gameObject.tag == "CustomLabel").FirstOrDefault();
+
+            text.text = setting ? comp.Label : "";
+            comp.PinNamesDisplayed = setting;
+        }
+        catch (Exception) { }
     }
 
     private void CreatePinLabel(GameObject template, Transform canvas, string text, TextAnchor alignment, float width, float height, float x, float y)

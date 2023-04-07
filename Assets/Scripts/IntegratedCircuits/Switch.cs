@@ -10,6 +10,9 @@ namespace IntegratedCircuits
         [DataMember]
         public bool[] SwitchState;
 
+        [DataMember]
+        public string Label;
+
         public bool OnState = true;
 
         protected readonly int SwitchPins;       
@@ -24,6 +27,7 @@ namespace IntegratedCircuits
             IcType = ICType.ic4;
             ModelName = "momentary_switch";
             WriteToNodes = false;
+            OverwriteObjText = false;
         }
 
         protected override void InternalReset(bool disable)

@@ -32,21 +32,28 @@ namespace userInterface {
         public void OpenContextMenu()
         {
             ClearContextMenu();
+            UpdateMenuPosition();
+            gameObject.SetActive(true);
             if (raycastManager.GetIntegratedCircuit(out raycastHit, out integratedCircuit))
             {
-                gameObject.SetActive(true);
+                
                 DrawButtons("Integrated Circuit", true, Context_None);
                 DrawButtons("Edit", !integratedCircuit.isEditable, Context_Edit);
-                DrawButtons("Toggle Label", integratedCircuit.PinNames.Length <= 0, Context_Labels);
+                if(integratedCircuit is Switch)
+                {
+                    DrawButtons("Custom Label", false, Context_Edit_Label);
+                }
+                DrawButtons("Toggle Pinouts", integratedCircuit.PinNames.Length <= 0, Context_Labels);
                 DrawButtons("Remove", false, Context_Remove);
+                DrawButtons("Close", false, CloseContextMenu);
                 menuOpen = true;
             }
             else if (raycastManager.GetBreadBoard(out raycastHit, out string breadBoardId, out string[] _))
             {
-                gameObject.SetActive(true);
                 DrawButtons("Bread Board", true, Context_None);
                 DrawButtons("Move", true, Context_None);
                 DrawButtons("Remove", false, Context_Remove);
+                DrawButtons("Close", false, CloseContextMenu);
                 menuOpen = true;
             } 
             else
@@ -57,12 +64,19 @@ namespace userInterface {
 
         private void Update()
         {
-            // Keep context menu in fixed position
             if (menuOpen)
             {
-                Vector3 pos = Camera.main.WorldToScreenPoint(raycastHit.point);
-                gameObject.transform.position = new Vector3(pos.x, pos.y, 0);
+                UpdateMenuPosition();
             }
+        }
+
+        /// <summary>
+        /// Keep context menu in fixed position
+        /// </summary>
+        private void UpdateMenuPosition()
+        {
+            Vector3 pos = Camera.main.WorldToScreenPoint(raycastHit.point);
+            gameObject.transform.position = new Vector3(pos.x, pos.y, 0);
         }
 
         private void DrawButtons(string name, bool disabled, UnityEngine.Events.UnityAction call)
@@ -110,6 +124,16 @@ namespace userInterface {
             if (integratedCircuit != null)
             {
                 breadBoard.SetLabelDisplay(integratedCircuit.GetId());
+            }
+        }
+
+        private void Context_Edit_Label()
+        {
+            if (integratedCircuit != null)
+            {
+                Switch ic = (Switch)integratedCircuit;
+                ic.Label = "Write";
+                breadBoard.SetSwitchLabelDisplay(integratedCircuit.GetId());
             }
         }
     }
