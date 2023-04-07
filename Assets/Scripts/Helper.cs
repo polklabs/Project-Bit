@@ -158,6 +158,8 @@ namespace Helper
             Material material = root.GetComponent<MeshRenderer>().materials[0];
             Mesh wireMesh = root.GetComponent<MeshFilter>().mesh;
 
+            Material materialPin = Resources.Load<Material>("Materials/Metal_Splotchy");
+
             obj.transform.GetChild(0).gameObject.SetActive(false);
             root.SetActive(false);
 
@@ -171,6 +173,7 @@ namespace Helper
                 rotation.z *= -1;
 
                 float height = Vector3.Distance(pointA, pointB);
+                height -= (height * height) / 3;
 
                 Vector3 point = (pointA + pointB) / 2.0f;
 
@@ -183,9 +186,17 @@ namespace Helper
                 capCol.radius = 0.5f;
 
                 MeshRenderer meshRenderer = collider.AddComponent<MeshRenderer>();
-                meshRenderer.material = material;
-
                 MeshFilter meshFilter = collider.AddComponent<MeshFilter>();
+                
+                if (i == 1 || i == wireNodes.Length-1)
+                {
+                    meshRenderer.material = materialPin;
+                    collider.transform.localScale += new Vector3(0.1f, 0, 0.1f);
+                } 
+                else
+                {
+                    meshRenderer.material = material;
+                }
                 meshFilter.mesh = wireMesh;
 
                 collider.transform.position = point;
