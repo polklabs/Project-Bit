@@ -13,6 +13,8 @@ namespace IntegratedCircuits
             IcType = ICType.ic4;
             ModelName = "IC14";
 
+            PinNames = new string[] { "J1", "Q'1", "Q1", "K1", "Q2", "Q'2", "GND", "J2", "CLK2", "CLR2", "K2", "CLK1", "CLR1", "VCC" };
+
             Chip = new Chips.Dual_JK_FlipFlop();
 
             SetPinModes(1, 2, PinMode.Output);

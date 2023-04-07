@@ -590,17 +590,18 @@ public class WorkspaceEditor : Singleton<WorkspaceEditor>
             string stateString;
 
             int state = breadBoard.GetNodeState(hit.transform.name);
+            var fullState = breadBoard.GetNodeStateFull(hit.transform.name);
             if (state == 1)
             {
-                stateString = "High";
+                stateString = $"High: {fullState.x}, {fullState.y}";
             }
             else if (state == -1)
             {
-                stateString = "Low";
+                stateString = $"Low: {fullState.x}, {fullState.y}";
             }
             else
             {
-                stateString = "Off";
+                stateString = $"Off: {fullState.x}, {fullState.y}";
             }
 
             string[] s = nodeId.Split('x');

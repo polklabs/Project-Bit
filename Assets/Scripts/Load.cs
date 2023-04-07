@@ -32,6 +32,7 @@ public class Load : Singleton<Load>
 
     public void LoadWorkspace(string workSpaceName)
     {
+        Debug.Log($"Loading: {workSpaceName}");
         Title.text = workSpaceName;
 
         string filePath = GameHelper.GetSaveDirectory();
@@ -52,7 +53,7 @@ public class Load : Singleton<Load>
         {
             fabricator.addBoard("0", 0, 0, false);
         }
-
+        Debug.Log("Finished Loading!");
     }
 
     private int GetZipArchiveEntryIndex(string name, ZipArchive archive)
@@ -69,6 +70,7 @@ public class Load : Singleton<Load>
 
     private void LoadComponents(ZipArchive archive)
     {
+        Debug.Log("Loading Components");
         int index = GetZipArchiveEntryIndex("components.json", archive);               
         if (index == -1)
         {
@@ -125,13 +127,7 @@ public class Load : Singleton<Load>
                     case ICType.wire:
 
                         obj = cp.PlaceIntegratedCircuit(ic, ic.GetPinNode(0), ic.GetPinNodeIndex(0), ic.GetPinNode(1), ic.GetPinNodeIndex(1), true);
-
                         Vector3[] vectors = ((Wire)ic).points;
-
-                        //LineRenderer lineRenderer = obj.GetComponentInChildren<LineRenderer>();
-                        //lineRenderer.positionCount = vectors.Length;
-                        //lineRenderer.SetPositions(vectors);
-
                         CircuitHelper.CreateColliderChain(obj, vectors);
 
                         break;
@@ -147,6 +143,7 @@ public class Load : Singleton<Load>
 
     private void LoadNodes(ZipArchive archive)
     {
+        Debug.Log("Loading Nodes...");
         int index = GetZipArchiveEntryIndex("nodes.json", archive);
         if (index == -1)
         {
@@ -171,6 +168,7 @@ public class Load : Singleton<Load>
 
     private void LoadUpdates(ZipArchive archive)
     {
+        Debug.Log("Loading Updates...");
         int index = GetZipArchiveEntryIndex("updates.json", archive);
         if (index == -1)
         {
@@ -190,6 +188,7 @@ public class Load : Singleton<Load>
 
     private void LoadBreadBoards(ZipArchive archive)
     {
+        Debug.Log("Loading Breadboards...");
         int index = GetZipArchiveEntryIndex("breadboard.json", archive);
         if (index == -1)
         {
@@ -211,6 +210,7 @@ public class Load : Singleton<Load>
 
     private void LoadGeneral(ZipArchive archive)
     {
+        Debug.Log("Loading General...");
         int index = GetZipArchiveEntryIndex("general.json", archive);
         if (index == -1)
         {
