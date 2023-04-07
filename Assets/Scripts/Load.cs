@@ -128,9 +128,9 @@ public class Load : Singleton<Load>
 
                         Vector3[] vectors = ((Wire)ic).points;
 
-                        LineRenderer lineRenderer = obj.GetComponentInChildren<LineRenderer>();
-                        lineRenderer.positionCount = vectors.Length;
-                        lineRenderer.SetPositions(vectors);
+                        //LineRenderer lineRenderer = obj.GetComponentInChildren<LineRenderer>();
+                        //lineRenderer.positionCount = vectors.Length;
+                        //lineRenderer.SetPositions(vectors);
 
                         CircuitHelper.CreateColliderChain(obj, vectors);
 

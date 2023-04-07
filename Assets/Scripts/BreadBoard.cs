@@ -494,7 +494,7 @@ public class BreadBoard : Singleton<BreadBoard>
         RemoveNodeConnection(nodeIdA, indexA);
         RemoveNodeConnection(nodeIdB, indexB);
 
-        if(!AreNodesConnected(nodeIdA, nodeIdB))
+        if (!AreNodesConnected(nodeIdA, nodeIdB))
         {
             Vector2Int node = NodeValues(nodeIdA);
             PropagateValue(nodeIdA, "", indexA, 100, node.x, node.y);
@@ -505,7 +505,7 @@ public class BreadBoard : Singleton<BreadBoard>
             PropagateValue(nodeIdA, "", indexA, 0);
             PropagateValue(nodeIdB, "", indexB, 0);
         }
-        
+
     }
 
     public void LinkNodes(string nodeIdA, int indexA, string nodeIdB, int indexB)

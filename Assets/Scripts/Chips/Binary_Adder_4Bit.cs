@@ -12,42 +12,35 @@ namespace Chips
     {
         public Binary_Adder_4Bit() : base(9, 5)
         {
-            Full_Adder chipA = new Full_Adder();
-            int indexA = AddChip(chipA);
-
-            Full_Adder chipB = new Full_Adder();
-            int indexB = AddChip(chipB);
-
-            Full_Adder chipC = new Full_Adder();
-            int indexC = AddChip(chipC);
-
-            Full_Adder chipD = new Full_Adder();
-            int indexD = AddChip(chipD);
+            Chip chipA = AddChipIndexed(new Full_Adder());
+            Chip chipB = AddChipIndexed(new Full_Adder());
+            Chip chipC = AddChipIndexed(new Full_Adder());
+            Chip chipD = AddChipIndexed(new Full_Adder());
 
             // Chip A
-            AddWire(ID, new Wire(8, 2, indexA, true));
-            AddWire(ID, new Wire(7, 0, indexA, true));
-            AddWire(ID, new Wire(6, 1, indexA, true));
-            AddWire(chipA.ID, new Wire(0, 4, -1, true));
-            AddWire(chipA.ID, new Wire(1, 2, indexB, true));
+            AddInputWire(new Wire(8, 2, chipA, true));
+            AddInputWire(new Wire(7, 0, chipA, true));
+            AddInputWire(new Wire(6, 1, chipA, true));
+            AddWire(chipA, new Wire(0, 4, -1, true));
+            AddWire(chipA, new Wire(1, 2, chipB, true));
 
             // Chip B            
-            AddWire(ID, new Wire(5, 0, indexB, true));
-            AddWire(ID, new Wire(4, 1, indexB, true));
-            AddWire(chipB.ID, new Wire(0, 3, -1, true));
-            AddWire(chipB.ID, new Wire(1, 2, indexC, true));
+            AddInputWire(new Wire(5, 0, chipB, true));
+            AddInputWire(new Wire(4, 1, chipB, true));
+            AddWire(chipB, new Wire(0, 3, -1, true));
+            AddWire(chipB, new Wire(1, 2, chipC, true));
 
             // Chip C
-            AddWire(ID, new Wire(3, 0, indexC, true));
-            AddWire(ID, new Wire(2, 1, indexC, true));
-            AddWire(chipC.ID, new Wire(0, 2, -1, true));
-            AddWire(chipC.ID, new Wire(1, 2, indexD, true));
+            AddInputWire(new Wire(3, 0, chipC, true));
+            AddInputWire(new Wire(2, 1, chipC, true));
+            AddWire(chipC, new Wire(0, 2, -1, true));
+            AddWire(chipC, new Wire(1, 2, chipD, true));
 
             // Chip D   
-            AddWire(ID, new Wire(1, 0, indexD, true));
-            AddWire(ID, new Wire(0, 1, indexD, true));
-            AddWire(chipD.ID, new Wire(0, 1, -1, true));
-            AddWire(chipD.ID, new Wire(1, 0, -1, true));
+            AddInputWire(new Wire(1, 0, chipD, true));
+            AddInputWire(new Wire(0, 1, chipD, true));
+            AddWire(chipD, new Wire(0, 1, -1, true));
+            AddWire(chipD, new Wire(1, 0, -1, true));
         }
     }
 }

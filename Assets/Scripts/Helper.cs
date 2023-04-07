@@ -154,6 +154,13 @@ namespace Helper
 
         public static void CreateColliderChain(GameObject obj, Vector3[] wireNodes)
         {
+            GameObject root = obj.transform.GetChild(obj.transform.childCount-1).gameObject;
+            Material material = root.GetComponent<MeshRenderer>().materials[0];
+            Mesh wireMesh = root.GetComponent<MeshFilter>().mesh;
+
+            obj.transform.GetChild(0).gameObject.SetActive(false);
+            root.SetActive(false);
+
             for (int i = 1; i < wireNodes.Length; i++)
             {
                 Vector3 pointA = wireNodes[i - 1];
@@ -163,16 +170,23 @@ namespace Helper
                 rotation.x *= -1;
                 rotation.z *= -1;
 
-                float height = Vector3.Distance(pointA, pointB) + 0.35f;
+                float height = Vector3.Distance(pointA, pointB);
 
                 Vector3 point = (pointA + pointB) / 2.0f;
 
                 GameObject collider = new GameObject();
                 collider.transform.parent = obj.transform;
+                collider.transform.localScale = new Vector3(0.3f, height, 0.3f);
 
                 CapsuleCollider capCol = collider.AddComponent<CapsuleCollider>();
-                capCol.height = height;
-                capCol.radius = 0.2f;
+                capCol.height = 2.0f;
+                capCol.radius = 0.5f;
+
+                MeshRenderer meshRenderer = collider.AddComponent<MeshRenderer>();
+                meshRenderer.material = material;
+
+                MeshFilter meshFilter = collider.AddComponent<MeshFilter>();
+                meshFilter.mesh = wireMesh;
 
                 collider.transform.position = point;
                 collider.transform.rotation = Quaternion.Euler(rotation);
